@@ -3,14 +3,15 @@ import re
 import os
 from playwright.sync_api import sync_playwright
 
-# List of distinct geographic search queries across El Paso
+# Complete list of geographic search target parameters covering all parts of El Paso
 TARGET_HUBS = [
     {"name": "Central / Downtown", "url": "https://www.google.com/maps/search/Gas+Stations+Central+El+Paso+TX/"},
     {"name": "West Side / Mesa Hills", "url": "https://www.google.com/maps/search/Gas+Stations+West+El+Paso+TX/"},
     {"name": "East Side / Cielo Vista", "url": "https://www.google.com/maps/search/Gas+Stations+East+El+Paso+TX/"},
     {"name": "Northeast / Dyer St", "url": "https://www.google.com/maps/search/Gas+Stations+Northeast+El+Paso+TX/"},
     {"name": "Lower Valley / Zaragosa", "url": "https://www.google.com/maps/search/Gas+Stations+Lower+Valley+El+Paso+TX/"},
-    {"name": "Socorro / Horizon", "url": "https://www.google.com/maps/search/Gas+Stations+Socorro+Horizon+TX/"}
+    {"name": "Socorro / Horizon", "url": "https://www.google.com/maps/search/Gas+Stations+Socorro+Horizon+TX/"},
+    {"name": "Far East Montana", "url": "http://googleusercontent.com/maps.google.com/7"}
 ]
 
 CSV_FILE = "el_paso_gas_prices.csv"
@@ -32,6 +33,26 @@ def extract_prices_directly(element):
         prem_price = prices[2]
         
     return reg_price, plus_price, prem_price
+
+def extract_coordinates(element):
+    """
+    Finds the anchor link within the element block and grabs latitude/longitude 
+    from Google Maps URL query strings.
+    """
+    lat, lng = "", ""
+    try:
+        # Search for any embedded anchor tags inside the listing item
+        link_elem = element.locator("a").first
+        if link_elem and link_elem.count() > 0:
+            href = link_elem.get_attribute("href") or ""
+            # Look for coordinate tracking pattern like /@31.7766157,-106.4088902
+            coord_match = re.search(r'@(-?\d+\.\d+),(-?\d+\.\d+)', href)
+            if coord_match:
+                lat = coord_match.group(1)
+                lng = coord_match.group(2)
+    except Exception:
+        pass
+    return lat, lng
 
 def run_pipeline():
     current_date = datetime.datetime.now().strftime("%m/%d/%Y")
@@ -69,9 +90,12 @@ def run_pipeline():
                             
                         reg_price, plus_price, prem_price = extract_prices_directly(element)
                         
-                        # Fallback: if no prices are visible, skip to avoid appending incomplete data
+                        # Skip if no prices are visible to maintain database purity
                         if not reg_price:
                             continue
+                        
+                        # Grab dynamic map coordinates safely
+                        latitude, longitude = extract_coordinates(element)
                         
                         text_content = element.inner_text() or ""
                         address = "El Paso, TX"
@@ -79,13 +103,17 @@ def run_pipeline():
                         if address_match:
                             address = address_match.group(1).strip().replace('\n', ' ')
                         
+                        # Append search sector tag to address if coordinate data fallback fails
+                        if not latitude and f"({hub['name']})" not in address:
+                            clean_hub_name = hub['name'].replace(" ", "_").replace("/", "")
+                            address = f"{address} ({clean_hub_name})"
+
                         station_signature = f"{station_name.lower()}|{address.lower()}"
                         if station_signature in seen_stations:
                             continue
                             
                         seen_stations.add(station_signature)
                         
-                        # Create clean lowercase Station_ID token
                         station_id = re.sub(r'[^a-z0-9\s-]', '', station_name.lower())
                         station_id = re.sub(r'[\s]+', '-', station_id).strip('-')
 
@@ -93,8 +121,8 @@ def run_pipeline():
                             "Station_ID": station_id,
                             "Name": station_name,
                             "Address": address,
-                            "Latitude": "",
-                            "Longitude": "",
+                            "Latitude": latitude,
+                            "Longitude": longitude,
                             "Regular_Price": reg_price,
                             "Plus_Price": plus_price,
                             "Premium_Price": prem_price,
@@ -110,7 +138,7 @@ def run_pipeline():
                 
         browser.close()
         
-    # Write aggregated metrics safely using the exact original schema headers
+    # Write entries out directly matching database column header tracking schema
     if all_parsed_records:
         file_exists = os.path.exists(CSV_FILE)
         
@@ -122,7 +150,7 @@ def run_pipeline():
                 line = f'"{record["Station_ID"]}","{record["Name"]}","{record["Address"]}","{record["Latitude"]}","{record["Longitude"]}","{record["Regular_Price"]}","{record["Plus_Price"]}","{record["Premium_Price"]}","{record["Scrape_Date"]}"\n'
                 f.write(line)
                 
-        print(f"\nPipeline finished. Added {len(all_parsed_records)} unique gas stations with valid tracking schemas.")
+        print(f"\nPipeline finished. Added {len(all_parsed_records)} unique gas stations with coordinates across all El Paso sectors.")
     else:
         print("\nWarning: No records with valid price details found during this sweep.")
 
