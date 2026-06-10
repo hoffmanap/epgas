@@ -3,7 +3,7 @@ import re
 import os
 from playwright.sync_api import sync_playwright
 
-# List of distinct geographic search coordinates/queries across El Paso to widen coverage
+# List of distinct geographic search queries across El Paso
 TARGET_HUBS = [
     {"name": "Central / Downtown", "url": "https://www.google.com/maps/search/Gas+Stations+Central+El+Paso+TX/"},
     {"name": "West Side / Mesa Hills", "url": "https://www.google.com/maps/search/Gas+Stations+West+El+Paso+TX/"},
@@ -15,34 +15,28 @@ TARGET_HUBS = [
 
 CSV_FILE = "el_paso_gas_prices.csv"
 
-def extract_prices_from_text(text):
+def extract_prices_directly(element):
     """
-    Scans the raw element innerText for price listings.
-    Defaults to empty string if missing to avoid breaking statistical averages.
+    Locates text containing money symbols ($X.XX) inside the card container.
     """
-    price_pattern = re.compile(r'\$\s*(\d+\.\d{2})')
-    matches = price_pattern.findall(text)
+    raw_text = element.inner_text() or ""
+    prices = re.findall(r'\$(\d+\.\d{2})', raw_text)
     
-    reg, plus, prem = "", "", ""
-    lower_text = text.lower()
+    reg_price, plus_price, prem_price = "", "", ""
     
-    if "regular" in lower_text and matches:
-        reg = matches[0]
-    if "plus" in lower_text and len(matches) > 1:
-        plus = matches[1]
-    if "premium" in lower_text and len(matches) > 2:
-        prem = matches[2]
+    if len(prices) >= 1:
+        reg_price = prices[0]
+    if len(prices) >= 2:
+        plus_price = prices[1]
+    if len(prices) >= 3:
+        prem_price = prices[2]
         
-    if not reg and matches:
-        reg = matches[0]
-        
-    return reg, plus, prem
+    return reg_price, plus_price, prem_price
 
 def run_pipeline():
     current_date = datetime.datetime.now().strftime("%m/%d/%Y")
     print(f"--- Launching Multi-Location Scraping Pipeline for {current_date} ---")
     
-    # Track unique combinations of (Station Name + Address) to prevent local duplication 
     seen_stations = set()
     all_parsed_records = []
     
@@ -53,17 +47,14 @@ def run_pipeline():
         )
         
         page = context.new_page()
-        # Speed optimization: block heavy images and fonts
         page.route("**/*", lambda route: route.abort() if route.request.resource_type in ["image", "font", "media"] else route.continue_())
         
-        # Loop through each distinct sector of the city
         for hub in TARGET_HUBS:
             print(f"\nScanning Sector: {hub['name']}...")
             try:
                 page.goto(hub["url"], wait_until="domcontentloaded", timeout=45000)
-                page.wait_for_timeout(5000) # Quick pause for data rows to settle
+                page.wait_for_timeout(6000)
                 
-                # Attempt to find standard map list view markers
                 elements = page.locator('div[role="article"]').all()
                 if not elements:
                     elements = page.locator('div.Nv2PK').all()
@@ -72,36 +63,42 @@ def run_pipeline():
                 
                 for element in elements:
                     try:
-                        text_content = element.inner_text()
-                        if not text_content:
+                        station_name = element.get_attribute("aria-label") or "Unknown Station"
+                        if "unknown" in station_name.lower() or not station_name.strip():
                             continue
                             
-                        station_name = element.get_attribute("aria-label") or "Unknown Station"
-                        reg_price, plus_price, prem_price = extract_prices_from_text(text_content)
+                        reg_price, plus_price, prem_price = extract_prices_directly(element)
                         
-                        # Extract basic street address details from text block
+                        # Fallback: if no prices are visible, skip to avoid appending incomplete data
+                        if not reg_price:
+                            continue
+                        
+                        text_content = element.inner_text() or ""
                         address = "El Paso, TX"
                         address_match = re.search(r'·\s*([^·\n\d]*\d+[^·\n]*)', text_content)
                         if address_match:
-                            address = address_match.group(1).strip()
+                            address = address_match.group(1).strip().replace('\n', ' ')
                         
-                        # Clean out line breaks if any snuck into address field
-                        address = address.replace('\n', ' ').strip()
-                        
-                        # De-duplication check matching name + address signature
                         station_signature = f"{station_name.lower()}|{address.lower()}"
                         if station_signature in seen_stations:
                             continue
                             
                         seen_stations.add(station_signature)
                         
+                        # Create clean lowercase Station_ID token
+                        station_id = re.sub(r'[^a-z0-9\s-]', '', station_name.lower())
+                        station_id = re.sub(r'[\s]+', '-', station_id).strip('-')
+
                         all_parsed_records.append({
-                            "Date": current_date,
-                            "Station": station_name,
+                            "Station_ID": station_id,
+                            "Name": station_name,
                             "Address": address,
-                            "Regular": reg_price,
-                            "Plus": plus_price,
-                            "Premium": prem_price
+                            "Latitude": "",
+                            "Longitude": "",
+                            "Regular_Price": reg_price,
+                            "Plus_Price": plus_price,
+                            "Premium_Price": prem_price,
+                            "Scrape_Date": current_date
                         })
                         
                     except Exception as elem_err:
@@ -113,21 +110,21 @@ def run_pipeline():
                 
         browser.close()
         
-    # Write aggregated metrics safely to the historical log
+    # Write aggregated metrics safely using the exact original schema headers
     if all_parsed_records:
         file_exists = os.path.exists(CSV_FILE)
         
         with open(CSV_FILE, mode="a", encoding="utf-8") as f:
             if not file_exists:
-                f.write("Date,Station,Address,Regular,Plus,Premium\n")
+                f.write("Station_ID,Name,Address,Latitude,Longitude,Regular_Price,Plus_Price,Premium_Price,Scrape_Date\n")
             
             for record in all_parsed_records:
-                line = f'"{record["Date"]}","{record["Station"]}","{record["Address"]}","{record["Regular"]}","{record["Plus"]}","{record["Premium"]}"\n'
+                line = f'"{record["Station_ID"]}","{record["Name"]}","{record["Address"]}","{record["Latitude"]}","{record["Longitude"]}","{record["Regular_Price"]}","{record["Plus_Price"]}","{record["Premium_Price"]}","{record["Scrape_Date"]}"\n'
                 f.write(line)
                 
-        print(f"\nPipeline finished. Added {len(all_parsed_records)} unique gas stations across El Paso.")
+        print(f"\nPipeline finished. Added {len(all_parsed_records)} unique gas stations with valid tracking schemas.")
     else:
-        print("\nWarning: No records were processed during this citywide sweep.")
+        print("\nWarning: No records with valid price details found during this sweep.")
 
 if __name__ == "__main__":
     run_pipeline()
