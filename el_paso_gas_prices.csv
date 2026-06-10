@@ -1,477 +1,300 @@
 Station_ID,Name,Address,Latitude,Longitude,Regular_Price,Plus_Price,Premium_Price,Scrape_Date
-circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX 79925",,,,,,5/30/2026
-windstar-gas-station,Windstar Gas Station,"El Paso, TX 79901",,,,,,5/30/2026
-dk-gas-station,DK Gas Station,"El Paso, TX 79912",,,4.02,,,5/30/2026
-chevron,Chevron,"El Paso, TX 79924",,,4.6,,,5/30/2026
-speedway,Speedway,"El Paso, TX 79925",,,,,,5/30/2026
-flyers,Flyers,"El Paso, TX 79901",,,,,,5/30/2026
-in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX 79901",,,,,,5/30/2026
-alon-gas-station,ALON Gas Station,"El Paso, TX 79925",,,3.95,,,5/30/2026
-mesa-hills-valero,Mesa Hills Valero,"El Paso, TX 79912",,,4.16,,,5/30/2026
-circle-k-gas-station,Circle K Gas Station,"El Paso, TX 79936",,,3.85,,,5/30/2026
-murphy-usa,Murphy USA,"El Paso, TX 79936",,,3.82,,,5/30/2026
-valero,Valero,"El Paso, TX 79936",,,3.86,,,5/30/2026
-circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX 79938",31.745064,-106.4639476,,,,5/31/2026
-windstar-gas-station,Windstar Gas Station,"El Paso, TX 79934",31.818696,-106.659685,,,,5/31/2026
-dk-gas-station,DK Gas Station,"El Paso, TX 79936",31.7416774,-106.4256875,4.0,,,5/31/2026
-speedway,Speedway,"El Paso, TX 79938",31.779059,-106.5360634,,,,5/31/2026
-in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX 79935",31.813356,-106.6059946,,,,5/31/2026
-flyers,Flyers,"El Paso, TX 79935",31.7737337,-106.6441404,,,,5/31/2026
-chevron-howdy's,Chevron Howdy's,"El Paso, TX 79934",31.818696,-106.659685,4.4,,,5/31/2026
-valero,Valero,"El Paso, TX 79938",31.7537884,-106.4625185,3.8,,,5/31/2026
-alon-gas-station,ALON Gas Station,"El Paso, TX 79938",31.7571875,-106.4733887,3.92,,,5/31/2026
-chevron,Chevron,"El Paso, TX 79934",31.9236188,-106.5844405,4.6,,,5/31/2026
-parking,parking,"El Paso, TX 79901",31.7618778,-106.5210706,,,,5/31/2026
-tahsin-aslan-cumhuriyeti,Tahsin Aslan Cumhuriyeti,"El Paso, TX 79901",31.7576291,-106.5146604,,,,5/31/2026
-ram,Ram,"El Paso, TX 79901",31.7576291,-106.5146604,,,,5/31/2026
-texaco-service-station-(former),Texaco Service Station (Former),"El Paso, TX 79934",31.7859338,-106.6064318,,,,5/31/2026
-circle-k,Circle K,"El Paso, TX 79936",31.7769866,-106.338836,3.85,,,5/31/2026
-quick-mart,Quick Mart,"El Paso, TX 79901",31.7547176,-106.5271964,4.4,,,5/31/2026
-brio,Brio,"El Paso, TX 79901",31.770173,-106.5040306,,,,5/31/2026
-dk,DK,"El Paso, TX 79935",31.7924773,-106.6520973,,,,5/31/2026
-mesa-hills-valero,Mesa Hills Valero,"El Paso, TX 79935",31.813356,-106.6059946,4.16,,,5/31/2026
-payan's-fuel-center,Payan's Fuel Center,"El Paso, TX 79905",31.766977,-106.5332848,4.1,,,5/31/2026
-e-schuster,e schuster,"El Paso, TX 79901",31.7764291,-106.5210585,,,,5/31/2026
-paisano-super-stop,Paisano Super Stop,"El Paso, TX 79901",31.7592423,-106.5102265,,,,5/31/2026
-ram-super-stop,Ram Super Stop,"El Paso, TX 79901",31.7670533,-106.497733,,,,5/31/2026
-marathon,Marathon,"El Paso, TX 79901",31.7670533,-106.497733,,,,5/31/2026
-costco-gas-station,Costco Gas Station,"El Paso, TX 79938",31.782414,-106.5551774,,,,5/31/2026
-diamond-shamrock,Diamond Shamrock,"El Paso, TX 79901",31.7793522,-106.487123,,,,5/31/2026
-valero-corner-store,Valero Corner Store,"El Paso, TX 79935",31.7883855,-106.5934559,4.1,,,5/31/2026
-station-54,STATION 54,"El Paso, TX 79938",31.8488722,-106.5835102,,,,5/31/2026
-murphy-usa,Murphy USA,"El Paso, TX 79938",31.8053881,-106.4045155,3.8,,,5/31/2026
-freeway-chevron,FREEWAY CHEVRON,"El Paso, TX 79936",31.766595,-106.4349878,4.4,,,5/31/2026
-murphy's-usa,Murphy's USA,"El Paso, TX 79912",31.8379277,-106.632765,3.86,,,5/31/2026
-walmart-fuel-&-convenience,Walmart Fuel & Convenience,"El Paso, TX 79932",31.8840023,-106.7229286,,,,5/31/2026
-sam's-club-gas-station,Sam's Club Gas Station,"El Paso, TX 79936",31.7767451,-106.4585995,,,,5/31/2026
-gas-station,Gas Station,"El Paso, TX 79938",31.796972,-106.3617756,,,,5/31/2026
-giant,Giant,"El Paso, TX 79912",31.8382967,-106.6326668,,,,5/31/2026
-howdy's-chevron,Howdy's Chevron,"El Paso, TX 79915",31.7414816,-106.5216598,4.4,,,5/31/2026
-phillips-66,Phillips 66,"El Paso, TX 79915",31.758181,-106.4999476,3.96,,,5/31/2026
-shell,Shell,"El Paso, TX 79936",31.765342,-106.4114368,4.4,,,5/31/2026
-7-eleven,7-Eleven,"El Paso, TX 79924",31.9299844,-106.4961241,,,,5/31/2026
-circle-k-gas-station,Circle K Gas Station,"El Paso, TX 79938",31.796972,-106.3617756,3.85,,,5/31/2026
-love's-travel-stop,Love's Travel Stop,"El Paso, TX 79938",31.749474,-106.4346882,3.73,,,5/31/2026
-quiktrip,QuikTrip,"El Paso, TX 79938",31.783267,-106.4572346,,,,5/31/2026
-chevron-el-paso-far-east-montana,Chevron El Paso Far East Montana,"El Paso, TX 79938",31.796972,-106.3617756,4.3,,,5/31/2026
-fast-trak-valero,Fast Trak Valero,"El Paso, TX 79938",31.745064,-106.4639476,3.82,,,5/31/2026
-petro-travel-center,Petro Travel Center,"El Paso, TX 79938",31.6609767,-106.3866485,,,,5/31/2026
-texaco-service-station-(former),Texaco Service Station (Former),"El Paso, TX 79930",31.7859338,-106.534334,,,,6/1/2026
-quick-mart,Quick Mart,"El Paso, TX 79901",31.7547176,-106.5271964,4.4,,,6/1/2026
-diamond-shamrock,Diamond Shamrock,"El Paso, TX 79903",31.7793522,-106.487123,,,,6/1/2026
-firestone-complete-auto-care,Firestone Complete Auto Care,"El Paso, TX 79903",31.7825288,-106.4649497,,,,6/1/2026
-murphy's-usa,Murphy's USA,"El Paso, TX 79912",31.8379277,-106.632765,3.86,,,6/1/2026
-gas-station,Gas Station,"El Paso, TX 79938",31.8188317,-106.2497142,,,,6/1/2026
-howdy's-chevron,Howdy's Chevron,"El Paso, TX 79915",31.722846,-106.4036909,4.4,,,6/1/2026
-valero-fast-market,VALERO FAST MARKET,"El Paso, TX 79938",31.7827499,-106.4106502,3.97,,,6/1/2026
-7-eleven,7-Eleven,"El Paso, TX 79924",31.9104305,-106.4786586,,,,6/1/2026
-circle-k-gas-station,Circle K Gas Station,"El Paso, TX 79938",31.776881,-106.3410978,3.85,,,6/1/2026
-fast-trak-valero,Fast Trak Valero,"El Paso, TX 79938",31.8038457,-106.3565626,3.82,,,6/1/2026
-speedway,Speedway,"El Paso, TX (Socorro_Horizon_Border)",31.7256355,-106.2843653,,,,6/1/2026
-chevron,Chevron,"El Paso, TX (Socorro_Horizon_Border)",31.7052302,-106.3003847,4.4,,,6/1/2026
-circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7792925,-106.4291065,,,,6/1/2026
-dk-gas-station,DK Gas Station,"El Paso, TX (Northeast_Dyer)",31.8367682,-106.3835532,4.1,,,6/1/2026
-valero,Valero,"El Paso, TX (Socorro_Horizon_Border)",31.679245,-106.3345322,3.96,,,6/1/2026
-alon-gas-station,ALON Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.679245,-106.3345322,3.92,,,6/1/2026
-circle-k,Circle K,"El Paso, TX (Socorro_Horizon_Border)",31.7052302,-106.3003847,3.83,,,6/1/2026
-flyers,Flyers,"El Paso, TX (Zaragosa_Lower_Valley)",31.7489212,-106.3409759,,,,6/1/2026
-windstar-gas-station,Windstar Gas Station,"El Paso, TX (Downtown_Central)",31.7548313,-106.5091717,,,,6/1/2026
-chevron-howdy's,Chevron Howdy's,"El Paso, TX (Far_East_Montana)",31.8002216,-106.4395241,4.4,,,6/1/2026
-in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX (Upper_Valley)",31.7767451,-106.4045261,,,,6/1/2026
-costco-gas-station,Costco Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7810875,-106.4246792,,,,6/1/2026
-brio,Brio,"El Paso, TX (Far_East_Montana)",31.7681631,-106.4413088,,,,6/1/2026
-parking,parking,"El Paso, TX (Downtown_Central)",31.7618778,-106.5030461,,,,6/1/2026
-marathon,Marathon,"El Paso, TX (Downtown_Central)",31.7670812,-106.479743,,,,6/1/2026
-gazpro-5-de-mayo,Gazpro 5 de Mayo,"El Paso, TX (Downtown_Central)",31.7440663,-106.4914757,,,,6/1/2026
-oxxo-gas,Oxxo Gas,"El Paso, TX (Downtown_Central)",31.7440663,-106.4914757,,,,6/1/2026
-payan's-fuel-center,Payan's Fuel Center,"El Paso, TX (Downtown_Central)",31.766977,-106.4792114,4.1,,,6/1/2026
-ram,Ram,"El Paso, TX (Downtown_Central)",31.7592188,-106.4920828,,,,6/1/2026
-ram-super-stop,Ram Super Stop,"El Paso, TX (Downtown_Central)",31.779059,-106.4098922,,,,6/1/2026
-klemme-roadway,Klemme Roadway,"El Paso, TX (Socorro_Horizon_Border)",31.7833158,-106.4250496,,,,6/1/2026
-totalgas--lerdo,TotalGas- Lerdo,"El Paso, TX (Downtown_Central)",31.7659348,-106.4325506,,,,6/1/2026
-c-&-r-distributing-llc,C & R Distributing LLC,"El Paso, TX (Socorro_Horizon_Border)",31.7792925,-106.4291065,,,,6/1/2026
-gazpro-anapra,Gazpro Anapra,"El Paso, TX (Downtown_Central)",31.7521378,-106.5157245,,,,6/1/2026
-pemex-gasolinera-5-de-mayo,Pemex Gasolinera 5 de mayo,"El Paso, TX (Downtown_Central)",31.7441551,-106.4913405,,,,6/1/2026
-711,711,"El Paso, TX (Socorro_Horizon_Border)",31.7810247,-106.4439032,,,,6/1/2026
-dk,Dk,"El Paso, TX (Socorro_Horizon_Border)",31.7811996,-106.4248036,,,,6/1/2026
-gasolinera-pemex,Gasolinera Pemex,"El Paso, TX (Downtown_Central)",31.7428647,-106.4991714,,,,6/1/2026
-valero-corner-store,Valero Corner Store,"El Paso, TX (Far_East_Montana)",31.7883855,-106.4672847,4.1,,,6/1/2026
-tahsin-aslan-cumhuriyeti,Tahsin Aslan Cumhuriyeti,"El Paso, TX (Downtown_Central)",31.7618778,-106.5030461,,,,6/1/2026
-pemex-gasolinera-tlaxcala,Pemex Gasolinera Tlaxcala,"El Paso, TX (Downtown_Central)",31.7433584,-106.4820212,,,,6/1/2026
-mesa-hills-valero,Mesa Hills Valero,"El Paso, TX (West_Side_Mesa)",31.818696,-106.5335138,4.16,,,6/1/2026
-mesa-hills-shamrock,MESA HILLS SHAMROCK,"El Paso, TX (West_Side_Mesa)",31.818253,-106.5337944,,,,6/1/2026
-cassidy-express,Cassidy Express,"El Paso, TX (Socorro_Horizon_Border)",31.8132896,-106.4496756,,,,6/1/2026
-sam's-club-gas-station,Sam's Club Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7767451,-106.4045261,,,,6/1/2026
-walmart-fuel-&-convenience,Walmart Fuel & Convenience,"El Paso, TX (Upper_Valley)",31.8840023,-106.5967574,,,,6/1/2026
-murphy-usa,Murphy USA,"El Paso, TX (Socorro_Horizon_Border)",31.6536896,-106.3074275,3.73,,,6/1/2026
-giant,Giant,"El Paso, TX (Upper_Valley)",31.8789953,-106.5866748,,,,6/1/2026
-fast-market-8168,Fast Market 8168,"El Paso, TX (Upper_Valley)",31.8612739,-106.567382,,,,6/1/2026
-station-54,STATION 54,"El Paso, TX (Northeast_Dyer)",31.8488722,-106.457339,,,,6/1/2026
-logan-heights-express,Logan Heights Express,"El Paso, TX (Northeast_Dyer)",31.839986,-106.4616804,,,,6/1/2026
-aafes,AAFES,"El Paso, TX (Northeast_Dyer)",31.8367682,-106.3835532,,,,6/1/2026
-good-time-stores,Good Time Stores,"El Paso, TX (Northeast_Dyer)",31.853124,-106.456742,,,,6/1/2026
-bliss-biggs-east-express,Bliss Biggs East Express,"El Paso, TX (Northeast_Dyer)",31.8277145,-106.4061606,,,,6/1/2026
-aafes-px-gas-station,AAFES PX Gas Station,"El Paso, TX (Far_East_Montana)",31.7750579,-106.3920526,,,,6/1/2026
-freeway-chevron,FREEWAY CHEVRON,"El Paso, TX (Far_East_Montana)",31.7640375,-106.3829644,4.4,,,6/1/2026
-western-fuel,Western fuel,"El Paso, TX (East_Side_Cielo_Vista)",31.7766157,-106.4088902,,,,6/1/2026
-phillips-66,Phillips 66,"El Paso, TX (Socorro_Horizon_Border)",31.7398113,-106.3651365,3.96,,,6/1/2026
-shell,Shell,"El Paso, TX (East_Side_Cielo_Vista)",31.765342,-106.3573634,4.4,,,6/1/2026
-dk-convenient-store/gas-station,DK Convenient Store/Gas Station,"El Paso, TX (Zaragosa_Lower_Valley)",31.7438495,-106.3038977,,,,6/1/2026
-"valero-""fast-mart""","Valero ""Fast Mart""","El Paso, TX (Zaragosa_Lower_Valley)",31.7378595,-106.3095234,,,,6/1/2026
-dk-convenience-store,DK Convenience Store,"El Paso, TX (Zaragosa_Lower_Valley)",31.7653262,-106.3481719,,,,6/1/2026
-chevron-el-paso-far-east-montana,Chevron El Paso Far East Montana,"El Paso, TX (Far_East_Montana)",31.8081137,-106.2776987,4.3,,,6/1/2026
-water-refill-station,Water Refill Station,"El Paso, TX (Far_East_Montana)",31.803409,-106.3029603,,,,6/1/2026
-nustar-energy---el-paso-terminal,NuStar Energy - El Paso Terminal,"El Paso, TX (Far_East_Montana)",31.8223608,-106.2766917,,,,6/1/2026
-quiktrip,Quiktrip,"El Paso, TX (Socorro_Horizon_Border)",31.685814,-106.2861944,3.73,,,6/1/2026
-murphy-express,Murphy Express,"El Paso, TX (Socorro_Horizon_Border)",31.6885755,-106.2814167,3.73,,,6/1/2026
-flying-j-travel-center,Flying J Travel Center,"El Paso, TX (Socorro_Horizon_Border)",31.6620526,-106.2561123,4.1,,,6/1/2026
-love's-travel-stop,Love's Travel Stop,"El Paso, TX (Socorro_Horizon_Border)",31.6620526,-106.2561123,3.73,,,6/1/2026
-in-n-out---marathon,In N Out - Marathon,"El Paso, TX (Socorro_Horizon_Border)",31.6619098,-106.314599,4.5,,,6/1/2026
-speedway,Speedway,"El Paso, TX (Socorro_Horizon_Border)",31.7750579,-106.3920526,,,,6/2/2026
-chevron,Chevron,"El Paso, TX (Socorro_Horizon_Border)",31.704319,-106.298926,4.4,,,6/2/2026
-circle-k,Circle K,"El Paso, TX (Socorro_Horizon_Border)",31.7052302,-106.3003847,3.82,,,6/2/2026
-circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7591,-106.4064644,,,,6/2/2026
-valero,Valero,"El Paso, TX (Socorro_Horizon_Border)",31.6780314,-106.3335587,3.88,,,6/2/2026
-dk-gas-station,DK Gas Station,"El Paso, TX (Upper_Valley)",31.7788665,-106.4690964,4.0,,,6/2/2026
-alon-gas-station,ALON Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7886808,-106.4493156,3.95,,,6/2/2026
-chevron-howdy's,Chevron Howdy's,"El Paso, TX (Northeast_Dyer)",31.7770087,-106.4846444,4.2,,,6/2/2026
-flyers,Flyers,"El Paso, TX (Zaragosa_Lower_Valley)",31.7489212,-106.3409759,,,,6/2/2026
-in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX (Upper_Valley)",31.7670812,-106.479743,,,,6/2/2026
-costco-gas-station,Costco Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.780961,-106.4255094,,,,6/2/2026
-windstar-gas-station,Windstar Gas Station,"El Paso, TX (Downtown_Central)",31.7548313,-106.5091717,,,,6/2/2026
-brio,Brio,"El Paso, TX (East_Side_Cielo_Vista)",31.7681631,-106.4413088,,,,6/2/2026
-parking,parking,"El Paso, TX (Downtown_Central)",31.7618778,-106.5030461,,,,6/2/2026
-marathon,Marathon,"El Paso, TX (Downtown_Central)",31.7670812,-106.479743,,,,6/2/2026
-gazpro-5-de-mayo,Gazpro 5 de Mayo,"El Paso, TX (Downtown_Central)",31.7440663,-106.4914757,,,,6/2/2026
-oxxo-gas,Oxxo Gas,"El Paso, TX (Downtown_Central)",31.760001,-106.5270014,,,,6/2/2026
-payan's-fuel-center,Payan's Fuel Center,"El Paso, TX (Downtown_Central)",31.760001,-106.5270014,4.1,,,6/2/2026
-klemme-roadway,Klemme Roadway,"El Paso, TX (Socorro_Horizon_Border)",31.7833158,-106.4250496,,,,6/2/2026
-ram-super-stop,Ram Super Stop,"El Paso, TX (Downtown_Central)",31.7670533,-106.4797085,,,,6/2/2026
-ram,Ram,"El Paso, TX (Downtown_Central)",31.7592188,-106.4920828,,,,6/2/2026
-gazpro-anapra,Gazpro Anapra,"El Paso, TX (Downtown_Central)",31.7521378,-106.5157245,,,,6/2/2026
-totalgas--lerdo,TotalGas- Lerdo,"El Paso, TX (Downtown_Central)",31.7428197,-106.4991963,,,,6/2/2026
-c-&-r-distributing-llc,C & R Distributing LLC,"El Paso, TX (Socorro_Horizon_Border)",31.7792925,-106.4291065,,,,6/2/2026
-pemex-gasolinera-5-de-mayo,Pemex Gasolinera 5 de mayo,"El Paso, TX (Downtown_Central)",31.7441551,-106.4913405,,,,6/2/2026
-valero-corner-store,Valero Corner Store,"El Paso, TX (Northeast_Dyer)",31.7883855,-106.4672847,4.0,,,6/2/2026
-dk,Dk,"El Paso, TX (Socorro_Horizon_Border)",31.6619098,-106.314599,,,,6/2/2026
-711,711,"El Paso, TX (Far_East_Montana)",31.7810247,-106.4439032,,,,6/2/2026
-gasolinera-pemex,Gasolinera Pemex,"El Paso, TX (Downtown_Central)",31.7810247,-106.4439032,,,,6/2/2026
-mesa-hills-valero,Mesa Hills Valero,"El Paso, TX (West_Side_Mesa)",31.818696,-106.5335138,4.16,,,6/2/2026
-cassidy-express,Cassidy Express,"El Paso, TX (Socorro_Horizon_Border)",31.8132896,-106.4496756,,,,6/2/2026
-mesa-hills-shamrock,MESA HILLS SHAMROCK,"El Paso, TX (West_Side_Mesa)",31.818253,-106.5337944,,,,6/2/2026
-sam's-club-gas-station,Sam's Club Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7767451,-106.4045261,,,,6/2/2026
-aafes-px-gas-station,AAFES PX Gas Station,"El Paso, TX (Northeast_Dyer)",31.8002216,-106.4395241,,,,6/2/2026
-walmart-fuel-&-convenience,Walmart Fuel & Convenience,"El Paso, TX (Upper_Valley)",31.8840023,-106.5967574,,,,6/2/2026
-giant,Giant,"El Paso, TX (Upper_Valley)",31.8789953,-106.5866748,,,,6/2/2026
-murphy-usa,Murphy USA,"El Paso, TX (Socorro_Horizon_Border)",31.6619098,-106.314599,3.73,,,6/2/2026
-fast-market-8168,Fast Market 8168,"El Paso, TX (Upper_Valley)",31.8612739,-106.567382,,,,6/2/2026
-station-54,STATION 54,"El Paso, TX (Northeast_Dyer)",31.8488722,-106.457339,,,,6/2/2026
-logan-heights-express,Logan Heights Express,"El Paso, TX (Northeast_Dyer)",31.839986,-106.4616804,,,,6/2/2026
-aafes,AAFES,"El Paso, TX (Northeast_Dyer)",31.8367682,-106.3835532,,,,6/2/2026
-good-time-stores,Good Time Stores,"El Paso, TX (Northeast_Dyer)",31.853124,-106.456742,,,,6/2/2026
-bliss-biggs-east-express,Bliss Biggs East Express,"El Paso, TX (Northeast_Dyer)",31.8277145,-106.4061606,,,,6/2/2026
-freeway-chevron,FREEWAY CHEVRON,"El Paso, TX (Socorro_Horizon_Border)",31.7640375,-106.3829644,4.4,,,6/2/2026
-western-fuel,Western fuel,"El Paso, TX (East_Side_Cielo_Vista)",31.7766157,-106.4088902,,,,6/2/2026
-phillips-66,Phillips 66,"El Paso, TX (Socorro_Horizon_Border)",31.7398113,-106.3651365,3.96,,,6/2/2026
-shell,Shell,"El Paso, TX (East_Side_Cielo_Vista)",31.765342,-106.3573634,4.4,,,6/2/2026
-dk-convenient-store/gas-station,DK Convenient Store/Gas Station,"El Paso, TX (Zaragosa_Lower_Valley)",31.7356976,-106.3303057,,,,6/2/2026
-"valero-""fast-mart""","Valero ""Fast Mart""","El Paso, TX (Zaragosa_Lower_Valley)",31.7378595,-106.3095234,,,,6/2/2026
-chevron-el-paso-far-east-montana,Chevron El Paso Far East Montana,"El Paso, TX (Far_East_Montana)",31.8081137,-106.2776987,4.2,,,6/2/2026
-water-refill-station,Water Refill Station,"El Paso, TX (Far_East_Montana)",31.803409,-106.3029603,,,,6/2/2026
-nustar-energy---el-paso-terminal,NuStar Energy - El Paso Terminal,"El Paso, TX (Far_East_Montana)",31.8223608,-106.2766917,,,,6/2/2026
-quiktrip,Quiktrip,"El Paso, TX (Socorro_Horizon_Border)",31.685814,-106.2861944,3.73,,,6/2/2026
-murphy-express,Murphy Express,"El Paso, TX (Socorro_Horizon_Border)",31.6885755,-106.2814167,3.73,,,6/2/2026
-flying-j-travel-center,Flying J Travel Center,"El Paso, TX (Socorro_Horizon_Border)",31.6620526,-106.2561123,4.1,,,6/2/2026
-love's-travel-stop,Love's Travel Stop,"El Paso, TX (Socorro_Horizon_Border)",31.6598198,-106.2554586,3.73,,,6/2/2026
-in-n-out---marathon,In N Out - Marathon,"El Paso, TX (Socorro_Horizon_Border)",31.6619098,-106.314599,,,,6/2/2026
-speedway,Speedway,"El Paso, TX (Socorro_Horizon_Border)",31.6589727,-106.2924948,,,,6/3/2026
-chevron,Chevron,"El Paso, TX (Socorro_Horizon_Border)",31.704319,-106.298926,4.2,,,6/3/2026
-circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7886808,-106.4493156,,,,6/3/2026
-dk-gas-station,DK Gas Station,"El Paso, TX (West_Side_Mesa)",31.7788665,-106.4690964,3.95,,,6/3/2026
-circle-k,Circle K,"El Paso, TX (Socorro_Horizon_Border)",31.7052302,-106.3003847,4.0,,,6/3/2026
-valero,Valero,"El Paso, TX (Socorro_Horizon_Border)",31.679245,-106.3345322,3.88,,,6/3/2026
-flyers,Flyers,"El Paso, TX (Zaragosa_Lower_Valley)",31.7489212,-106.3409759,,,,6/3/2026
-windstar-gas-station,Windstar Gas Station,"El Paso, TX (Downtown_Central)",31.7620427,-106.4997671,,,,6/3/2026
-chevron-howdy's,Chevron Howdy's,"El Paso, TX (Far_East_Montana)",31.7770087,-106.4846444,4.2,,,6/3/2026
-in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX (Upper_Valley)",31.7670812,-106.479743,,,,6/3/2026
-alon-gas-station,ALON Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.6657638,-106.3262821,3.8,,,6/3/2026
-costco-gas-station,Costco Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.780961,-106.4255094,,,,6/3/2026
-parking,parking,"El Paso, TX (Downtown_Central)",31.782414,-106.4290062,,,,6/3/2026
-brio,Brio,"El Paso, TX (Far_East_Montana)",31.7681631,-106.4413088,,,,6/3/2026
-marathon,Marathon,"El Paso, TX (Downtown_Central)",31.7670812,-106.479743,,,,6/3/2026
-gazpro-5-de-mayo,Gazpro 5 de Mayo,"El Paso, TX (Downtown_Central)",31.7440663,-106.4914757,,,,6/3/2026
-oxxo-gas,Oxxo Gas,"El Paso, TX (Downtown_Central)",31.760001,-106.5270014,,,,6/3/2026
-ram,Ram,"El Paso, TX (Downtown_Central)",31.7592188,-106.4920828,,,,6/3/2026
-totalgas--lerdo,TotalGas- Lerdo,"El Paso, TX (Downtown_Central)",31.7428197,-106.4991963,,,,6/3/2026
-ram-super-stop,Ram Super Stop,"El Paso, TX (Downtown_Central)",31.7670533,-106.4797085,,,,6/3/2026
-payan's-fuel-center,Payan's Fuel Center,"El Paso, TX (Downtown_Central)",31.7670533,-106.4797085,4.1,,,6/3/2026
-gazpro-anapra,Gazpro Anapra,"El Paso, TX (Downtown_Central)",31.7521378,-106.5157245,,,,6/3/2026
-klemme-roadway,Klemme Roadway,"El Paso, TX (Socorro_Horizon_Border)",31.7833158,-106.4250496,,,,6/3/2026
-pemex-gasolinera-5-de-mayo,Pemex Gasolinera 5 de mayo,"El Paso, TX (Downtown_Central)",31.7441551,-106.4913405,,,,6/3/2026
-gasolinera-pemex,Gasolinera Pemex,"El Paso, TX (Downtown_Central)",31.7428647,-106.4991714,,,,6/3/2026
-pemex-gasolinera-tlaxcala,Pemex Gasolinera Tlaxcala,"El Paso, TX (Downtown_Central)",31.7775026,-106.4105362,,,,6/3/2026
-tahsin-aslan-cumhuriyeti,Tahsin Aslan Cumhuriyeti,"El Paso, TX (Downtown_Central)",31.7433584,-106.4820212,,,,6/3/2026
-c-&-r-distributing-llc,C & R Distributing LLC,"El Paso, TX (Socorro_Horizon_Border)",31.7792925,-106.4291065,,,,6/3/2026
-711,711,"El Paso, TX (Socorro_Horizon_Border)",31.7810247,-106.4439032,,,,6/3/2026
-valero-corner-store,Valero Corner Store,"El Paso, TX (Northeast_Dyer)",31.8002216,-106.4395241,3.9,,,6/3/2026
-dk,Dk,"El Paso, TX (Socorro_Horizon_Border)",31.7811996,-106.4248036,,,,6/3/2026
-mesa-hills-valero,Mesa Hills Valero,"El Paso, TX (West_Side_Mesa)",31.818696,-106.5335138,4.16,,,6/3/2026
-mesa-hills-shamrock,MESA HILLS SHAMROCK,"El Paso, TX (West_Side_Mesa)",31.818253,-106.5337944,,,,6/3/2026
-cassidy-express,Cassidy Express,"El Paso, TX (Socorro_Horizon_Border)",31.8132896,-106.4496756,,,,6/3/2026
-sam's-club-gas-station,Sam's Club Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7767451,-106.4045261,,,,6/3/2026
-walmart-fuel-&-convenience,Walmart Fuel & Convenience,"El Paso, TX (Upper_Valley)",31.8840023,-106.5967574,,,,6/3/2026
-murphy-usa,Murphy USA,"El Paso, TX (Socorro_Horizon_Border)",31.6987501,-106.2594515,,,,6/3/2026
-giant,Giant,"El Paso, TX (Upper_Valley)",31.8789953,-106.5866748,,,,6/3/2026
-fast-market-8168,Fast Market 8168,"El Paso, TX (Upper_Valley)",31.8612739,-106.567382,,,,6/3/2026
-station-54,STATION 54,"El Paso, TX (Northeast_Dyer)",31.8488722,-106.457339,,,,6/3/2026
-logan-heights-express,Logan Heights Express,"El Paso, TX (Northeast_Dyer)",31.839986,-106.4616804,,,,6/3/2026
-aafes,AAFES,"El Paso, TX (Northeast_Dyer)",31.8367682,-106.3835532,,,,6/3/2026
-good-time-stores,Good Time Stores,"El Paso, TX (Northeast_Dyer)",31.853124,-106.456742,,,,6/3/2026
-bliss-biggs-east-express,Bliss Biggs East Express,"El Paso, TX (Northeast_Dyer)",31.8277145,-106.4061606,,,,6/3/2026
-aafes-px-gas-station,AAFES PX Gas Station,"El Paso, TX (Far_East_Montana)",31.8002216,-106.4395241,,,,6/3/2026
-freeway-chevron,FREEWAY CHEVRON,"El Paso, TX (Far_East_Montana)",31.7640375,-106.3829644,4.4,,,6/3/2026
-western-fuel,Western fuel,"El Paso, TX (East_Side_Cielo_Vista)",31.770864,-106.3673694,,,,6/3/2026
-super-stop-23,Super Stop 23,"El Paso, TX (East_Side_Cielo_Vista)",31.7650859,-106.3572982,,,,6/3/2026
-dk-convenient-store/gas-station,DK Convenient Store/Gas Station,"El Paso, TX (Zaragosa_Lower_Valley)",31.7356976,-106.3303057,,,,6/3/2026
-"valero-""fast-mart""","Valero ""Fast Mart""","El Paso, TX (Zaragosa_Lower_Valley)",31.7378595,-106.3095234,,,,6/3/2026
-dk-convenience-store,DK Convenience Store,"El Paso, TX (Zaragosa_Lower_Valley)",31.7653262,-106.3481719,,,,6/3/2026
-chevron-el-paso-far-east-montana,Chevron El Paso Far East Montana,"El Paso, TX (Far_East_Montana)",31.8081137,-106.2776987,4.2,,,6/3/2026
-water-refill-station,Water Refill Station,"El Paso, TX (Far_East_Montana)",31.803409,-106.3029603,,,,6/3/2026
-nustar-energy---el-paso-terminal,NuStar Energy - El Paso Terminal,"El Paso, TX (Far_East_Montana)",31.8223608,-106.2766917,,,,6/3/2026
-quiktrip,Quiktrip,"El Paso, TX (Socorro_Horizon_Border)",31.685814,-106.2861944,3.73,,,6/3/2026
-murphy-express,Murphy Express,"El Paso, TX (Socorro_Horizon_Border)",31.6885755,-106.2814167,3.7,,,6/3/2026
-flying-j-travel-center,Flying J Travel Center,"El Paso, TX (Socorro_Horizon_Border)",31.6620526,-106.2561123,3.73,,,6/3/2026
-love's-travel-stop,Love's Travel Stop,"El Paso, TX (Socorro_Horizon_Border)",31.6598198,-106.2554586,3.73,,,6/3/2026
-in-n-out---marathon,In N Out - Marathon,"El Paso, TX (Socorro_Horizon_Border)",31.6562654,-106.3098212,4.0,,,6/3/2026
-phillips-66,Phillips 66,"El Paso, TX (Socorro_Horizon_Border)",31.7398113,-106.3651365,3.96,,,6/3/2026
-speedway,Speedway,"El Paso, TX (Socorro_Horizon_Border)",31.7256355,-106.2843653,0.0,0.0,0.0,2026-06-04
-chevron,Chevron,"El Paso, TX (Socorro_Horizon_Border)",31.704319,-106.298926,4.3,,,2026-06-04
-circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.783786,-106.4562414,0.0,0.0,0.0,2026-06-04
-dk-gas-station,DK Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7767363,-106.4304575,3.95,,,2026-06-04
-circle-k,Circle K,"El Paso, TX (Socorro_Horizon_Border)",31.7052302,-106.3003847,4.3,,,2026-06-04
-flyers,Flyers,"El Paso, TX (Zaragosa_Lower_Valley)",31.7489212,-106.3409759,0.0,0.0,0.0,2026-06-04
-windstar-gas-station,Windstar Gas Station,"El Paso, TX (Downtown_Central)",31.7548313,-106.5091717,0.0,0.0,0.0,2026-06-04
-valero,Valero,"El Paso, TX (Socorro_Horizon_Border)",31.679245,-106.3345322,4.0,,,2026-06-04
-chevron-howdy's,Chevron Howdy's,"El Paso, TX (Far_East_Montana)",31.7640375,-106.3829644,4.3,,,2026-06-04
-in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX (Upper_Valley)",31.7670812,-106.479743,0.0,0.0,0.0,2026-06-04
-parking,parking,"El Paso, TX (Downtown_Central)",31.7618778,-106.5030461,0.0,0.0,0.0,2026-06-04
-brio,Brio,"El Paso, TX (Far_East_Montana)",31.783787,-106.4479418,0.0,0.0,0.0,2026-06-04
-costco-gas-station,Costco Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.782414,-106.4290062,0.0,0.0,0.0,2026-06-04
-marathon,Marathon,"El Paso, TX (Downtown_Central)",31.7670812,-106.479743,0.0,0.0,0.0,2026-06-04
-gazpro-5-de-mayo,Gazpro 5 de Mayo,"El Paso, TX (Downtown_Central)",31.7440663,-106.4914757,0.0,0.0,0.0,2026-06-04
-alon-gas-station,ALON Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.6657638,-106.3262821,3.8,,,2026-06-04
-oxxo-gas,Oxxo Gas,"El Paso, TX (Downtown_Central)",31.760001,-106.5270014,0.0,0.0,0.0,2026-06-04
-payan's-fuel-center,Payan's Fuel Center,"El Paso, TX (Downtown_Central)",31.766977,-106.4792114,4.1,,,2026-06-04
-ram,Ram,"El Paso, TX (Downtown_Central)",31.7592188,-106.4920828,0.0,0.0,0.0,2026-06-04
-totalgas--lerdo,TotalGas- Lerdo,"El Paso, TX (Downtown_Central)",31.7428197,-106.4991963,0.0,0.0,0.0,2026-06-04
-ram-super-stop,Ram Super Stop,"El Paso, TX (Downtown_Central)",31.7670533,-106.4797085,0.0,0.0,0.0,2026-06-04
-gazpro-anapra,Gazpro Anapra,"El Paso, TX (Downtown_Central)",31.7521378,-106.5157245,0.0,0.0,0.0,2026-06-04
-pemex-gasolinera-5-de-mayo,Pemex Gasolinera 5 de mayo,"El Paso, TX (Downtown_Central)",31.7521378,-106.5157245,0.0,0.0,0.0,2026-06-04
-klemme-roadway,Klemme Roadway,"El Paso, TX (Socorro_Horizon_Border)",31.7833158,-106.4250496,0.0,0.0,0.0,2026-06-04
-gasolinera-pemex,Gasolinera Pemex,"El Paso, TX (Downtown_Central)",31.7428647,-106.4991714,0.0,0.0,0.0,2026-06-04
-tahsin-aslan-cumhuriyeti,Tahsin Aslan Cumhuriyeti,"El Paso, TX (Downtown_Central)",31.7428647,-106.4991714,0.0,0.0,0.0,2026-06-04
-c-&-r-distributing-llc,C & R Distributing LLC,"El Paso, TX (Socorro_Horizon_Border)",31.7886808,-106.4493156,0.0,0.0,0.0,2026-06-04
-pemex-gasolinera-tlaxcala,Pemex Gasolinera Tlaxcala,"El Paso, TX (Downtown_Central)",31.7433584,-106.4820212,0.0,0.0,0.0,2026-06-04
-711,711,"El Paso, TX (Socorro_Horizon_Border)",31.7256355,-106.2843653,0.0,0.0,0.0,2026-06-04
-dk,Dk,"El Paso, TX (Socorro_Horizon_Border)",31.7811996,-106.4248036,0.0,0.0,0.0,2026-06-04
-valero-corner-store,Valero Corner Store,"El Paso, TX (Northeast_Dyer)",31.7883855,-106.4672847,4.3,,,2026-06-04
-gazpro-tlaxcala,Gazpro Tlaxcala,"El Paso, TX (Downtown_Central)",31.7433798,-106.4819629,0.0,0.0,0.0,2026-06-04
-mesa-hills-valero,Mesa Hills Valero,"El Paso, TX (West_Side_Mesa)",31.818696,-106.5335138,4.16,,,2026-06-04
-mesa-hills-shamrock,MESA HILLS SHAMROCK,"El Paso, TX (West_Side_Mesa)",31.818253,-106.5337944,0.0,0.0,0.0,2026-06-04
-cassidy-express,Cassidy Express,"El Paso, TX (Far_East_Montana)",31.7966888,-106.3663094,0.0,0.0,0.0,2026-06-04
-murphy's-usa,Murphy's USA,"El Paso, TX (West_Side_Mesa)",31.8379277,-106.5786916,3.83,,,2026-06-04
-sam's-club-gas-station,Sam's Club Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7052302,-106.3003847,0.0,0.0,0.0,2026-06-04
-walmart-fuel-&-convenience,Walmart Fuel & Convenience,"El Paso, TX (Upper_Valley)",31.8840023,-106.5967574,0.0,0.0,0.0,2026-06-04
-murphy-usa,Murphy USA,"El Paso, TX (Socorro_Horizon_Border)",31.6987501,-106.2594515,0.0,0.0,0.0,2026-06-04
-giant,Giant,"El Paso, TX (Upper_Valley)",31.8789953,-106.5866748,0.0,0.0,0.0,2026-06-04
-fast-market-8168,Fast Market 8168,"El Paso, TX (Upper_Valley)",31.8517694,-106.5738275,0.0,0.0,0.0,2026-06-04
-station-54,STATION 54,"El Paso, TX (Northeast_Dyer)",31.8488722,-106.457339,0.0,0.0,0.0,2026-06-04
-logan-heights-express,Logan Heights Express,"El Paso, TX (Northeast_Dyer)",31.839986,-106.4616804,0.0,0.0,0.0,2026-06-04
-good-time-stores,Good Time Stores,"El Paso, TX (Northeast_Dyer)",31.853124,-106.456742,0.0,0.0,0.0,2026-06-04
-aafes,AAFES,"El Paso, TX (Northeast_Dyer)",31.8655016,-106.4413854,0.0,0.0,0.0,2026-06-04
-bliss-biggs-east-express,Bliss Biggs East Express,"El Paso, TX (Northeast_Dyer)",31.8277145,-106.4061606,0.0,0.0,0.0,2026-06-04
-aafes-px-gas-station,AAFES PX Gas Station,"El Paso, TX (Far_East_Montana)",31.7750579,-106.3920526,0.0,0.0,0.0,2026-06-04
-freeway-chevron,FREEWAY CHEVRON,"El Paso, TX (Far_East_Montana)",31.7640375,-106.3829644,4.4,,,2026-06-04
-western-fuel,Western fuel,"El Paso, TX (East_Side_Cielo_Vista)",31.7766157,-106.4088902,0.0,0.0,0.0,2026-06-04
-phillips-66,Phillips 66,"El Paso, TX (Socorro_Horizon_Border)",31.7398113,-106.3651365,3.9,,,2026-06-04
-shell,Shell,"El Paso, TX (East_Side_Cielo_Vista)",31.765342,-106.3573634,4.4,,,2026-06-04
-dk-convenient-store/gas-station,DK Convenient Store/Gas Station,"El Paso, TX (Zaragosa_Lower_Valley)",31.7356976,-106.3303057,0.0,0.0,0.0,2026-06-04
-"valero-""fast-mart""","Valero ""Fast Mart""","El Paso, TX (Zaragosa_Lower_Valley)",31.7378595,-106.3095234,0.0,0.0,0.0,2026-06-04
-dk-convenience-store,DK Convenience Store,"El Paso, TX (Zaragosa_Lower_Valley)",31.7653262,-106.3481719,0.0,0.0,0.0,2026-06-04
-chevron-el-paso-far-east-montana,Chevron El Paso Far East Montana,"El Paso, TX (Far_East_Montana)",31.8081137,-106.2776987,4.3,,,2026-06-04
-water-refill-station,Water Refill Station,"El Paso, TX (Far_East_Montana)",31.803409,-106.3029603,0.0,0.0,0.0,2026-06-04
-nustar-energy---el-paso-terminal,NuStar Energy - El Paso Terminal,"El Paso, TX (Far_East_Montana)",31.8223608,-106.2766917,0.0,0.0,0.0,2026-06-04
-quiktrip,Quiktrip,"El Paso, TX (Socorro_Horizon_Border)",31.685814,-106.2861944,4.0,,,2026-06-04
-murphy-express,Murphy Express,"El Paso, TX (Socorro_Horizon_Border)",31.6885755,-106.2814167,3.7,,,2026-06-04
-flying-j-travel-center,Flying J Travel Center,"El Paso, TX (Socorro_Horizon_Border)",31.6885755,-106.2814167,3.73,,,2026-06-04
-love's-travel-stop,Love's Travel Stop,"El Paso, TX (Socorro_Horizon_Border)",31.6598198,-106.2554586,3.73,,,2026-06-04
-in-n-out---marathon,In N Out - Marathon,"El Paso, TX (Socorro_Horizon_Border)",31.6562654,-106.3098212,4.0,,,2026-06-04
-speedway,Speedway,"El Paso, TX (Socorro_Horizon_Border)",31.6589727,-106.2924948,0.0,0.0,0.0,2026-06-05
-chevron,Chevron,"El Paso, TX (Socorro_Horizon_Border)",31.7679892,-106.4503966,4.3,,,2026-06-05
-circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.783828,-106.4131114,0.0,0.0,0.0,2026-06-05
-dk-gas-station,DK Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7767363,-106.4304575,4.2,,,2026-06-05
-circle-k,Circle K,"El Paso, TX (Socorro_Horizon_Border)",31.691252,-106.2797869,3.74,,,2026-06-05
-chevron-howdy's,Chevron Howdy's,"El Paso, TX (Socorro_Horizon_Border)",31.7770087,-106.4846444,4.3,,,2026-06-05
-alon-gas-station,ALON Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.791252,-106.4228004,4.3,,,2026-06-05
-valero,Valero,"El Paso, TX (Socorro_Horizon_Border)",31.6780314,-106.3335587,4.0,,,2026-06-05
-in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7770087,-106.4846444,0.0,0.0,0.0,2026-06-05
-flyers,Flyers,"El Paso, TX (Zaragosa_Lower_Valley)",31.7489212,-106.3409759,0.0,0.0,0.0,2026-06-05
-windstar-gas-station,Windstar Gas Station,"El Paso, TX (Downtown_Central)",31.7548313,-106.5091717,0.0,0.0,0.0,2026-06-05
-costco-gas-station,Costco Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.782414,-106.4290062,0.0,0.0,0.0,2026-06-05
-parking,parking,"El Paso, TX (Downtown_Central)",31.7618778,-106.5030461,0.0,0.0,0.0,2026-06-05
-brio,Brio,"El Paso, TX (Socorro_Horizon_Border)",31.7681631,-106.4413088,0.0,0.0,0.0,2026-06-05
-marathon,Marathon,"El Paso, TX (Downtown_Central)",31.7670812,-106.479743,0.0,0.0,0.0,2026-06-05
-711,711,"El Paso, TX (Socorro_Horizon_Border)",31.7810247,-106.4439032,0.0,0.0,0.0,2026-06-05
-gazpro-5-de-mayo,Gazpro 5 de Mayo,"El Paso, TX (Downtown_Central)",31.7440663,-106.4914757,0.0,0.0,0.0,2026-06-05
-payan's-fuel-center,Payan's Fuel Center,"El Paso, TX (Downtown_Central)",31.766977,-106.4792114,4.1,,,2026-06-05
-ram-super-stop,Ram Super Stop,"El Paso, TX (Downtown_Central)",31.766977,-106.4792114,0.0,0.0,0.0,2026-06-05
-ram,Ram,"El Paso, TX (Downtown_Central)",31.7592188,-106.4920828,0.0,0.0,0.0,2026-06-05
-valero-corner-store,Valero Corner Store,"El Paso, TX (Socorro_Horizon_Border)",31.7883855,-106.4672847,4.3,,,2026-06-05
-oxxo-gas,Oxxo Gas,"El Paso, TX (Downtown_Central)",31.760001,-106.5270014,0.0,0.0,0.0,2026-06-05
-totalgas--lerdo,TotalGas- Lerdo,"El Paso, TX (Downtown_Central)",31.7428197,-106.4991963,0.0,0.0,0.0,2026-06-05
-klemme-roadway,Klemme Roadway,"El Paso, TX (Socorro_Horizon_Border)",31.7833158,-106.4250496,0.0,0.0,0.0,2026-06-05
-gazpro-anapra,Gazpro Anapra,"El Paso, TX (Downtown_Central)",31.7521378,-106.5157245,0.0,0.0,0.0,2026-06-05
-pemex-gasolinera-5-de-mayo,Pemex Gasolinera 5 de mayo,"El Paso, TX (Downtown_Central)",31.7441551,-106.4913405,0.0,0.0,0.0,2026-06-05
-c-&-r-distributing-llc,C & R Distributing LLC,"El Paso, TX (Socorro_Horizon_Border)",31.7770087,-106.4846444,0.0,0.0,0.0,2026-06-05
-gasolinera-pemex,Gasolinera Pemex,"El Paso, TX (Downtown_Central)",31.7428647,-106.4991714,0.0,0.0,0.0,2026-06-05
-mesa-hills-valero,Mesa Hills Valero,"El Paso, TX (West_Side_Mesa)",31.818696,-106.5335138,4.16,,,2026-06-05
-dk,Dk,"El Paso, TX (Socorro_Horizon_Border)",31.7811996,-106.4248036,0.0,0.0,0.0,2026-06-05
-mesa-hills-shamrock,MESA HILLS SHAMROCK,"El Paso, TX (West_Side_Mesa)",31.818253,-106.5337944,0.0,0.0,0.0,2026-06-05
-cassidy-express,Cassidy Express,"El Paso, TX (Socorro_Horizon_Border)",31.8132896,-106.4496756,0.0,0.0,0.0,2026-06-05
-sam's-club-gas-station,Sam's Club Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7767451,-106.4045261,0.0,0.0,0.0,2026-06-05
-walmart-fuel-&-convenience,Walmart Fuel & Convenience,"El Paso, TX (Upper_Valley)",31.8840023,-106.5967574,0.0,0.0,0.0,2026-06-05
-murphy-usa,Murphy USA,"El Paso, TX (Socorro_Horizon_Border)",31.6536896,-106.3074275,3.73,,,2026-06-05
-giant,Giant,"El Paso, TX (Upper_Valley)",31.8836075,-106.5945523,0.0,0.0,0.0,2026-06-05
-aafes-px-gas-station,AAFES PX Gas Station,"El Paso, TX (Far_East_Montana)",31.8002216,-106.4395241,0.0,0.0,0.0,2026-06-05
-station-54,STATION 54,"El Paso, TX (Northeast_Dyer)",31.8488722,-106.457339,0.0,0.0,0.0,2026-06-05
-logan-heights-express,Logan Heights Express,"El Paso, TX (Northeast_Dyer)",31.839986,-106.4616804,0.0,0.0,0.0,2026-06-05
-aafes,AAFES,"El Paso, TX (Northeast_Dyer)",31.8130669,-106.4496574,0.0,0.0,0.0,2026-06-05
-bliss-biggs-east-express,Bliss Biggs East Express,"El Paso, TX (Northeast_Dyer)",31.8277145,-106.4061606,0.0,0.0,0.0,2026-06-05
-good-time-stores,Good Time Stores,"El Paso, TX (Northeast_Dyer)",31.853124,-106.456742,0.0,0.0,0.0,2026-06-05
-freeway-chevron,FREEWAY CHEVRON,"El Paso, TX (Far_East_Montana)",31.7640375,-106.3829644,4.4,,,2026-06-05
-western-fuel,Western fuel,"El Paso, TX (East_Side_Cielo_Vista)",31.7766157,-106.4088902,0.0,0.0,0.0,2026-06-05
-phillips-66,Phillips 66,"El Paso, TX (Socorro_Horizon_Border)",31.7398113,-106.3651365,3.9,,,2026-06-05
-dk-convenient-store/gas-station,DK Convenient Store/Gas Station,"El Paso, TX (Zaragosa_Lower_Valley)",31.7356976,-106.3303057,0.0,0.0,0.0,2026-06-05
-chevron-el-paso-far-east-montana,Chevron El Paso Far East Montana,"El Paso, TX (Far_East_Montana)",31.8081137,-106.2776987,4.3,,,2026-06-05
-water-refill-station,Water Refill Station,"El Paso, TX (Far_East_Montana)",31.803409,-106.3029603,0.0,0.0,0.0,2026-06-05
-nustar-energy---el-paso-terminal,NuStar Energy - El Paso Terminal,"El Paso, TX (Far_East_Montana)",31.8223608,-106.2766917,0.0,0.0,0.0,2026-06-05
-quiktrip,Quiktrip,"El Paso, TX (Socorro_Horizon_Border)",31.685814,-106.2861944,4.3,,,2026-06-05
-flying-j-travel-center,Flying J Travel Center,"El Paso, TX (Socorro_Horizon_Border)",31.6620526,-106.2561123,3.73,,,2026-06-05
-love's-travel-stop,Love's Travel Stop,"El Paso, TX (Socorro_Horizon_Border)",31.6598198,-106.2554586,3.73,,,2026-06-05
-murphy-express,Murphy Express,"El Paso, TX (Socorro_Horizon_Border)",31.6885755,-106.2814167,3.7,,,2026-06-05
-in-n-out---marathon,In N Out - Marathon,"El Paso, TX (Socorro_Horizon_Border)",31.6562654,-106.3098212,4.0,,,2026-06-05
-speedway,Speedway,"El Paso, TX (Socorro_Horizon_Border)",31.7256355,-106.2843653,0.0,0.0,0.0,2026-06-08
-chevron,Chevron,"El Paso, TX (Socorro_Horizon_Border)",31.7052302,-106.3003847,4.3,,,2026-06-08
-circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.783786,-106.4562414,0.0,0.0,0.0,2026-06-08
-dk-gas-station,DK Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7810047,-106.4253881,4.2,,,2026-06-08
-circle-k,Circle K,"El Paso, TX (Socorro_Horizon_Border)",31.7052302,-106.3003847,3.87,,,2026-06-08
-valero,Valero,"El Paso, TX (Socorro_Horizon_Border)",31.679245,-106.3345322,4.0,,,2026-06-08
-flyers,Flyers,"El Paso, TX (Zaragosa_Lower_Valley)",31.7489212,-106.3409759,0.0,0.0,0.0,2026-06-08
-windstar-gas-station,Windstar Gas Station,"El Paso, TX (Downtown_Central)",31.7548313,-106.5091717,0.0,0.0,0.0,2026-06-08
-chevron-howdy's,Chevron Howdy's,"El Paso, TX (Far_East_Montana)",31.7770087,-106.4846444,4.3,,,2026-06-08
-in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX (Upper_Valley)",31.7670812,-106.479743,0.0,0.0,0.0,2026-06-08
-costco-gas-station,Costco Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.782414,-106.4290062,0.0,0.0,0.0,2026-06-08
-brio,Brio,"El Paso, TX (Far_East_Montana)",31.7681631,-106.4413088,0.0,0.0,0.0,2026-06-08
-parking,parking,"El Paso, TX (Downtown_Central)",31.7679892,-106.4503966,0.0,0.0,0.0,2026-06-08
-marathon,Marathon,"El Paso, TX (Downtown_Central)",31.7679892,-106.4503966,0.0,0.0,0.0,2026-06-08
-alon-gas-station,ALON Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.6657638,-106.3262821,3.9,,,2026-06-08
-gazpro-5-de-mayo,Gazpro 5 de Mayo,"El Paso, TX (Downtown_Central)",31.7670812,-106.479743,0.0,0.0,0.0,2026-06-08
-oxxo-gas,Oxxo Gas,"El Paso, TX (Downtown_Central)",31.760001,-106.5270014,0.0,0.0,0.0,2026-06-08
-ram,Ram,"El Paso, TX (Downtown_Central)",31.760001,-106.5270014,0.0,0.0,0.0,2026-06-08
-totalgas--lerdo,TotalGas- Lerdo,"El Paso, TX (Downtown_Central)",31.7592188,-106.4920828,0.0,0.0,0.0,2026-06-08
-payan's-fuel-center,Payan's Fuel Center,"El Paso, TX (Downtown_Central)",31.766977,-106.4792114,4.1,,,2026-06-08
-gazpro-anapra,Gazpro Anapra,"El Paso, TX (Downtown_Central)",31.766977,-106.4792114,0.0,0.0,0.0,2026-06-08
-ram-super-stop,Ram Super Stop,"El Paso, TX (Downtown_Central)",31.766977,-106.4792114,0.0,0.0,0.0,2026-06-08
-klemme-roadway,Klemme Roadway,"El Paso, TX (Socorro_Horizon_Border)",31.7833158,-106.4250496,0.0,0.0,0.0,2026-06-08
-pemex-gasolinera-5-de-mayo,Pemex Gasolinera 5 de mayo,"El Paso, TX (Downtown_Central)",31.7441551,-106.4913405,0.0,0.0,0.0,2026-06-08
-gasolinera-pemex,Gasolinera Pemex,"El Paso, TX (Downtown_Central)",31.7441551,-106.4913405,0.0,0.0,0.0,2026-06-08
-c-&-r-distributing-llc,C & R Distributing LLC,"El Paso, TX (Socorro_Horizon_Border)",31.7792925,-106.4291065,0.0,0.0,0.0,2026-06-08
-tahsin-aslan-cumhuriyeti,Tahsin Aslan Cumhuriyeti,"El Paso, TX (Downtown_Central)",31.7618778,-106.5030461,0.0,0.0,0.0,2026-06-08
-pemex-gasolinera-tlaxcala,Pemex Gasolinera Tlaxcala,"El Paso, TX (Downtown_Central)",31.7618778,-106.5030461,0.0,0.0,0.0,2026-06-08
-711,711,"El Paso, TX (Socorro_Horizon_Border)",31.7810247,-106.4439032,0.0,0.0,0.0,2026-06-08
-valero-corner-store,Valero Corner Store,"El Paso, TX (Far_East_Montana)",31.7883855,-106.4672847,4.0,,,2026-06-08
-dk,Dk,"El Paso, TX (Socorro_Horizon_Border)",31.7811996,-106.4248036,0.0,0.0,0.0,2026-06-08
-mesa-hills-valero,Mesa Hills Valero,"El Paso, TX (West_Side_Mesa)",31.818696,-106.5335138,4.3,,,2026-06-08
-mesa-hills-shamrock,MESA HILLS SHAMROCK,"El Paso, TX (West_Side_Mesa)",31.818253,-106.5337944,0.0,0.0,0.0,2026-06-08
-cassidy-express,Cassidy Express,"El Paso, TX (Far_East_Montana)",31.8132896,-106.4496756,0.0,0.0,0.0,2026-06-08
-murphy's-usa,Murphy's USA,"El Paso, TX (West_Side_Mesa)",31.8517694,-106.5738275,3.83,,,2026-06-08
-sam's-club-gas-station,Sam's Club Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7767451,-106.4045261,0.0,0.0,0.0,2026-06-08
-walmart-fuel-&-convenience,Walmart Fuel & Convenience,"El Paso, TX (Upper_Valley)",31.8840023,-106.5967574,0.0,0.0,0.0,2026-06-08
-murphy-usa,Murphy USA,"El Paso, TX (Socorro_Horizon_Border)",31.6987501,-106.2594515,0.0,0.0,0.0,2026-06-08
-giant,Giant,"El Paso, TX (Upper_Valley)",31.8789953,-106.5866748,0.0,0.0,0.0,2026-06-08
-fast-market-8168,Fast Market 8168,"El Paso, TX (Upper_Valley)",31.8612739,-106.567382,0.0,0.0,0.0,2026-06-08
-station-54,STATION 54,"El Paso, TX (Northeast_Dyer)",31.8488722,-106.457339,0.0,0.0,0.0,2026-06-08
-logan-heights-express,Logan Heights Express,"El Paso, TX (Northeast_Dyer)",31.839986,-106.4616804,0.0,0.0,0.0,2026-06-08
-aafes,AAFES,"El Paso, TX (Northeast_Dyer)",31.8367682,-106.3835532,0.0,0.0,0.0,2026-06-08
-good-time-stores,Good Time Stores,"El Paso, TX (Northeast_Dyer)",31.853124,-106.456742,0.0,0.0,0.0,2026-06-08
-bliss-biggs-east-express,Bliss Biggs East Express,"El Paso, TX (Northeast_Dyer)",31.8277145,-106.4061606,0.0,0.0,0.0,2026-06-08
-aafes-px-gas-station,AAFES PX Gas Station,"El Paso, TX (Far_East_Montana)",31.8002216,-106.4395241,0.0,0.0,0.0,2026-06-08
-freeway-chevron,FREEWAY CHEVRON,"El Paso, TX (Far_East_Montana)",31.7640375,-106.3829644,4.4,,,2026-06-08
-western-fuel,Western fuel,"El Paso, TX (East_Side_Cielo_Vista)",31.7766157,-106.4088902,0.0,0.0,0.0,2026-06-08
-phillips-66,Phillips 66,"El Paso, TX (Socorro_Horizon_Border)",31.7398113,-106.3651365,3.9,,,2026-06-08
-shell,Shell,"El Paso, TX (East_Side_Cielo_Vista)",31.765342,-106.3573634,4.3,,,2026-06-08
-dk-convenient-store/gas-station,DK Convenient Store/Gas Station,"El Paso, TX (Zaragosa_Lower_Valley)",31.7356976,-106.3303057,0.0,0.0,0.0,2026-06-08
-"valero-""fast-mart""","Valero ""Fast Mart""","El Paso, TX (Zaragosa_Lower_Valley)",31.7378595,-106.3095234,0.0,0.0,0.0,2026-06-08
-dk-convenience-store,DK Convenience Store,"El Paso, TX (Zaragosa_Lower_Valley)",31.7653262,-106.3481719,0.0,0.0,0.0,2026-06-08
-chevron-el-paso-far-east-montana,Chevron El Paso Far East Montana,"El Paso, TX (Far_East_Montana)",31.8081137,-106.2776987,4.2,,,2026-06-08
-water-refill-station,Water Refill Station,"El Paso, TX (Far_East_Montana)",31.803409,-106.3029603,0.0,0.0,0.0,2026-06-08
-nustar-energy---el-paso-terminal,NuStar Energy - El Paso Terminal,"El Paso, TX (Far_East_Montana)",31.8223608,-106.2766917,0.0,0.0,0.0,2026-06-08
-quiktrip,Quiktrip,"El Paso, TX (Socorro_Horizon_Border)",31.685814,-106.2861944,4.0,,,2026-06-08
-murphy-express,Murphy Express,"El Paso, TX (Socorro_Horizon_Border)",31.6885755,-106.2814167,3.68,,,2026-06-08
-flying-j-travel-center,Flying J Travel Center,"El Paso, TX (Socorro_Horizon_Border)",31.6620526,-106.2561123,4.3,,,2026-06-08
-love's-travel-stop,Love's Travel Stop,"El Paso, TX (Socorro_Horizon_Border)",31.6598198,-106.2554586,4.0,,,2026-06-08
-in-n-out---marathon,In N Out - Marathon,"El Paso, TX (Socorro_Horizon_Border)",31.6562654,-106.3098212,4.0,,,2026-06-08
-chevron,Chevron,"El Paso, TX (Socorro_Horizon_Border)",31.7679892,-106.4503966,0.0,0.0,0.0,06/10/2026
-speedway,Speedway,"El Paso, TX (Socorro_Horizon_Border)",31.7770087,-106.4846444,0.0,0.0,0.0,06/10/2026
-valero,Valero,"El Paso, TX (Socorro_Horizon_Border)",31.6780314,-106.3335587,0.0,0.0,0.0,06/10/2026
-circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7591,-106.4064644,0.0,0.0,0.0,06/10/2026
-dk-gas-station,DK Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7767363,-106.4304575,0.0,0.0,0.0,06/10/2026
-circle-k,Circle K,"El Paso, TX (Socorro_Horizon_Border)",31.691252,-106.2797869,0.0,0.0,0.0,06/10/2026
-chevron-howdy's,Chevron Howdy's,"El Paso, TX (Socorro_Horizon_Border)",31.7770087,-106.4846444,0.0,0.0,0.0,06/10/2026
-in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7770087,-106.4846444,0.0,0.0,0.0,06/10/2026
-flyers,Flyers,"El Paso, TX (Zaragosa_Lower_Valley)",31.7489212,-106.3409759,0.0,0.0,0.0,06/10/2026
-windstar-gas-station,Windstar Gas Station,"El Paso, TX (Downtown_Central)",31.7548313,-106.5091717,0.0,0.0,0.0,06/10/2026
-costco-gas-station,Costco Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.782414,-106.4290062,0.0,0.0,0.0,06/10/2026
-alon-gas-station,ALON Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.6657638,-106.3262821,0.0,0.0,0.0,06/10/2026
-parking,parking,"El Paso, TX (Downtown_Central)",31.7618778,-106.5030461,0.0,0.0,0.0,06/10/2026
-brio,Brio,"El Paso, TX (Far_East_Montana)",31.7681631,-106.4413088,0.0,0.0,0.0,06/10/2026
-marathon,Marathon,"El Paso, TX (Downtown_Central)",31.7670812,-106.479743,0.0,0.0,0.0,06/10/2026
-klemme-roadway,Klemme Roadway,"El Paso, TX (Socorro_Horizon_Border)",31.7833158,-106.4250496,0.0,0.0,0.0,06/10/2026
-dk,Dk,"El Paso, TX (Socorro_Horizon_Border)",31.7811996,-106.4248036,0.0,0.0,0.0,06/10/2026
-711,711,"El Paso, TX (Socorro_Horizon_Border)",31.7810247,-106.4439032,0.0,0.0,0.0,06/10/2026
-gazpro-5-de-mayo,Gazpro 5 de Mayo,"El Paso, TX (Downtown_Central)",31.7440663,-106.4914757,0.0,0.0,0.0,06/10/2026
-ram,Ram,"El Paso, TX (Downtown_Central)",31.7592188,-106.4920828,0.0,0.0,0.0,06/10/2026
-valero-corner-store,Valero Corner Store,"El Paso, TX (Socorro_Horizon_Border)",31.7883855,-106.4672847,0.0,0.0,0.0,06/10/2026
-payan's-fuel-center,Payan's Fuel Center,"El Paso, TX (Downtown_Central)",31.766977,-106.4792114,0.0,0.0,0.0,06/10/2026
-oxxo-gas,Oxxo Gas,"El Paso, TX (Downtown_Central)",31.760001,-106.5270014,0.0,0.0,0.0,06/10/2026
-ram-super-stop,Ram Super Stop,"El Paso, TX (Downtown_Central)",31.7670533,-106.4797085,0.0,0.0,0.0,06/10/2026
-c-&-r-distributing-llc,C & R Distributing LLC,"El Paso, TX (Socorro_Horizon_Border)",31.7792925,-106.4291065,0.0,0.0,0.0,06/10/2026
-totalgas--lerdo,TotalGas- Lerdo,"El Paso, TX (Downtown_Central)",31.7428197,-106.4991963,0.0,0.0,0.0,06/10/2026
-gazpro-anapra,Gazpro Anapra,"El Paso, TX (Downtown_Central)",31.7521378,-106.5157245,0.0,0.0,0.0,06/10/2026
-pemex-gasolinera-5-de-mayo,Pemex Gasolinera 5 de mayo,"El Paso, TX (Downtown_Central)",31.7441551,-106.4913405,0.0,0.0,0.0,06/10/2026
-mesa-hills-valero,Mesa Hills Valero,"El Paso, TX (West_Side_Mesa)",31.818696,-106.5335138,0.0,0.0,0.0,06/10/2026
-mesa-hills-shamrock,MESA HILLS SHAMROCK,"El Paso, TX (West_Side_Mesa)",31.818253,-106.5337944,0.0,0.0,0.0,06/10/2026
-cassidy-express,Cassidy Express,"El Paso, TX (Far_East_Montana)",31.8132896,-106.4496756,0.0,0.0,0.0,06/10/2026
-sam's-club-gas-station,Sam's Club Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7767451,-106.4045261,0.0,0.0,0.0,06/10/2026
-aafes-px-gas-station,AAFES PX Gas Station,"El Paso, TX (Far_East_Montana)",31.8002216,-106.4395241,0.0,0.0,0.0,06/10/2026
-walmart-fuel-&-convenience,Walmart Fuel & Convenience,"El Paso, TX (Upper_Valley)",31.8840023,-106.5967574,0.0,0.0,0.0,06/10/2026
-murphy-usa,Murphy USA,"El Paso, TX (Socorro_Horizon_Border)",31.6916915,-106.3241961,0.0,0.0,0.0,06/10/2026
-giant,Giant,"El Paso, TX (Upper_Valley)",31.8789953,-106.5866748,0.0,0.0,0.0,06/10/2026
-station-54,STATION 54,"El Paso, TX (Northeast_Dyer)",31.8488722,-106.457339,0.0,0.0,0.0,06/10/2026
-logan-heights-express,Logan Heights Express,"El Paso, TX (Northeast_Dyer)",31.839986,-106.4616804,0.0,0.0,0.0,06/10/2026
-aafes,AAFES,"El Paso, TX (Northeast_Dyer)",31.8367682,-106.3835532,0.0,0.0,0.0,06/10/2026
-bliss-biggs-east-express,Bliss Biggs East Express,"El Paso, TX (Northeast_Dyer)",31.8277145,-106.4061606,0.0,0.0,0.0,06/10/2026
-good-time-stores,Good Time Stores,"El Paso, TX (Northeast_Dyer)",31.853124,-106.456742,0.0,0.0,0.0,06/10/2026
-freeway-chevron,FREEWAY CHEVRON,"El Paso, TX (Socorro_Horizon_Border)",31.7640375,-106.3829644,0.0,0.0,0.0,06/10/2026
-western-fuel,Western fuel,"El Paso, TX (East_Side_Cielo_Vista)",31.7766157,-106.4088902,0.0,0.0,0.0,06/10/2026
-phillips-66,Phillips 66,"El Paso, TX (Socorro_Horizon_Border)",31.7398113,-106.3651365,0.0,0.0,0.0,06/10/2026
-dk-convenient-store/gas-station,DK Convenient Store/Gas Station,"El Paso, TX (Zaragosa_Lower_Valley)",31.7356976,-106.3303057,0.0,0.0,0.0,06/10/2026
-dk-convenience-store,DK Convenience Store,"El Paso, TX (Zaragosa_Lower_Valley)",31.7571875,-106.3472175,0.0,0.0,0.0,06/10/2026
-chevron-el-paso-far-east-montana,Chevron El Paso Far East Montana,"El Paso, TX (Far_East_Montana)",31.8081137,-106.2776987,0.0,0.0,0.0,06/10/2026
-water-refill-station,Water Refill Station,"El Paso, TX (Far_East_Montana)",31.803409,-106.3029603,0.0,0.0,0.0,06/10/2026
-nustar-energy---el-paso-terminal,NuStar Energy - El Paso Terminal,"El Paso, TX (Far_East_Montana)",31.8223608,-106.2766917,0.0,0.0,0.0,06/10/2026
-quiktrip,Quiktrip,"El Paso, TX (Socorro_Horizon_Border)",31.685814,-106.2861944,0.0,0.0,0.0,06/10/2026
-flying-j-travel-center,Flying J Travel Center,"El Paso, TX (Socorro_Horizon_Border)",31.6620526,-106.2561123,0.0,0.0,0.0,06/10/2026
-love's-travel-stop,Love's Travel Stop,"El Paso, TX (Socorro_Horizon_Border)",31.6598198,-106.2554586,0.0,0.0,0.0,06/10/2026
-murphy-express,Murphy Express,"El Paso, TX (Socorro_Horizon_Border)",31.6885755,-106.2814167,0.0,0.0,0.0,06/10/2026
-in-n-out---marathon,In N Out - Marathon,"El Paso, TX (Socorro_Horizon_Border)",31.6619098,-106.314599,0.0,0.0,0.0,06/10/2026
+circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX 79925",,,,,,05/30/2026
+windstar-gas-station,Windstar Gas Station,"El Paso, TX 79901",,,,,,05/30/2026
+dk-gas-station,DK Gas Station,"El Paso, TX 79912",,,4.02,,,05/30/2026
+chevron,Chevron,"El Paso, TX 79924",,,4.6,,,05/30/2026
+speedway,Speedway,"El Paso, TX 79925",,,,,,05/30/2026
+flyers,Flyers,"El Paso, TX 79901",,,,,,05/30/2026
+in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX 79901",,,,,,05/30/2026
+alon-gas-station,ALON Gas Station,"El Paso, TX 79925",,,3.95,,,05/30/2026
+mesa-hills-valero,Mesa Hills Valero,"El Paso, TX 79912",,,4.16,,,05/30/2026
+circle-k-gas-station,Circle K Gas Station,"El Paso, TX 79936",,,3.85,,,05/30/2026
+murphy-usa,Murphy USA,"El Paso, TX 79936",,,3.82,,,05/30/2026
+valero,Valero,"El Paso, TX 79936",,,3.86,,,05/30/2026
+circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX 79938",31.745064,-106.4639476,,,,05/31/2026
+windstar-gas-station,Windstar Gas Station,"El Paso, TX 79934",31.818696,-106.659685,,,,05/31/2026
+dk-gas-station,DK Gas Station,"El Paso, TX 79936",31.7416774,-106.4256875,4.0,,,05/31/2026
+speedway,Speedway,"El Paso, TX 79938",31.779059,-106.5360634,,,,05/31/2026
+in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX 79935",31.813356,-106.6059946,,,,05/31/2026
+flyers,Flyers,"El Paso, TX 79935",31.7737337,-106.6441404,,,,05/31/2026
+chevron-howdy's,Chevron Howdy's,"El Paso, TX 79934",31.818696,-106.659685,4.4,,,05/31/2026
+valero,Valero,"El Paso, TX 79938",31.7537884,-106.4625185,3.8,,,05/31/2026
+alon-gas-station,ALON Gas Station,"El Paso, TX 79938",31.7571875,-106.4733887,3.92,,,05/31/2026
+chevron,Chevron,"El Paso, TX 79934",31.9236188,-106.5844405,4.6,,,05/31/2026
+parking,parking,"El Paso, TX 79901",31.7618778,-106.5210706,,,,05/31/2026
+tahsin-aslan-cumhuriyeti,Tahsin Aslan Cumhuriyeti,"El Paso, TX 79901",31.7576291,-106.5146604,,,,05/31/2026
+ram,Ram,"El Paso, TX 79901",31.7576291,-106.5146604,,,,05/31/2026
+texaco-service-station-(former),Texaco Service Station (Former),"El Paso, TX 79934",31.7859338,-106.6064318,,,,05/31/2026
+circle-k,Circle K,"El Paso, TX 79936",31.7769866,-106.338836,3.85,,,05/31/2026
+quick-mart,Quick Mart,"El Paso, TX 79901",31.7547176,-106.5271964,4.4,,,05/31/2026
+brio,Brio,"El Paso, TX 79901",31.770173,-106.5040306,,,,05/31/2026
+dk,DK,"El Paso, TX 79935",31.7924773,-106.6520973,,,,05/31/2026
+mesa-hills-valero,Mesa Hills Valero,"El Paso, TX 79935",31.813356,-106.6059946,4.16,,,05/31/2026
+payan's-fuel-center,Payan's Fuel Center,"El Paso, TX 79905",31.766977,-106.5332848,4.1,,,05/31/2026
+e-schuster,e schuster,"El Paso, TX 79901",31.7764291,-106.5210585,,,,05/31/2026
+paisano-super-stop,Paisano Super Stop,"El Paso, TX 79901",31.7592423,-106.5102265,,,,05/31/2026
+ram-super-stop,Ram Super Stop,"El Paso, TX 79901",31.7670533,-106.497733,,,,05/31/2026
+marathon,Marathon,"El Paso, TX 79901",31.7670533,-106.497733,,,,05/31/2026
+costco-gas-station,Costco Gas Station,"El Paso, TX 79938",31.782414,-106.5551774,,,,05/31/2026
+diamond-shamrock,Diamond Shamrock,"El Paso, TX 79901",31.7793522,-106.487123,,,,05/31/2026
+valero-corner-store,Valero Corner Store,"El Paso, TX 79935",31.7883855,-106.5934559,4.1,,,05/31/2026
+station-54,STATION 54,"El Paso, TX 79938",31.8488722,-106.5835102,,,,05/31/2026
+murphy-usa,Murphy USA,"El Paso, TX 79938",31.8053881,-106.4045155,3.8,,,05/31/2026
+freeway-chevron,FREEWAY CHEVRON,"El Paso, TX 79936",31.766595,-106.4349878,4.4,,,05/31/2026
+murphy's-usa,Murphy's USA,"El Paso, TX 79912",31.8379277,-106.632765,3.86,,,05/31/2026
+walmart-fuel-&-convenience,Walmart Fuel & Convenience,"El Paso, TX 79932",31.8840023,-106.7229286,,,,05/31/2026
+sam's-club-gas-station,Sam's Club Gas Station,"El Paso, TX 79936",31.7767451,-106.4585995,,,,05/31/2026
+gas-station,Gas Station,"El Paso, TX 79938",31.796972,-106.3617756,,,,05/31/2026
+giant,Giant,"El Paso, TX 79912",31.8382967,-106.6326668,,,,05/31/2026
+howdy's-chevron,Howdy's Chevron,"El Paso, TX 79915",31.7414816,-106.5216598,4.4,,,05/31/2026
+phillips-66,Phillips 66,"El Paso, TX 79915",31.758181,-106.4999476,3.96,,,05/31/2026
+shell,Shell,"El Paso, TX 79936",31.765342,-106.4114368,4.4,,,05/31/2026
+7-eleven,7-Eleven,"El Paso, TX 79924",31.9299844,-106.4961241,,,,05/31/2026
+circle-k-gas-station,Circle K Gas Station,"El Paso, TX 79938",31.796972,-106.3617756,3.85,,,05/31/2026
+love's-travel-stop,Love's Travel Stop,"El Paso, TX 79938",31.749474,-106.4346882,3.73,,,05/31/2026
+quiktrip,QuikTrip,"El Paso, TX 79938",31.783267,-106.4572346,,,,05/31/2026
+chevron-el-paso-far-east-montana,Chevron El Paso Far East Montana,"El Paso, TX 79938",31.796972,-106.3617756,4.3,,,05/31/2026
+fast-trak-valero,Fast Trak Valero,"El Paso, TX 79938",31.745064,-106.4639476,3.82,,,05/31/2026
+petro-travel-center,Petro Travel Center,"El Paso, TX 79938",31.6609767,-106.3866485,,,,05/31/2026
+texaco-service-station-(former),Texaco Service Station (Former),"El Paso, TX 79930",31.7859338,-106.534334,,,,06/01/2026
+quick-mart,Quick Mart,"El Paso, TX 79901",31.7547176,-106.5271964,4.4,,,06/01/2026
+diamond-shamrock,Diamond Shamrock,"El Paso, TX 79903",31.7793522,-106.487123,,,,06/01/2026
+firestone-complete-auto-care,Firestone Complete Auto Care,"El Paso, TX 79903",31.7825288,-106.4649497,,,,06/01/2026
+murphy's-usa,Murphy's USA,"El Paso, TX 79912",31.8379277,-106.632765,3.86,,,06/01/2026
+gas-station,Gas Station,"El Paso, TX 79938",31.8188317,-106.2497142,,,,06/01/2026
+howdy's-chevron,Howdy's Chevron,"El Paso, TX 79915",31.722846,-106.4036909,4.4,,,06/01/2026
+valero-fast-market,VALERO FAST MARKET,"El Paso, TX 79938",31.7827499,-106.4106502,3.97,,,06/01/2026
+7-eleven,7-Eleven,"El Paso, TX 79924",31.9104305,-106.4786586,,,,06/01/2026
+circle-k-gas-station,Circle K Gas Station,"El Paso, TX 79938",31.776881,-106.3410978,3.85,,,06/01/2026
+fast-trak-valero,Fast Trak Valero,"El Paso, TX 79938",31.8038457,-106.3565626,3.82,,,06/01/2026
+speedway,Speedway,"El Paso, TX (Socorro_Horizon_Border)",31.7256355,-106.2843653,,,,06/01/2026
+chevron,Chevron,"El Paso, TX (Socorro_Horizon_Border)",31.7052302,-106.3003847,4.4,,,06/01/2026
+circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7792925,-106.4291065,,,,06/01/2026
+dk-gas-station,DK Gas Station,"El Paso, TX (Northeast_Dyer)",31.8367682,-106.3835532,4.1,,,06/01/2026
+valero,Valero,"El Paso, TX (Socorro_Horizon_Border)",31.679245,-106.3345322,3.96,,,06/01/2026
+alon-gas-station,ALON Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.679245,-106.3345322,3.92,,,06/01/2026
+circle-k,Circle K,"El Paso, TX (Socorro_Horizon_Border)",31.7052302,-106.3003847,3.83,,,06/01/2026
+flyers,Flyers,"El Paso, TX (Zaragosa_Lower_Valley)",31.7489212,-106.3409759,,,,06/01/2026
+windstar-gas-station,Windstar Gas Station,"El Paso, TX (Downtown_Central)",31.7548313,-106.5091717,,,,06/01/2026
+chevron-howdy's,Chevron Howdy's,"El Paso, TX (Far_East_Montana)",31.8002216,-106.4395241,4.4,,,06/01/2026
+in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX (Upper_Valley)",31.7767451,-106.4045261,,,,06/01/2026
+costco-gas-station,Costco Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7810875,-106.4246792,,,,06/01/2026
+brio,Brio,"El Paso, TX (Far_East_Montana)",31.7681631,-106.4413088,,,,06/01/2026
+parking,parking,"El Paso, TX (Downtown_Central)",31.7618778,-106.5030461,,,,06/01/2026
+marathon,Marathon,"El Paso, TX (Downtown_Central)",31.7670812,-106.479743,,,,06/01/2026
+gazpro-5-de-mayo,Gazpro 5 de Mayo,"El Paso, TX (Downtown_Central)",31.7440663,-106.4914757,,,,06/01/2026
+oxxo-gas,Oxxo Gas,"El Paso, TX (Downtown_Central)",31.7440663,-106.4914757,,,,06/01/2026
+payan's-fuel-center,Payan's Fuel Center,"El Paso, TX (Downtown_Central)",31.766977,-106.4792114,4.1,,,06/01/2026
+ram,Ram,"El Paso, TX (Downtown_Central)",31.7592188,-106.4920828,,,,06/01/2026
+ram-super-stop,Ram Super Stop,"El Paso, TX (Downtown_Central)",31.779059,-106.4098922,,,,06/01/2026
+klemme-roadway,Klemme Roadway,"El Paso, TX (Socorro_Horizon_Border)",31.7833158,-106.4250496,,,,06/01/2026
+totalgas--lerdo,TotalGas- Lerdo,"El Paso, TX (Downtown_Central)",31.7659348,-106.4325506,,,,06/01/2026
+c-&-r-distributing-llc,C & R Distributing LLC,"El Paso, TX (Socorro_Horizon_Border)",31.7792925,-106.4291065,,,,06/01/2026
+gazpro-anapra,Gazpro Anapra,"El Paso, TX (Downtown_Central)",31.7521378,-106.5157245,,,,06/01/2026
+pemex-gasolinera-5-de-mayo,Pemex Gasolinera 5 de mayo,"El Paso, TX (Downtown_Central)",31.7441551,-106.4913405,,,,06/01/2026
+711,711,"El Paso, TX (Socorro_Horizon_Border)",31.7810247,-106.4439032,,,,06/01/2026
+dk,Dk,"El Paso, TX (Socorro_Horizon_Border)",31.7811996,-106.4248036,,,,06/01/2026
+gasolinera-pemex,Gasolinera Pemex,"El Paso, TX (Downtown_Central)",31.7428647,-106.4991714,,,,06/01/2026
+valero-corner-store,Valero Corner Store,"El Paso, TX (Far_East_Montana)",31.7883855,-106.4672847,4.1,,,06/01/2026
+tahsin-aslan-cumhuriyeti,Tahsin Aslan Cumhuriyeti,"El Paso, TX (Downtown_Central)",31.7618778,-106.5030461,,,,06/01/2026
+pemex-gasolinera-tlaxcala,Pemex Gasolinera Tlaxcala,"El Paso, TX (Downtown_Central)",31.7433584,-106.4820212,,,,06/01/2026
+mesa-hills-valero,Mesa Hills Valero,"El Paso, TX (West_Side_Mesa)",31.818696,-106.5335138,4.16,,,06/01/2026
+mesa-hills-shamrock,MESA HILLS SHAMROCK,"El Paso, TX (West_Side_Mesa)",31.818253,-106.5337944,,,,06/01/2026
+cassidy-express,Cassidy Express,"El Paso, TX (Socorro_Horizon_Border)",31.8132896,-106.4496756,,,,06/01/2026
+sam's-club-gas-station,Sam's Club Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7767451,-106.4045261,,,,06/01/2026
+walmart-fuel-&-convenience,Walmart Fuel & Convenience,"El Paso, TX (Upper_Valley)",31.8840023,-106.5967574,,,,06/01/2026
+murphy-usa,Murphy USA,"El Paso, TX (Socorro_Horizon_Border)",31.6536896,-106.3074275,3.73,,,06/01/2026
+giant,Giant,"El Paso, TX (Upper_Valley)",31.8789953,-106.5866748,,,,06/01/2026
+fast-market-8168,Fast Market 8168,"El Paso, TX (Upper_Valley)",31.8612739,-106.567382,,,,06/01/2026
+station-54,STATION 54,"El Paso, TX (Northeast_Dyer)",31.8488722,-106.457339,,,,06/01/2026
+logan-heights-express,Logan Heights Express,"El Paso, TX (Northeast_Dyer)",31.839986,-106.4616804,,,,06/01/2026
+aafes,AAFES,"El Paso, TX (Northeast_Dyer)",31.8367682,-106.3835532,,,,06/01/2026
+good-time-stores,Good Time Stores,"El Paso, TX (Northeast_Dyer)",31.853124,-106.456742,,,,06/01/2026
+bliss-biggs-east-express,Bliss Biggs East Express,"El Paso, TX (Northeast_Dyer)",31.8277145,-106.4061606,,,,06/01/2026
+aafes-px-gas-station,AAFES PX Gas Station,"El Paso, TX (Far_East_Montana)",31.7750579,-106.3920526,,,,06/01/2026
+freeway-chevron,FREEWAY CHEVRON,"El Paso, TX (Far_East_Montana)",31.7640375,-106.3829644,4.4,,,06/01/2026
+western-fuel,Western fuel,"El Paso, TX (East_Side_Cielo_Vista)",31.7766157,-106.4088902,,,,06/01/2026
+phillips-66,Phillips 66,"El Paso, TX (Socorro_Horizon_Border)",31.7398113,-106.3651365,3.96,,,06/01/2026
+shell,Shell,"El Paso, TX (East_Side_Cielo_Vista)",31.765342,-106.3573634,4.4,,,06/01/2026
+dk-convenient-store/gas-station,DK Convenient Store/Gas Station,"El Paso, TX (Zaragosa_Lower_Valley)",31.7438495,-106.3038977,,,,06/01/2026
+"valero-""fast-mart""","Valero ""Fast Mart""","El Paso, TX (Zaragosa_Lower_Valley)",31.7378595,-106.3095234,,,,06/01/2026
+dk-convenience-store,DK Convenience Store,"El Paso, TX (Zaragosa_Lower_Valley)",31.7653262,-106.3481719,,,,06/01/2026
+chevron-el-paso-far-east-montana,Chevron El Paso Far East Montana,"El Paso, TX (Far_East_Montana)",31.8081137,-106.2776987,4.3,,,06/01/2026
+water-refill-station,Water Refill Station,"El Paso, TX (Far_East_Montana)",31.803409,-106.3029603,,,,06/01/2026
+nustar-energy---el-paso-terminal,NuStar Energy - El Paso Terminal,"El Paso, TX (Far_East_Montana)",31.8223608,-106.2766917,,,,06/01/2026
+quiktrip,Quiktrip,"El Paso, TX (Socorro_Horizon_Border)",31.685814,-106.2861944,3.73,,,06/01/2026
+murphy-express,Murphy Express,"El Paso, TX (Socorro_Horizon_Border)",31.6885755,-106.2814167,3.73,,,06/01/2026
+flying-j-travel-center,Flying J Travel Center,"El Paso, TX (Socorro_Horizon_Border)",31.6620526,-106.2561123,4.1,,,06/01/2026
+love's-travel-stop,Love's Travel Stop,"El Paso, TX (Socorro_Horizon_Border)",31.6620526,-106.2561123,3.73,,,06/01/2026
+in-n-out---marathon,In N Out - Marathon,"El Paso, TX (Socorro_Horizon_Border)",31.6619098,-106.314599,4.5,,,06/01/2026
+speedway,Speedway,"El Paso, TX (Socorro_Horizon_Border)",31.7750579,-106.3920526,,,,06/02/2026
+chevron,Chevron,"El Paso, TX (Socorro_Horizon_Border)",31.704319,-106.298926,4.4,,,06/02/2026
+circle-k,Circle K,"El Paso, TX (Socorro_Horizon_Border)",31.7052302,-106.3003847,3.82,,,06/02/2026
+circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7591,-106.4064644,,,,06/02/2026
+valero,Valero,"El Paso, TX (Socorro_Horizon_Border)",31.6780314,-106.3335587,3.88,,,06/02/2026
+dk-gas-station,DK Gas Station,"El Paso, TX (Upper_Valley)",31.7788665,-106.4690964,4.0,,,06/02/2026
+alon-gas-station,ALON Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7886808,-106.4493156,3.95,,,06/02/2026
+chevron-howdy's,Chevron Howdy's,"El Paso, TX (Northeast_Dyer)",31.7770087,-106.4846444,4.2,,,06/02/2026
+flyers,Flyers,"El Paso, TX (Zaragosa_Lower_Valley)",31.7489212,-106.3409759,,,,06/02/2026
+in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX (Upper_Valley)",31.7670812,-106.479743,,,,06/02/2026
+costco-gas-station,Costco Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.780961,-106.4255094,,,,06/02/2026
+windstar-gas-station,Windstar Gas Station,"El Paso, TX (Downtown_Central)",31.7548313,-106.5091717,,,,06/02/2026
+brio,Brio,"El Paso, TX (East_Side_Cielo_Vista)",31.7681631,-106.4413088,,,,06/02/2026
+parking,parking,"El Paso, TX (Downtown_Central)",31.7618778,-106.5030461,,,,06/02/2026
+marathon,Marathon,"El Paso, TX (Downtown_Central)",31.7670812,-106.479743,,,,06/02/2026
+gazpro-5-de-mayo,Gazpro 5 de Mayo,"El Paso, TX (Downtown_Central)",31.7440663,-106.4914757,,,,06/02/2026
+oxxo-gas,Oxxo Gas,"El Paso, TX (Downtown_Central)",31.760001,-106.5270014,,,,06/02/2026
+payan's-fuel-center,Payan's Fuel Center,"El Paso, TX (Downtown_Central)",31.760001,-106.5270014,4.1,,,06/02/2026
+klemme-roadway,Klemme Roadway,"El Paso, TX (Socorro_Horizon_Border)",31.7833158,-106.4250496,,,,06/02/2026
+ram-super-stop,Ram Super Stop,"El Paso, TX (Downtown_Central)",31.7670533,-106.4797085,,,,06/02/2026
+ram,Ram,"El Paso, TX (Downtown_Central)",31.7592188,-106.4920828,,,,06/02/2026
+gazpro-anapra,Gazpro Anapra,"El Paso, TX (Downtown_Central)",31.7521378,-106.5157245,,,,06/02/2026
+totalgas--lerdo,TotalGas- Lerdo,"El Paso, TX (Downtown_Central)",31.7428197,-106.4991963,,,,06/02/2026
+c-&-r-distributing-llc,C & R Distributing LLC,"El Paso, TX (Socorro_Horizon_Border)",31.7792925,-106.4291065,,,,06/02/2026
+pemex-gasolinera-5-de-mayo,Pemex Gasolinera 5 de mayo,"El Paso, TX (Downtown_Central)",31.7441551,-106.4913405,,,,06/02/2026
+valero-corner-store,Valero Corner Store,"El Paso, TX (Northeast_Dyer)",31.7883855,-106.4672847,4.0,,,06/02/2026
+dk,Dk,"El Paso, TX (Socorro_Horizon_Border)",31.6619098,-106.314599,,,,06/02/2026
+711,711,"El Paso, TX (Far_East_Montana)",31.7810247,-106.4439032,,,,06/02/2026
+gasolinera-pemex,Gasolinera Pemex,"El Paso, TX (Downtown_Central)",31.7810247,-106.4439032,,,,06/02/2026
+mesa-hills-valero,Mesa Hills Valero,"El Paso, TX (West_Side_Mesa)",31.818696,-106.5335138,4.16,,,06/02/2026
+cassidy-express,Cassidy Express,"El Paso, TX (Socorro_Horizon_Border)",31.8132896,-106.4496756,,,,06/02/2026
+mesa-hills-shamrock,MESA HILLS SHAMROCK,"El Paso, TX (West_Side_Mesa)",31.818253,-106.5337944,,,,06/02/2026
+sam's-club-gas-station,Sam's Club Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7767451,-106.4045261,,,,06/02/2026
+aafes-px-gas-station,AAFES PX Gas Station,"El Paso, TX (Northeast_Dyer)",31.8002216,-106.4395241,,,,06/02/2026
+walmart-fuel-&-convenience,Walmart Fuel & Convenience,"El Paso, TX (Upper_Valley)",31.8840023,-106.5967574,,,,06/02/2026
+giant,Giant,"El Paso, TX (Upper_Valley)",31.8789953,-106.5866748,,,,06/02/2026
+murphy-usa,Murphy USA,"El Paso, TX (Socorro_Horizon_Border)",31.6619098,-106.314599,3.73,,,06/02/2026
+fast-market-8168,Fast Market 8168,"El Paso, TX (Upper_Valley)",31.8612739,-106.567382,,,,06/02/2026
+station-54,STATION 54,"El Paso, TX (Northeast_Dyer)",31.8488722,-106.457339,,,,06/02/2026
+logan-heights-express,Logan Heights Express,"El Paso, TX (Northeast_Dyer)",31.839986,-106.4616804,,,,06/02/2026
+aafes,AAFES,"El Paso, TX (Northeast_Dyer)",31.8367682,-106.3835532,,,,06/02/2026
+good-time-stores,Good Time Stores,"El Paso, TX (Northeast_Dyer)",31.853124,-106.456742,,,,06/02/2026
+bliss-biggs-east-express,Bliss Biggs East Express,"El Paso, TX (Northeast_Dyer)",31.8277145,-106.4061606,,,,06/02/2026
+freeway-chevron,FREEWAY CHEVRON,"El Paso, TX (Socorro_Horizon_Border)",31.7640375,-106.3829644,4.4,,,06/02/2026
+western-fuel,Western fuel,"El Paso, TX (East_Side_Cielo_Vista)",31.7766157,-106.4088902,,,,06/02/2026
+phillips-66,Phillips 66,"El Paso, TX (Socorro_Horizon_Border)",31.7398113,-106.3651365,3.96,,,06/02/2026
+shell,Shell,"El Paso, TX (East_Side_Cielo_Vista)",31.765342,-106.3573634,4.4,,,06/02/2026
+dk-convenient-store/gas-station,DK Convenient Store/Gas Station,"El Paso, TX (Zaragosa_Lower_Valley)",31.7356976,-106.3303057,,,,06/02/2026
+"valero-""fast-mart""","Valero ""Fast Mart""","El Paso, TX (Zaragosa_Lower_Valley)",31.7378595,-106.3095234,,,,06/02/2026
+chevron-el-paso-far-east-montana,Chevron El Paso Far East Montana,"El Paso, TX (Far_East_Montana)",31.8081137,-106.2776987,4.2,,,06/02/2026
+water-refill-station,Water Refill Station,"El Paso, TX (Far_East_Montana)",31.803409,-106.3029603,,,,06/02/2026
+nustar-energy---el-paso-terminal,NuStar Energy - El Paso Terminal,"El Paso, TX (Far_East_Montana)",31.8223608,-106.2766917,,,,06/02/2026
+quiktrip,Quiktrip,"El Paso, TX (Socorro_Horizon_Border)",31.685814,-106.2861944,3.73,,,06/02/2026
+murphy-express,Murphy Express,"El Paso, TX (Socorro_Horizon_Border)",31.6885755,-106.2814167,3.73,,,06/02/2026
+flying-j-travel-center,Flying J Travel Center,"El Paso, TX (Socorro_Horizon_Border)",31.6620526,-106.2561123,4.1,,,06/02/2026
+love's-travel-stop,Love's Travel Stop,"El Paso, TX (Socorro_Horizon_Border)",31.6598198,-106.2554586,3.73,,,06/02/2026
+in-n-out---marathon,In N Out - Marathon,"El Paso, TX (Socorro_Horizon_Border)",31.6619098,-106.314599,,,,06/02/2026
+speedway,Speedway,"El Paso, TX (Socorro_Horizon_Border)",31.6589727,-106.2924948,,,,06/03/2026
+chevron,Chevron,"El Paso, TX (Socorro_Horizon_Border)",31.704319,-106.298926,4.2,,,06/03/2026
+circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7886808,-106.4493156,,,,06/03/2026
+dk-gas-station,DK Gas Station,"El Paso, TX (West_Side_Mesa)",31.7788665,-106.4690964,3.95,,,06/03/2026
+circle-k,Circle K,"El Paso, TX (Socorro_Horizon_Border)",31.7052302,-106.3003847,4.0,,,06/03/2026
+valero,Valero,"El Paso, TX (Socorro_Horizon_Border)",31.679245,-106.3345322,3.88,,,06/03/2026
+flyers,Flyers,"El Paso, TX (Zaragosa_Lower_Valley)",31.7489212,-106.3409759,,,,06/03/2026
+windstar-gas-station,Windstar Gas Station,"El Paso, TX (Downtown_Central)",31.7620427,-106.4997671,,,,06/03/2026
+chevron-howdy's,Chevron Howdy's,"El Paso, TX (Far_East_Montana)",31.7770087,-106.4846444,4.2,,,06/03/2026
+in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX (Upper_Valley)",31.7670812,-106.479743,,,,06/03/2026
+alon-gas-station,ALON Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.6657638,-106.3262821,3.8,,,06/03/2026
+costco-gas-station,Costco Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.780961,-106.4255094,,,,06/03/2026
+parking,parking,"El Paso, TX (Downtown_Central)",31.782414,-106.4290062,,,,06/03/2026
+brio,Brio,"El Paso, TX (Far_East_Montana)",31.7681631,-106.4413088,,,,06/03/2026
+marathon,Marathon,"El Paso, TX (Downtown_Central)",31.7670812,-106.479743,,,,06/03/2026
+gazpro-5-de-mayo,Gazpro 5 de Mayo,"El Paso, TX (Downtown_Central)",31.7440663,-106.4914757,,,,06/03/2026
+oxxo-gas,Oxxo Gas,"El Paso, TX (Downtown_Central)",31.760001,-106.5270014,,,,06/03/2026
+ram,Ram,"El Paso, TX (Downtown_Central)",31.7592188,-106.4920828,,,,06/03/2026
+totalgas--lerdo,TotalGas- Lerdo,"El Paso, TX (Downtown_Central)",31.7428197,-106.4991963,,,,06/03/2026
+ram-super-stop,Ram Super Stop,"El Paso, TX (Downtown_Central)",31.7670533,-106.4797085,,,,06/03/2026
+payan's-fuel-center,Payan's Fuel Center,"El Paso, TX (Downtown_Central)",31.7670533,-106.4797085,4.1,,,06/03/2026
+gazpro-anapra,Gazpro Anapra,"El Paso, TX (Downtown_Central)",31.7521378,-106.5157245,,,,06/03/2026
+klemme-roadway,Klemme Roadway,"El Paso, TX (Socorro_Horizon_Border)",31.7833158,-106.4250496,,,,06/03/2026
+pemex-gasolinera-5-de-mayo,Pemex Gasolinera 5 de mayo,"El Paso, TX (Downtown_Central)",31.7441551,-106.4913405,,,,06/03/2026
+gasolinera-pemex,Gasolinera Pemex,"El Paso, TX (Downtown_Central)",31.7428647,-106.4991714,,,,06/03/2026
+pemex-gasolinera-tlaxcala,Pemex Gasolinera Tlaxcala,"El Paso, TX (Downtown_Central)",31.7775026,-106.4105362,,,,06/03/2026
+tahsin-aslan-cumhuriyeti,Tahsin Aslan Cumhuriyeti,"El Paso, TX (Downtown_Central)",31.7433584,-106.4820212,,,,06/03/2026
+c-&-r-distributing-llc,C & R Distributing LLC,"El Paso, TX (Socorro_Horizon_Border)",31.7792925,-106.4291065,,,,06/03/2026
+711,711,"El Paso, TX (Socorro_Horizon_Border)",31.7810247,-106.4439032,,,,06/03/2026
+valero-corner-store,Valero Corner Store,"El Paso, TX (Northeast_Dyer)",31.8002216,-106.4395241,3.9,,,06/03/2026
+dk,Dk,"El Paso, TX (Socorro_Horizon_Border)",31.7811996,-106.4248036,,,,06/03/2026
+mesa-hills-valero,Mesa Hills Valero,"El Paso, TX (West_Side_Mesa)",31.818696,-106.5335138,4.16,,,06/03/2026
+mesa-hills-shamrock,MESA HILLS SHAMROCK,"El Paso, TX (West_Side_Mesa)",31.818253,-106.5337944,,,,06/03/2026
+cassidy-express,Cassidy Express,"El Paso, TX (Socorro_Horizon_Border)",31.8132896,-106.4496756,,,,06/03/2026
+sam's-club-gas-station,Sam's Club Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7767451,-106.4045261,,,,06/03/2026
+walmart-fuel-&-convenience,Walmart Fuel & Convenience,"El Paso, TX (Upper_Valley)",31.8840023,-106.5967574,,,,06/03/2026
+murphy-usa,Murphy USA,"El Paso, TX (Socorro_Horizon_Border)",31.6987501,-106.2594515,,,,06/03/2026
+giant,Giant,"El Paso, TX (Upper_Valley)",31.8789953,-106.5866748,,,,06/03/2026
+fast-market-8168,Fast Market 8168,"El Paso, TX (Upper_Valley)",31.8612739,-106.567382,,,,06/03/2026
+station-54,STATION 54,"El Paso, TX (Northeast_Dyer)",31.8488722,-106.457339,,,,06/03/2026
+logan-heights-express,Logan Heights Express,"El Paso, TX (Northeast_Dyer)",31.839986,-106.4616804,,,,06/03/2026
+aafes,AAFES,"El Paso, TX (Northeast_Dyer)",31.8367682,-106.3835532,,,,06/03/2026
+good-time-stores,Good Time Stores,"El Paso, TX (Northeast_Dyer)",31.853124,-106.456742,,,,06/03/2026
+bliss-biggs-east-express,Bliss Biggs East Express,"El Paso, TX (Northeast_Dyer)",31.8277145,-106.4061606,,,,06/03/2026
+aafes-px-gas-station,AAFES PX Gas Station,"El Paso, TX (Far_East_Montana)",31.8002216,-106.4395241,,,,06/03/2026
+freeway-chevron,FREEWAY CHEVRON,"El Paso, TX (Far_East_Montana)",31.7640375,-106.3829644,4.4,,,06/03/2026
+western-fuel,Western fuel,"El Paso, TX (East_Side_Cielo_Vista)",31.770864,-106.3673694,,,,06/03/2026
+super-stop-23,Super Stop 23,"El Paso, TX (East_Side_Cielo_Vista)",31.7650859,-106.3572982,,,,06/03/2026
+dk-convenient-store/gas-station,DK Convenient Store/Gas Station,"El Paso, TX (Zaragosa_Lower_Valley)",31.7356976,-106.3303057,,,,06/03/2026
+"valero-""fast-mart""","Valero ""Fast Mart""","El Paso, TX (Zaragosa_Lower_Valley)",31.7378595,-106.3095234,,,,06/03/2026
+dk-convenience-store,DK Convenience Store,"El Paso, TX (Zaragosa_Lower_Valley)",31.7653262,-106.3481719,,,,06/03/2026
+chevron-el-paso-far-east-montana,Chevron El Paso Far East Montana,"El Paso, TX (Far_East_Montana)",31.8081137,-106.2776987,4.2,,,06/03/2026
+water-refill-station,Water Refill Station,"El Paso, TX (Far_East_Montana)",31.803409,-106.3029603,,,,06/03/2026
+nustar-energy---el-paso-terminal,NuStar Energy - El Paso Terminal,"El Paso, TX (Far_East_Montana)",31.8223608,-106.2766917,,,,06/03/2026
+quiktrip,Quiktrip,"El Paso, TX (Socorro_Horizon_Border)",31.685814,-106.2861944,3.73,,,06/03/2026
+murphy-express,Murphy Express,"El Paso, TX (Socorro_Horizon_Border)",31.6885755,-106.2814167,3.7,,,06/03/2026
+flying-j-travel-center,Flying J Travel Center,"El Paso, TX (Socorro_Horizon_Border)",31.6620526,-106.2561123,3.73,,,06/03/2026
+love's-travel-stop,Love's Travel Stop,"El Paso, TX (Socorro_Horizon_Border)",31.6598198,-106.2554586,3.73,,,06/03/2026
+in-n-out---marathon,In N Out - Marathon,"El Paso, TX (Socorro_Horizon_Border)",31.6562654,-106.3098212,4.0,,,06/03/2026
+phillips-66,Phillips 66,"El Paso, TX (Socorro_Horizon_Border)",31.7398113,-106.3651365,3.96,,,06/03/2026
+chevron,Chevron,"El Paso, TX (Socorro_Horizon_Border)",31.7679892,-106.4503966,,,,06/10/2026
+speedway,Speedway,"El Paso, TX (Socorro_Horizon_Border)",31.7770087,-106.4846444,,,,06/10/2026
+valero,Valero,"El Paso, TX (Socorro_Horizon_Border)",31.6780314,-106.3335587,,,,06/10/2026
+circle-k-|-gas-station,Circle K | Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7591,-106.4064644,,,,06/10/2026
+dk-gas-station,DK Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7767363,-106.4304575,,,,06/10/2026
+circle-k,Circle K,"El Paso, TX (Socorro_Horizon_Border)",31.691252,-106.2797869,,,,06/10/2026
+chevron-howdy's,Chevron Howdy's,"El Paso, TX (Socorro_Horizon_Border)",31.7770087,-106.4846444,,,,06/10/2026
+in-n-out-gas-station,In-N-Out Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7770087,-106.4846444,,,,06/10/2026
+flyers,Flyers,"El Paso, TX (Zaragosa_Lower_Valley)",31.7489212,-106.3409759,,,,06/10/2026
+windstar-gas-station,Windstar Gas Station,"El Paso, TX (Downtown_Central)",31.7548313,-106.5091717,,,,06/10/2026
+costco-gas-station,Costco Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.782414,-106.4290062,,,,06/10/2026
+alon-gas-station,ALON Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.6657638,-106.3262821,,,,06/10/2026
+parking,parking,"El Paso, TX (Downtown_Central)",31.7618778,-106.5030461,,,,06/10/2026
+brio,Brio,"El Paso, TX (Far_East_Montana)",31.7681631,-106.4413088,,,,06/10/2026
+marathon,Marathon,"El Paso, TX (Downtown_Central)",31.7670812,-106.479743,,,,06/10/2026
+klemme-roadway,Klemme Roadway,"El Paso, TX (Socorro_Horizon_Border)",31.7833158,-106.4250496,,,,06/10/2026
+dk,Dk,"El Paso, TX (Socorro_Horizon_Border)",31.7811996,-106.4248036,,,,06/10/2026
+711,711,"El Paso, TX (Socorro_Horizon_Border)",31.7810247,-106.4439032,,,,06/10/2026
+gazpro-5-de-mayo,Gazpro 5 de Mayo,"El Paso, TX (Downtown_Central)",31.7440663,-106.4914757,,,,06/10/2026
+ram,Ram,"El Paso, TX (Downtown_Central)",31.7592188,-106.4920828,,,,06/10/2026
+valero-corner-store,Valero Corner Store,"El Paso, TX (Socorro_Horizon_Border)",31.7883855,-106.4672847,,,,06/10/2026
+payan's-fuel-center,Payan's Fuel Center,"El Paso, TX (Downtown_Central)",31.766977,-106.4792114,,,,06/10/2026
+oxxo-gas,Oxxo Gas,"El Paso, TX (Downtown_Central)",31.760001,-106.5270014,,,,06/10/2026
+ram-super-stop,Ram Super Stop,"El Paso, TX (Downtown_Central)",31.7670533,-106.4797085,,,,06/10/2026
+c-&-r-distributing-llc,C & R Distributing LLC,"El Paso, TX (Socorro_Horizon_Border)",31.7792925,-106.4291065,,,,06/10/2026
+totalgas--lerdo,TotalGas- Lerdo,"El Paso, TX (Downtown_Central)",31.7428197,-106.4991963,,,,06/10/2026
+gazpro-anapra,Gazpro Anapra,"El Paso, TX (Downtown_Central)",31.7521378,-106.5157245,,,,06/10/2026
+pemex-gasolinera-5-de-mayo,Pemex Gasolinera 5 de mayo,"El Paso, TX (Downtown_Central)",31.7441551,-106.4913405,,,,06/10/2026
+mesa-hills-valero,Mesa Hills Valero,"El Paso, TX (West_Side_Mesa)",31.818696,-106.5335138,,,,06/10/2026
+mesa-hills-shamrock,MESA HILLS SHAMROCK,"El Paso, TX (West_Side_Mesa)",31.818253,-106.5337944,,,,06/10/2026
+cassidy-express,Cassidy Express,"El Paso, TX (Far_East_Montana)",31.8132896,-106.4496756,,,,06/10/2026
+sam's-club-gas-station,Sam's Club Gas Station,"El Paso, TX (Socorro_Horizon_Border)",31.7767451,-106.4045261,,,,06/10/2026
+aafes-px-gas-station,AAFES PX Gas Station,"El Paso, TX (Far_East_Montana)",31.8002216,-106.4395241,,,,06/10/2026
+walmart-fuel-&-convenience,Walmart Fuel & Convenience,"El Paso, TX (Upper_Valley)",31.8840023,-106.5967574,,,,06/10/2026
+murphy-usa,Murphy USA,"El Paso, TX (Socorro_Horizon_Border)",31.6916915,-106.3241961,,,,06/10/2026
+giant,Giant,"El Paso, TX (Upper_Valley)",31.8789953,-106.5866748,,,,06/10/2026
+station-54,STATION 54,"El Paso, TX (Northeast_Dyer)",31.8488722,-106.457339,,,,06/10/2026
+logan-heights-express,Logan Heights Express,"El Paso, TX (Northeast_Dyer)",31.839986,-106.4616804,,,,06/10/2026
+aafes,AAFES,"El Paso, TX (Northeast_Dyer)",31.8367682,-106.3835532,,,,06/10/2026
+bliss-biggs-east-express,Bliss Biggs East Express,"El Paso, TX (Northeast_Dyer)",31.8277145,-106.4061606,,,,06/10/2026
+good-time-stores,Good Time Stores,"El Paso, TX (Northeast_Dyer)",31.853124,-106.456742,,,,06/10/2026
+freeway-chevron,FREEWAY CHEVRON,"El Paso, TX (Socorro_Horizon_Border)",31.7640375,-106.3829644,,,,06/10/2026
+western-fuel,Western fuel,"El Paso, TX (East_Side_Cielo_Vista)",31.7766157,-106.4088902,,,,06/10/2026
+phillips-66,Phillips 66,"El Paso, TX (Socorro_Horizon_Border)",31.7398113,-106.3651365,,,,06/10/2026
+dk-convenient-store/gas-station,DK Convenient Store/Gas Station,"El Paso, TX (Zaragosa_Lower_Valley)",31.7356976,-106.3303057,,,,06/10/2026
+dk-convenience-store,DK Convenience Store,"El Paso, TX (Zaragosa_Lower_Valley)",31.7571875,-106.3472175,,,,06/10/2026
+chevron-el-paso-far-east-montana,Chevron El Paso Far East Montana,"El Paso, TX (Far_East_Montana)",31.8081137,-106.2776987,,,,06/10/2026
+water-refill-station,Water Refill Station,"El Paso, TX (Far_East_Montana)",31.803409,-106.3029603,,,,06/10/2026
+nustar-energy---el-paso-terminal,NuStar Energy - El Paso Terminal,"El Paso, TX (Far_East_Montana)",31.8223608,-106.2766917,,,,06/10/2026
+quiktrip,Quiktrip,"El Paso, TX (Socorro_Horizon_Border)",31.685814,-106.2861944,,,,06/10/2026
+flying-j-travel-center,Flying J Travel Center,"El Paso, TX (Socorro_Horizon_Border)",31.6620526,-106.2561123,,,,06/10/2026
+love's-travel-stop,Love's Travel Stop,"El Paso, TX (Socorro_Horizon_Border)",31.6598198,-106.2554586,,,,06/10/2026
+murphy-express,Murphy Express,"El Paso, TX (Socorro_Horizon_Border)",31.6885755,-106.2814167,,,,06/10/2026
+in-n-out---marathon,In N Out - Marathon,"El Paso, TX (Socorro_Horizon_Border)",31.6619098,-106.314599,,,,06/10/2026
