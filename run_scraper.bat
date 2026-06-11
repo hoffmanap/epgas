@@ -18,7 +18,12 @@ echo ===================================================
 echo   STEP 3: Syncing Cleaned Data to GitHub Pages...
 echo ===================================================
 
-:: Force stage everything inside the directory (CSV, HTML, scripts)
+:: Pull online updates first to reconcile out-of-sync tracking trees
+echo Fetching latest updates from GitHub server...
+git pull origin main --rebase
+
+:: Explicitly stage changes to override OneDrive locks
+git add -f el_paso_gas_prices.csv
 git add -A
 
 :: Commit the data with a dynamic timestamp message
@@ -27,7 +32,7 @@ set current_date=%datetime:~4,2%/%datetime:~6,2%/%datetime:~0,4%
 
 git commit -m "Automated data sync: %current_date%"
 
-:: Push the live metrics to your public GitHub pages branch
+:: Push the combined live data metrics to your repository
 echo Pushing updates to repository server...
 git push origin main
 
