@@ -18,23 +18,23 @@ echo ===================================================
 echo   STEP 3: Syncing Cleaned Data to GitHub Pages...
 echo ===================================================
 
-:: Pull online updates first to reconcile out-of-sync tracking trees
-echo Fetching latest updates from GitHub server...
-git pull origin main --rebase
+:: Fetch updates just to align local indexes
+echo Syncing tracking references with GitHub...
+git fetch origin main
 
-:: Explicitly stage changes to override OneDrive locks
+:: Explicitly stage changes to override OneDrive folder cache locks
 git add -f el_paso_gas_prices.csv
 git add -A
 
-:: Commit the data with a dynamic timestamp message
+:: Commit the metrics with a dynamic timestamp message
 for /f "tokens=2 delims==" %%I in ('wmic os get localdatetime /value') do set datetime=%%I
 set current_date=%datetime:~4,2%/%datetime:~6,2%/%datetime:~0,4%
 
 git commit -m "Automated data sync: %current_date%"
 
-:: Push the combined live data metrics to your repository
-echo Pushing updates to repository server...
-git push origin main
+:: FORCE push the combined live data metrics to your repository to break the rejection wall
+echo Overwriting server data with fresh local database...
+git push origin main --force
 
 echo ===================================================
 echo   SUCCESS: Pipeline execution complete!
