@@ -1,5 +1,7 @@
 # El Paso Spatial Gas Price Tracker (EPGas)
 
+## Live Dashbaord: https://hoffmanap.github.io/epgas/
+
 An automated data pipeline that extracts hyper-local, multi-grade fuel prices alongside spatial coordinates across El Paso, Texas. The resulting time-series dataset is explicitly structured to support geospatial analysis and mapping applications (QGIS, ArcGIS, CARTO).
 
 ## 📊 Dataset Schema
