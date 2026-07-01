@@ -3,177 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Paso Regular Gas Price Trends</title>
+    <title>El Paso Gas Prices Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800">
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
 
-    <div class="max-w-6xl mx-auto px-4 py-8">
-        <header class="mb-8 text-center md:text-left">
-            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">El Paso Regular Gas Tracker</h1>
-            <p class="text-slate-500 mt-2">Daily historical trends averaged across spatial grid collection nodes (zeros excluded).</p>
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <header class="mb-8 border-b border-gray-200 pb-5">
+            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">El Paso Gas Prices Analytics</h1>
+            <p class="text-sm text-gray-500 mt-1">Dynamic historical visualization and period-over-period tracking.</p>
         </header>
 
-        <main class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-            <div id="loading" class="flex flex-col items-center justify-center py-20 text-slate-400">
-                <svg class="animate-spin h-8 w-8 text-blue-500 mb-3" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <p class="text-sm font-medium">Parsing spatial fuel dataset matrix...</p>
+        <section class="bg-white rounded-xl shadow-xs border border-gray-200 p-6 mb-8 grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div>
+                <label for="aggregation" class="block text-sm font-semibold text-gray-700 mb-2">Data Aggregation</label>
+                <select id="aggregation" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="daily" selected>Daily Average</option>
+                    <option value="weekly">Weekly Average</option>
+                    <option value="monthly">Monthly Average</option>
+                    <option value="quarterly">Quarterly Average</option>
+                    <option value="yearly">Yearly Average</option>
+                </select>
             </div>
 
-            <div id="chart-container" class="hidden relative h-[450px] w-full">
-                <canvas id="trendsChart"></canvas>
+            <div>
+                <label for="startDate" class="block text-sm font-semibold text-gray-700 mb-2">Start Date</label>
+                <input type="date" id="startDate" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="endDate" class="block text-sm font-semibold text-gray-700 mb-2">End Date</label>
+                <input type="date" id="endDate" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <span class="block text-sm font-semibold text-gray-700 mb-2">Statistical Overlays</span>
+                <label class="inline-flex items-center mt-2 cursor-pointer">
+                    <input type="checkbox" id="toggleTrendline" class="sr-only peer">
+                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    <span class="ms-3 text-sm font-medium text-gray-600">Show Trendline</span>
+                </label>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-xs border border-gray-200">
+                <p class="text-sm font-medium text-gray-400 uppercase tracking-wider">Latest Regular Price</p>
+                <p id="kpiCurrent" class="text-3xl font-bold text-gray-900 mt-1">$-.--</p>
+                <p id="kpiCurrentDate" class="text-xs text-gray-400 mt-0.5">--/--/----</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-xs border border-gray-200">
+                <p class="text-sm font-medium text-gray-400 uppercase tracking-wider">Period-over-Period Change</p>
+                <p id="kpiDelta" class="text-3xl font-bold text-gray-900 mt-1">$-.--</p>
+                <span id="kpiDeltaBadge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-2 bg-gray-100 text-gray-800">--</span>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-xs border border-gray-200">
+                <p class="text-sm font-medium text-gray-400 uppercase tracking-wider">Year-over-Year Change</p>
+                <p id="kpiYoy" class="text-3xl font-bold text-gray-900 mt-1">$-.--</p>
+                <span id="kpiYoyBadge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-2 bg-gray-100 text-gray-800">--</span>
+            </div>
+        </section>
+
+        <main class="bg-white p-6 rounded-xl shadow-xs border border-gray-200">
+            <div class="relative w-full h-[500px]">
+                <canvas id="gasChart"></canvas>
             </div>
         </main>
     </div>
 
     <script>
-        // Bulletproof sequential character parser that explicitly preserves back-to-back empty commas
-        function parseCSVLine(line) {
-            const result = [];
-            let currentCell = '';
-            let insideQuotes = false;
+        const DateTime = luxon.DateTime;
+        let dailyBaselineRecords = []; // Stores single aggregated daily rows
+        let gasChartInstance = null;
 
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
+        // Configuration and elements hooks
+        const csvUrl = 'el_paso_gas_prices.csv';
+        const elAgg = document.getElementById('aggregation');
+        const elStart = document.getElementById('startDate');
+        const elEnd = document.getElementById('endDate');
+        const elTrend = document.getElementById('toggleTrendline');
 
-                if (char === '"') {
-                    insideQuotes = !insideQuotes; // Toggle quotes mode
-                } else if (char === ',' && !insideQuotes) {
-                    result.push(currentCell.trim());
-                    currentCell = '';
-                } else {
-                    currentCell += char;
+        // Initial Initialization Entrypoint
+        window.addEventListener('DOMContentLoaded', () => {
+            Papa.parse(csvUrl, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    processRawData(results.data);
+                },
+                error: function(err) {
+                    console.error("Critical error parsing the flat CSV data stream:", err);
                 }
+            });
+
+            // Bind Event Listeners to trigger programmatic recalculation UI refreshes
+            [elAgg, elStart, elEnd, elTrend].forEach(element => {
+                element.addEventListener('change', () => renderDashboard());
+            });
+        });
+
+        // Parse clean JavaScript primitives and aggregate raw entries into clean single-day timelines
+        function processRawData(data) {
+            let dayGrouping = {};
+
+            data.forEach(row => {
+                // Safeguard against variations in column headers or missing fields
+                const dateRaw = row.Scrape_Date || row.Date;
+                if (!dateRaw || dateRaw.trim() === "") return;
+
+                const parsedDate = DateTime.fromFormat(dateRaw.trim(), 'M/d/yyyy');
+                if (!parsedDate.isValid) return;
+
+                const dateKey = parsedDate.toISODate(); // Format standard YYYY-MM-DD keys
+
+                // Extract values while skipping 0.0 metrics
+                const reg = row.Regular_Price && row.Regular_Price.trim() !== "" ? parseFloat(row.Regular_Price) : 0;
+
+                if (!dayGrouping[dateKey]) {
+                    dayGrouping[dateKey] = {
+                        date: parsedDate,
+                        regSum: 0, regCount: 0
+                    };
+                }
+
+                if (reg > 0) { dayGrouping[dateKey].regSum += reg; dayGrouping[dateKey].regCount++; }
+            });
+
+            // Flatten object into a chronological daily snapshot collection
+            dailyBaselineRecords = Object.keys(dayGrouping).map(key => {
+                const day = dayGrouping[key];
+                return {
+                    date: day.date,
+                    regular: day.regCount > 0 ? (day.regSum / day.regCount) : null
+                };
+            }).filter(item => item.regular !== null) // drop days with absolutely no regular data points
+              .sort((a, b) => a.date.toMillis() - b.date.toMillis());
+
+            // Initialize control panel bounding limits using actual timelines found
+            if(dailyBaselineRecords.length > 0) {
+                elStart.value = dailyBaselineRecords[0].date.toISODate();
+                elEnd.value = dailyBaselineRecords[dailyBaselineRecords.length - 1].date.toISODate();
             }
-            result.push(currentCell.trim()); // Push final remaining cell
-            return result;
+
+            renderDashboard();
         }
 
-        function parseHeaderMappedCSV(text) {
-            const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-            if (lines.length <= 1) return [];
+        // Main rendering engine
+        function renderDashboard() {
+            if (dailyBaselineRecords.length === 0) return;
 
-            // Map headers to lock index targets
-            const headers = lines[0].split(',').map(h => h.trim());
-            const regPriceIdx = headers.indexOf("Regular_Price");
-            const dateIdx = headers.indexOf("Scrape_Date");
+            const startLimit = DateTime.fromISO(elStart.value);
+            const endLimit = DateTime.fromISO(elEnd.value).endOf('day');
+            const aggMode = elAgg.value;
 
-            const records = [];
+            // Step 1: Trim data array to fit user-specified date windows
+            const filteredData = dailyBaselineRecords.filter(r => r.date >= startLimit && r.date <= endLimit);
 
-            for (let i = 1; i < lines.length; i++) {
-                const rowValues = parseCSVLine(lines[i]);
-                if (rowValues.length < headers.length) continue;
+            // Step 2: Dynamic Bucketing & High-Level Aggregation Logic
+            let groupedMap = {};
+            filteredData.forEach(item => {
+                let key;
+                if (aggMode === 'daily')     key = item.date.toISODate();
+                else if (aggMode === 'weekly') key = `${item.date.year}-W${String(item.date.weekNumber).padStart(2, '0')}`;
+                else if (aggMode === 'monthly') key = item.date.toFormat('yyyy-MM');
+                else if (aggMode === 'quarterly') key = `${item.date.year}-Q${item.date.quarter}`;
+                else if (aggMode === 'yearly') key = `${item.date.year}`;
 
-                const rawPrice = rowValues[regPriceIdx];
-                const rawDate = rowValues[dateIdx];
+                if (!groupedMap[key]) {
+                    groupedMap[key] = { timestamp: item.date, regularSum: 0, regularCount: 0 };
+                }
+                
+                if (item.regular !== null) { groupedMap[key].regularSum += item.regular; groupedMap[key].regularCount++; }
+            });
 
-                if (rawDate) {
-                    const cleanPrice = parseFloat(rawPrice);
-                    records.push({
-                        Scrape_Date: rawDate,
-                        Regular_Price: !isNaN(cleanPrice) ? cleanPrice : 0.0
+            // Convert aggregate map back to clean sequential arrays
+            let processedPoints = Object.keys(groupedMap).map(key => {
+                const b = groupedMap[key];
+                return {
+                    label: key,
+                    dateObj: b.timestamp,
+                    regular: b.regularCount > 0 ? (b.regularSum / b.regularCount) : null
+                };
+            }).sort((a, b) => a.dateObj.toMillis() - b.dateObj.toMillis());
+
+            // Build structural dynamic KPI values
+            calculateKPIs(processedPoints);
+
+            // Map inputs to Chart.js structures
+            const labels = processedPoints.map(p => p.label);
+            const regularData = processedPoints.map(p => p.regular);
+
+            let datasets = [
+                { label: 'Regular Price', data: regularData, borderColor: '#3b82f6', backgroundColor: '#3b82f6', tension: 0.1, spanGaps: true }
+            ];
+
+            // Step 3: Compute Linear Trendline Overlay (Least Squares Regression)
+            if (elTrend.checked && regularData.length > 1) {
+                let xValues = [], yValues = [];
+                for (let i = 0; i < regularData.length; i++) {
+                    if (regularData[i] !== null) {
+                        xValues.push(i);
+                        yValues.push(regularData[i]);
+                    }
+                }
+                if(xValues.length > 1) {
+                    const n = xValues.length;
+                    let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+                    for (let i = 0; i < n; i++) {
+                        sumX += xValues[i];
+                        sumY += yValues[i];
+                        sumXY += xValues[i] * yValues[i];
+                        sumXX += xValues[i] * xValues[i];
+                    }
+                    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+                    const intercept = (sumY - slope * sumX) / n;
+
+                    let trendlinePoints = new Array(regularData.length).fill(null);
+                    for (let i = 0; i < regularData.length; i++) {
+                        trendlinePoints[i] = slope * i + intercept;
+                    }
+
+                    datasets.push({
+                        label: 'Trendline (OLS)',
+                        data: trendlinePoints,
+                        borderColor: '#ef4444',
+                        borderWidth: 2,
+                        borderDash: [6, 4],
+                        pointRadius: 0,
+                        fill: false
                     });
                 }
             }
-            return records;
+
+            // Step 4: Destroy existing chart layer context and draw canvas fresh
+            if (gasChartInstance) {
+                gasChartInstance.destroy();
+            }
+
+            const ctx = document.getElementById('gasChart').getContext('2d');
+            gasChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: { labels: labels, datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 6 } },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { maxRotation: 45, autoSkip: true, maxTicksLimit: 20 } },
+                        y: { 
+                            title: { display: true, text: 'Price ($ per Gallon)' },
+                            ticks: { callback: value => '$' + value.toFixed(2) }
+                        }
+                    }
+                }
+            });
         }
 
-        async function initDashboard() {
-            try {
-                const response = await fetch('el_paso_gas_prices.csv');
-                if (!response.ok) throw new Error('Data file mapping read error.');
-                const csvText = await response.text();
+        // Period-over-period comparative delta tracker matrix engine
+        function calculateKPIs(currentAggregatedArray) {
+            if (currentAggregatedArray.length === 0 || dailyBaselineRecords.length === 0) return;
+
+            // Locate most recent price row coordinates
+            const baseLatest = [...dailyBaselineRecords].reverse().find(r => r.regular !== null);
+            if (!baseLatest) return;
+
+            document.getElementById('kpiCurrent').innerText = `$${baseLatest.regular.toFixed(2)}`;
+            document.getElementById('kpiCurrentDate').innerText = `As of ${baseLatest.date.toFormat('MM/dd/yyyy')}`;
+
+            // Period over Period updates
+            const validAggs = currentAggregatedArray.filter(p => p.regular !== null);
+            if(validAggs.length >= 2) {
+                const currentPeriod = validAggs[validAggs.length - 1];
+                const previousPeriod = validAggs[validAggs.length - 2];
                 
-                const rawData = parseHeaderMappedCSV(csvText);
-                const dateGroups = {};
+                const delta = currentPeriod.regular - previousPeriod.regular;
+                const pct = previousPeriod.regular !== 0 ? (delta / previousPeriod.regular) * 100 : 0;
+                
+                renderBadge('kpiDelta', 'kpiDeltaBadge', delta, pct, `vs last ${elAgg.value}`);
+            } else {
+                clearKPIField('kpiDelta', 'kpiDeltaBadge');
+            }
 
-                rawData.forEach(row => {
-                    const date = row.Scrape_Date;
-                    const price = row.Regular_Price;
-
-                    // Keep standard gas prices and drop empty cells/zeros
-                    if (price > 2.00 && price < 7.00) { 
-                        if (!dateGroups[date]) {
-                            dateGroups[date] = { sum: 0, count: 0 };
-                        }
-                        dateGroups[date].sum += price; 
-                        dateGroups[date].count++; 
+            // Year-Over-Year lookback comparative calculations
+            const targetYoyDate = baseLatest.date.minus({ years: 1 });
+            let yoyMatch = null;
+            let closestDiff = Infinity;
+            
+            dailyBaselineRecords.forEach(r => {
+                if(r.regular !== null) {
+                    const diff = Math.abs(r.date.diff(targetYoyDate).as('days'));
+                    if(diff < closestDiff && diff <= 20) { // Tolerates up to 20 days seasonal layout offset bounds
+                        closestDiff = diff;
+                        yoyMatch = r;
                     }
-                });
-
-                // Sort structural calendar dates chronologically
-                const sortedDates = Object.keys(dateGroups).sort((a, b) => new Date(a) - new Date(b));
-                const avgRegular = [];
-
-                sortedDates.forEach(date => {
-                    const group = dateGroups[date];
-                    avgRegular.push(group.count > 0 ? (group.sum / group.count).toFixed(2) : null);
-                });
-
-                if (sortedDates.length === 0) {
-                    throw new Error("No valid regular gas entries found matching historical criteria.");
                 }
+            });
 
-                document.getElementById('loading').classList.add('hidden');
-                document.getElementById('chart-container').classList.remove('hidden');
-
-                const ctx = document.getElementById('trendsChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: sortedDates,
-                        datasets: [
-                            {
-                                label: 'Regular Unleaded Average ($/Gal)',
-                                data: avgRegular,
-                                borderColor: '#2563eb', 
-                                backgroundColor: 'rgba(37, 99, 235, 0.05)',
-                                fill: true,
-                                borderWidth: 3.5,
-                                tension: 0.15,
-                                pointBackgroundColor: '#2563eb',
-                                pointRadius: 5,
-                                spanGaps: true
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'top', labels: { font: { weight: 'bold', size: 13 } } },
-                            tooltip: {
-                                callbacks: {
-                                    label: context => `Average Price: $${context.raw}`
-                                }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                ticks: { callback: value => '$' + value },
-                                title: { display: true, text: 'Fuel Cost ($ USD)', font: { weight: 'bold' } }
-                            },
-                            x: {
-                                title: { display: true, text: 'Collection Timeline Date', font: { weight: 'bold' } }
-                            }
-                        }
-                    }
-                });
-
-            } catch (error) {
-                console.error(error);
-                document.getElementById('loading').innerHTML = `
-                    <p class="text-rose-500 font-medium">⚠️ Data Stream Visualization Disruption</p>
-                    <p class="text-slate-400 text-xs mt-1">${error.message}</p>
-                `;
+            if (yoyMatch) {
+                const yoyDelta = baseLatest.regular - yoyMatch.regular;
+                const yoyPct = yoyMatch.regular !== 0 ? (yoyDelta / yoyMatch.regular) * 100 : 0;
+                renderBadge('kpiYoy', 'kpiYoyBadge', yoyDelta, yoyPct, 'vs last year');
+            } else {
+                clearKPIField('kpiYoy', 'kpiYoyBadge');
             }
         }
 
-        window.addEventListener('DOMContentLoaded', initDashboard);
+        function renderBadge(textFieldId, badgeFieldId, valueDelta, percentageDelta, labelContext) {
+            const txtEl = document.getElementById(textFieldId);
+            const badgeEl = document.getElementById(badgeFieldId);
+            
+            const sign = valueDelta > 0 ? '+' : '';
+            txtEl.innerText = `$${valueDelta.toFixed(2)}`;
+            badgeEl.innerText = `${sign}${percentageDelta.toFixed(1)}% ${labelContext}`;
+            
+            if(valueDelta > 0) {
+                badgeEl.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-2 bg-red-100 text-red-800";
+            } else if (valueDelta < 0) {
+                badgeEl.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-2 bg-green-100 text-green-800";
+            } else {
+                badgeEl.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-2 bg-gray-100 text-gray-800";
+            }
+        }
+
+        function clearKPIField(textFieldId, badgeFieldId) {
+            document.getElementById(textFieldId).innerText = "N/A";
+            const badge = document.getElementById(badgeFieldId);
+            badge.innerText = "Insufficient scope";
+            badge.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-2 bg-gray-100 text-gray-400";
+        }
     </script>
 </body>
 </html>
