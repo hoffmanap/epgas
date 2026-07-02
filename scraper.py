@@ -1,158 +1,169 @@
 import datetime
 import re
 import os
+import urllib.parse
 from playwright.sync_api import sync_playwright
 
-# Complete list of geographic search target parameters covering all parts of El Paso
+# Complete list of live geographic search targets using Google Maps queries
 TARGET_HUBS = [
-    {"name": "Central / Downtown", "url": "https://www.google.com/maps/search/Gas+Stations+Central+El+Paso+TX/"},
-    {"name": "West Side / Mesa Hills", "url": "https://www.google.com/maps/search/Gas+Stations+West+El+Paso+TX/"},
-    {"name": "East Side / Cielo Vista", "url": "https://www.google.com/maps/search/Gas+Stations+East+El+Paso+TX/"},
-    {"name": "Northeast / Dyer St", "url": "https://www.google.com/maps/search/Gas+Stations+Northeast+El+Paso+TX/"},
-    {"name": "Lower Valley / Zaragosa", "url": "https://www.google.com/maps/search/Gas+Stations+Lower+Valley+El+Paso+TX/"},
-    {"name": "Socorro / Horizon", "url": "https://www.google.com/maps/search/Gas+Stations+Socorro+Horizon+TX/"},
-    {"name": "Far East Montana", "url": "http://googleusercontent.com/maps.google.com/7"}
+    {"name": "Central / Downtown", "query": "gas stations in Central Downtown El Paso TX"},
+    {"name": "West Side / Mesa Hills", "query": "gas stations in West Side Mesa Hills El Paso TX"},
+    {"name": "East Side / Cielo Vista", "query": "gas stations in East Side Cielo Vista El Paso TX"},
+    {"name": "Northeast / Dyer St", "query": "gas stations in Northeast Dyer St El Paso TX"},
+    {"name": "Lower Valley / Zaragosa", "query": "gas stations in Lower Valley Zaragosa El Paso TX"},
+    {"name": "Socorro / Horizon", "query": "gas stations in Socorro Horizon El Paso TX"},
+    {"name": "Far East Montana", "query": "gas stations in Far East Montana El Paso TX"}
 ]
 
 CSV_FILE = "el_paso_gas_prices.csv"
 
-def extract_prices_directly(element):
+def parse_listing_text_block(text_content, hub_name):
     """
-    Locates text containing money symbols ($X.XX) inside the card container.
+    Parses a raw text block from a Google Maps element to extract Name, Address, and Price.
     """
-    raw_text = element.inner_text() or ""
-    prices = re.findall(r'\$(\d+\.\d{2})', raw_text)
-    
-    reg_price, plus_price, prem_price = "", "", ""
-    
-    if len(prices) >= 1:
-        reg_price = prices[0]
-    if len(prices) >= 2:
-        plus_price = prices[1]
-    if len(prices) >= 3:
-        prem_price = prices[2]
+    lines = [line.strip() for line in text_content.split('\n') if line.strip()]
+    if not lines:
+        return None
         
-    return reg_price, plus_price, prem_price
-
-def extract_coordinates(element):
-    """
-    Finds the anchor link within the element block and grabs latitude/longitude 
-    from Google Maps URL query strings.
-    """
-    lat, lng = "", ""
-    try:
-        # Search for any embedded anchor tags inside the listing item
-        link_elem = element.locator("a").first
-        if link_elem and link_elem.count() > 0:
-            href = link_elem.get_attribute("href") or ""
-            # Look for coordinate tracking pattern like /@31.7766157,-106.4088902
-            coord_match = re.search(r'@(-?\d+\.\d+),(-?\d+\.\d+)', href)
-            if coord_match:
-                lat = coord_match.group(1)
-                lng = coord_match.group(2)
-    except Exception:
-        pass
-    return lat, lng
-
-def run_pipeline():
-    current_date = datetime.datetime.now().strftime("%m/%d/%Y")
-    print(f"--- Launching Multi-Location Scraping Pipeline for {current_date} ---")
+    station_name = lines[0]
     
-    seen_stations = set()
+    # Extract Price: Look for numbers matching gas prices (e.g., $3.45 or 3.45)
+    reg_price = None
+    price_matches = re.findall(r"\b\$?\d\.\d{2}\b", text_content)
+    if price_matches:
+        # Take the first match and strip the dollar sign if present
+        reg_price = float(price_matches[0].replace("$", ""))
+        
+    # If no price is listed in this block, skip it to avoid empty entries
+    if not reg_price:
+        return None
+        
+    # Extract Address: Look for standard street abbreviations or El Paso text
+    address_str = f"El Paso, TX ({hub_name})"
+    address_patterns = [
+        r"\d+\s+[A-Za-z0-9\s\.\-]+(?:St|Ave|Blvd|Dr|Rd|Ln|Way|Ct|Cir|Hwy|Loop|Gtwy)\b",
+        r"[A-Za-z0-9\s\.\-]+,\s*El\s*Paso"
+    ]
+    
+    for pattern in address_patterns:
+        addr_match = re.search(pattern, text_content, re.IGNORECASE)
+        if addr_match:
+            address_str = addr_match.group(0).strip()
+            break
+            
+    # Final cleanup to keep the CSV well-formatted
+    station_name = station_name.replace('"', '').replace(',', ' ')
+    address_str = address_str.replace('"', '').replace(',', ' ')
+    
+    return {
+        "Name": station_name,
+        "Address": address_str,
+        "Regular_Price": reg_price
+    }
+
+def run():
     all_parsed_records = []
+    current_date = datetime.datetime.now().strftime("%m/%d/%Y")
     
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+    with sync_playwright() as playwright:
+        # Launch browser with anti-detection flags
+        browser = playwright.chromium.launch(
+            headless=True,
+            args=["--disable-blink-features=AutomationControlled"]
+        )
+        
         context = browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            viewport={"width": 1440, "height": 900},
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
         )
         
         page = context.new_page()
-        page.route("**/*", lambda route: route.abort() if route.request.resource_type in ["image", "font", "media"] else route.continue_())
+        
+        # Block heavy visual elements to increase rendering speeds
+        page.route("**/*", lambda route: route.abort() if route.request.resource_type in ["image", "font"] else route.continue_())
         
         for hub in TARGET_HUBS:
-            print(f"\nScanning Sector: {hub['name']}...")
+            print(f"Scraping geographic target matrix section: {hub['name']}...")
             try:
-                page.goto(hub["url"], wait_until="domcontentloaded", timeout=45000)
-                page.wait_for_timeout(6000)
+                # Generate URL and navigate
+                encoded_query = urllib.parse.quote(hub["query"])
+                maps_url = f"https://www.google.com/maps/search/{encoded_query}"
                 
-                elements = page.locator('div[role="article"]').all()
-                if not elements:
-                    elements = page.locator('div.Nv2PK').all()
+                page.goto(maps_url, wait_until="load", timeout=60000)
+                page.wait_for_timeout(5000) # Give dynamic panels full time to settle text rows
                 
-                print(f" -> Found {len(elements)} potential listings in this view.")
+                # Broad capture: Grab ALL links or structural elements that look like a location entry
+                elements = page.query_selector_all("a[href*='/maps/place/'], [role='article'], div[jsaction*='pane.wfvdfl']")
                 
-                for element in elements:
+                for index, element in enumerate(elements):
                     try:
-                        station_name = element.get_attribute("aria-label") or "Unknown Station"
-                        if "unknown" in station_name.lower() or not station_name.strip():
+                        text_content = element.text_content()
+                        if not text_content or len(text_content.strip()) < 10:
                             continue
                             
-                        reg_price, plus_price, prem_price = extract_prices_directly(element)
+                        # Extract data points purely via text parsing logic
+                        parsed_data = parse_listing_text_block(text_content, hub["name"])
                         
-                        # Skip if no prices are visible to maintain database purity
-                        if not reg_price:
-                            continue
-                        
-                        # Grab dynamic map coordinates safely
-                        latitude, longitude = extract_coordinates(element)
-                        
-                        text_content = element.inner_text() or ""
-                        address = "El Paso, TX"
-                        address_match = re.search(r'·\s*([^·\n\d]*\d+[^·\n]*)', text_content)
-                        if address_match:
-                            address = address_match.group(1).strip().replace('\n', ' ')
-                        
-                        # Append search sector tag to address if coordinate data fallback fails
-                        if not latitude and f"({hub['name']})" not in address:
-                            clean_hub_name = hub['name'].replace(" ", "_").replace("/", "")
-                            address = f"{address} ({clean_hub_name})"
-
-                        station_signature = f"{station_name.lower()}|{address.lower()}"
-                        if station_signature in seen_stations:
-                            continue
+                        if parsed_data:
+                            # Extract link attributes safely for metadata strings
+                            station_url = element.get_attribute("href") or ""
                             
-                        seen_stations.add(station_signature)
-                        
-                        station_id = re.sub(r'[^a-z0-9\s-]', '', station_name.lower())
-                        station_id = re.sub(r'[\s]+', '-', station_id).strip('-')
-
-                        all_parsed_records.append({
-                            "Station_ID": station_id,
-                            "Name": station_name,
-                            "Address": address,
-                            "Latitude": latitude,
-                            "Longitude": longitude,
-                            "Regular_Price": reg_price,
-                            "Plus_Price": plus_price,
-                            "Premium_Price": prem_price,
-                            "Scrape_Date": current_date
-                        })
-                        
-                    except Exception as elem_err:
+                            # Build a reliable Station ID string
+                            if station_url and "/maps/place/" in station_url:
+                                parts = station_url.split('/maps/place/')
+                                station_id = re.sub(r'[^a-zA-Z0-9\-]', '', parts[1].split('/')[0])[:40].lower()
+                            else:
+                                clean_name = re.sub(r'[^a-z0-9]', '', parsed_data["Name"].lower())[:15]
+                                station_id = f"station_{clean_name}_{index}"
+                                
+                            # Capture positional GPS coordinates if available in the url
+                            lat, lng = "", ""
+                            if station_url and "!3d" in station_url:
+                                coords_match = re.search(r'!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)', station_url)
+                                if coords_match:
+                                    lat = coords_match.group(1)
+                                    lng = coords_match.group(2)
+                                    
+                            all_parsed_records.append({
+                                "Station_ID": station_id,
+                                "Name": parsed_data["Name"],
+                                "Address": parsed_data["Address"],
+                                "Latitude": lat,
+                                "Longitude": lng,
+                                "Regular_Price": parsed_data["Regular_Price"],
+                                "Plus_Price": "",
+                                "Premium_Price": "",
+                                "Scrape_Date": current_date
+                            })
+                    except Exception:
                         continue
                         
             except Exception as nav_err:
-                print(f"   Skipped hub {hub['name']} due to navigation timeout.")
+                print(f"   Skipped hub {hub['name']} due to connection layout timeout.")
                 continue
                 
         browser.close()
         
     # Write entries out directly matching database column header tracking schema
     if all_parsed_records:
+        # Deduplicate records grabbed multiple times due to broad element selectors
+        unique_records = {}
+        for rec in all_parsed_records:
+            unique_key = f"{rec['Name']}_{rec['Regular_Price']}"
+            unique_records[unique_key] = rec
+            
         file_exists = os.path.exists(CSV_FILE)
-        
         with open(CSV_FILE, mode="a", encoding="utf-8") as f:
             if not file_exists:
                 f.write("Station_ID,Name,Address,Latitude,Longitude,Regular_Price,Plus_Price,Premium_Price,Scrape_Date\n")
             
-            for record in all_parsed_records:
+            for record in unique_records.values():
                 line = f'"{record["Station_ID"]}","{record["Name"]}","{record["Address"]}","{record["Latitude"]}","{record["Longitude"]}","{record["Regular_Price"]}","{record["Plus_Price"]}","{record["Premium_Price"]}","{record["Scrape_Date"]}"\n'
                 f.write(line)
                 
-        print(f"\nPipeline finished. Added {len(all_parsed_records)} unique gas stations with coordinates across all El Paso sectors.")
+        print(f"\nPipeline finished. Added {len(unique_records)} unique gas stations with coordinates across all El Paso sectors.")
     else:
         print("\nWarning: No records with valid price details found during this sweep.")
 
 if __name__ == "__main__":
-    run_pipeline()
+    run()
