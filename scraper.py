@@ -19,7 +19,7 @@ async def scrape_node(context, lat, lng, area_name):
         await page.goto(search_url, timeout=60000)
         await page.wait_for_timeout(4000)
         
-        # Deep scroll map pane to force station cards to render
+        # Deep scroll map pane to force all station cards to load into the DOM
         for _ in range(6): 
             try:
                 await page.mouse.move(200, 400)
@@ -28,12 +28,17 @@ async def scrape_node(context, lat, lng, area_name):
             except Exception:
                 pass
 
-        cards = await page.query_selector_all('div[role="article"]')
-        print(f"  -> Found {len(cards)} entries on grid node {area_name}.")
-        
-        for card in cards[:50]:
+        # We cap at 35 to ensure the script completes before timing out
+        for i in range(35):
             try:
-                # 1. Structural target for station title
+                # Re-query cards every loop to avoid "Detached Element" errors after navigating back
+                cards = await page.query_selector_all('div[role="article"]')
+                if i >= len(cards):
+                    break
+                
+                card = cards[i]
+                
+                # Locate the station title
                 name_elem = await card.query_selector('a[href*="/maps/place"]')
                 if not name_elem:
                     name_elem = await card.query_selector('div.fontHeadlineSmall')
@@ -46,12 +51,9 @@ async def scrape_node(context, lat, lng, area_name):
                     name = await name_elem.inner_text()
                 name = name.strip()
 
-                # 2. Extract Card Text (Primary Price Source)
-                card_text = await card.inner_text()
-                
-                # Expand panel to force Google Maps to reveal hidden price DOM elements
+                # Click to expand the new detailed place panel shown in the image
                 await name_elem.click()
-                await page.wait_for_timeout(1800) 
+                await page.wait_for_timeout(2500) 
                 
                 current_url = page.url
                 station_lat, station_lng = None, None
@@ -64,31 +66,24 @@ async def scrape_node(context, lat, lng, area_name):
                     if fallback_match:
                         station_lat, station_lng = float(fallback_match.group(1)), float(fallback_match.group(2))
 
-                # 3. Pull text from the expanded panel if main card was missing prices
-                panel_text = ""
-                try:
-                    panel = await page.query_selector('div[role="main"]')
-                    if panel:
-                        panel_text = await panel.inner_text()
-                except Exception:
-                    pass
+                # Scrape the entire expanded sidebar panel to capture the new price grid
+                sidebar = await page.query_selector('div[role="main"]')
+                panel_text = await sidebar.inner_text() if sidebar else await page.inner_text('body')
 
-                combined_text = f"{card_text}\n{panel_text}"
-
-                # 4. Universal Price Extraction Engine
-                # Matches formats: $4.30, 4.30/Regular, $4.30/Gal, 4.30
-                found_prices = re.findall(r'\$?([2-6]\.\d{2})(?:\s*\/|\s*Regular|\s*Gal|\b)', combined_text, re.IGNORECASE)
+                # Regex specifically targets the $X.XX format from the grid (e.g., $4.50 *)
+                found_prices = re.findall(r'\$\s*([2-6]\.\d{2})', panel_text)
                 
-                # Convert strings to floats
+                # Deduplicate and validate prices
                 prices = []
                 for p in found_prices:
                     try:
                         val = float(p)
-                        if 2.00 <= val <= 6.50: # Valid fuel threshold guard
+                        if 2.00 <= val <= 6.50 and val not in prices:
                             prices.append(val)
                     except ValueError:
                         continue
 
+                # The grid orders them logically: Regular, Midgrade (Plus), Premium
                 reg_price, plus_price, prem_price = 0.0, 0.0, 0.0
                 if len(prices) >= 1: reg_price = prices[0]
                 if len(prices) >= 2: plus_price = prices[1]
@@ -103,11 +98,22 @@ async def scrape_node(context, lat, lng, area_name):
                     "Address": f"El Paso, TX ({area_name})",
                     "Latitude": station_lat, 
                     "Longitude": station_lng,
-                    "Regular_Price": reg_price if reg_price > 0 else "", # Leave clean blank instead of 0.0
+                    "Regular_Price": reg_price if reg_price > 0 else "", 
                     "Plus_Price": plus_price if plus_price > 0 else "",
                     "Premium_Price": prem_price if prem_price > 0 else "",
                     "Scrape_Date": current_date
                 }
+
+                # CRITICAL: Click the "Back" arrow to restore the list view so the loop can continue
+                back_btn = await page.query_selector('button[aria-label="Back"]')
+                if back_btn:
+                    await back_btn.click()
+                    await page.wait_for_timeout(1500)
+                else:
+                    # Failsafe if the back button is hidden
+                    await page.goto(search_url)
+                    await page.wait_for_timeout(4000)
+
             except Exception:
                 continue
                 
@@ -151,18 +157,24 @@ async def main():
         df_new = pd.DataFrame(all_stations.values())
         csv_file = "el_paso_gas_prices.csv"
         
-        # Remove empty rows where Regular_Price was not captured
+        # Filter out rows where Regular_Price was not successfully scraped
         df_new = df_new[df_new['Regular_Price'] != ""]
         
-        if os.path.exists(csv_file):
-            df_existing = pd.read_csv(csv_file)
-            df_final = pd.concat([df_existing, df_new], ignore_index=True)
-            df_final.drop_duplicates(subset=["Station_ID", "Scrape_Date"], keep="last", inplace=True)
+        if not df_new.empty:
+            if os.path.exists(csv_file):
+                df_existing = pd.read_csv(csv_file)
+                if not df_existing.empty:
+                    df_final = pd.concat([df_existing, df_new], ignore_index=True)
+                else:
+                    df_final = df_new
+                df_final.drop_duplicates(subset=["Station_ID", "Scrape_Date"], keep="last", inplace=True)
+            else:
+                df_final = df_new
+                
+            df_final.to_csv(csv_file, index=False)
+            print(f"✅ Success! Updated dataset with {len(df_new)} valid pricing entries for {current_date}.")
         else:
-            df_final = df_new
-            
-        df_final.to_csv(csv_file, index=False)
-        print(f"✅ Success! Updated dataset with {len(df_new)} valid pricing entries for {current_date}.")
+            print(f"⚠️ Scan completed, but no valid pricing grids were found for {current_date}.")
     else:
         print("❌ Error: Map scanning completed but no pricing entities could be verified.")
 
