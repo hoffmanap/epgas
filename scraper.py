@@ -1,169 +1,144 @@
-import datetime
-import re
 import os
-import urllib.parse
-from playwright.sync_api import sync_playwright
+import re
+import time
+import asyncio
+import pandas as pd
+from playwright.async_api import async_playwright
+from playwright_stealth import Stealth
 
-# Complete list of live geographic search targets using Google Maps queries
-TARGET_HUBS = [
-    {"name": "Central / Downtown", "query": "gas stations in Central Downtown El Paso TX"},
-    {"name": "West Side / Mesa Hills", "query": "gas stations in West Side Mesa Hills El Paso TX"},
-    {"name": "East Side / Cielo Vista", "query": "gas stations in East Side Cielo Vista El Paso TX"},
-    {"name": "Northeast / Dyer St", "query": "gas stations in Northeast Dyer St El Paso TX"},
-    {"name": "Lower Valley / Zaragosa", "query": "gas stations in Lower Valley Zaragosa El Paso TX"},
-    {"name": "Socorro / Horizon", "query": "gas stations in Socorro Horizon El Paso TX"},
-    {"name": "Far East Montana", "query": "gas stations in Far East Montana El Paso TX"}
-]
-
-CSV_FILE = "el_paso_gas_prices.csv"
-
-def parse_listing_text_block(text_content, hub_name):
-    """
-    Parses a raw text block from a Google Maps element to extract Name, Address, and Price.
-    """
-    lines = [line.strip() for line in text_content.split('\n') if line.strip()]
-    if not lines:
-        return None
-        
-    station_name = lines[0]
+async def scrape_node(context, lat, lng, area_name):
+    stations = {}
+    page = await context.new_page()
+    stealth = Stealth()
+    await stealth.apply_stealth_async(page)
     
-    # Extract Price: Look for numbers matching gas prices (e.g., $3.45 or 3.45)
-    reg_price = None
-    price_matches = re.findall(r"\b\$?\d\.\d{2}\b", text_content)
-    if price_matches:
-        # Take the first match and strip the dollar sign if present
-        reg_price = float(price_matches[0].replace("$", ""))
-        
-    # If no price is listed in this block, skip it to avoid empty entries
-    if not reg_price:
-        return None
-        
-    # Extract Address: Look for standard street abbreviations or El Paso text
-    address_str = f"El Paso, TX ({hub_name})"
-    address_patterns = [
-        r"\d+\s+[A-Za-z0-9\s\.\-]+(?:St|Ave|Blvd|Dr|Rd|Ln|Way|Ct|Cir|Hwy|Loop|Gtwy)\b",
-        r"[A-Za-z0-9\s\.\-]+,\s*El\s*Paso"
-    ]
+    search_url = f"https://www.google.com/maps/search/gas+stations/@{lat},{lng},15z"
+    print(f"Scanning Coordinate Node: {area_name}...")
     
-    for pattern in address_patterns:
-        addr_match = re.search(pattern, text_content, re.IGNORECASE)
-        if addr_match:
-            address_str = addr_match.group(0).strip()
-            break
-            
-    # Final cleanup to keep the CSV well-formatted
-    station_name = station_name.replace('"', '').replace(',', ' ')
-    address_str = address_str.replace('"', '').replace(',', ' ')
-    
-    return {
-        "Name": station_name,
-        "Address": address_str,
-        "Regular_Price": reg_price
-    }
-
-def run():
-    all_parsed_records = []
-    current_date = datetime.datetime.now().strftime("%m/%d/%Y")
-    
-    with sync_playwright() as playwright:
-        # Launch browser with anti-detection flags
-        browser = playwright.chromium.launch(
-            headless=True,
-            args=["--disable-blink-features=AutomationControlled"]
-        )
+    try:
+        await page.goto(search_url, timeout=60000)
+        await page.wait_for_timeout(5000)
         
-        context = browser.new_context(
-            viewport={"width": 1440, "height": 900},
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-        )
-        
-        page = context.new_page()
-        
-        # Block heavy visual elements to increase rendering speeds
-        page.route("**/*", lambda route: route.abort() if route.request.resource_type in ["image", "font"] else route.continue_())
-        
-        for hub in TARGET_HUBS:
-            print(f"Scraping geographic target matrix section: {hub['name']}...")
+        # Deep scroll map pane to populate sidebar
+        for _ in range(8): 
             try:
-                # Generate URL and navigate
-                encoded_query = urllib.parse.quote(hub["query"])
-                maps_url = f"https://www.google.com/maps/search/{encoded_query}"
+                await page.mouse.move(200, 400)
+                await page.mouse.wheel(0, 4000)
+                await page.wait_for_timeout(1200)
+            except Exception:
+                pass
+
+        # Use resilient ARIA and structural selectors instead of fragile class names
+        cards = await page.query_selector_all('div[role="article"]')
+        print(f"  -> Found {len(cards)} entries on grid node {area_name}.")
+        
+        for card in cards[:50]:
+            try:
+                # Target the station link structurally
+                name_elem = await card.query_selector('a[href*="/maps/place"]')
+                if not name_elem:
+                    # Fallback to general header target
+                    name_elem = await card.query_selector('div.fontHeadlineSmall')
                 
-                page.goto(maps_url, wait_until="load", timeout=60000)
-                page.wait_for_timeout(5000) # Give dynamic panels full time to settle text rows
+                if not name_elem:
+                    continue
+
+                name = await name_elem.get_attribute('aria-label')
+                if not name:
+                    name = await name_elem.inner_text()
                 
-                # Broad capture: Grab ALL links or structural elements that look like a location entry
-                elements = page.query_selector_all("a[href*='/maps/place/'], [role='article'], div[jsaction*='pane.wfvdfl']")
+                name = name.strip()
                 
-                for index, element in enumerate(elements):
-                    try:
-                        text_content = element.text_content()
-                        if not text_content or len(text_content.strip()) < 10:
-                            continue
-                            
-                        # Extract data points purely via text parsing logic
-                        parsed_data = parse_listing_text_block(text_content, hub["name"])
-                        
-                        if parsed_data:
-                            # Extract link attributes safely for metadata strings
-                            station_url = element.get_attribute("href") or ""
-                            
-                            # Build a reliable Station ID string
-                            if station_url and "/maps/place/" in station_url:
-                                parts = station_url.split('/maps/place/')
-                                station_id = re.sub(r'[^a-zA-Z0-9\-]', '', parts[1].split('/')[0])[:40].lower()
-                            else:
-                                clean_name = re.sub(r'[^a-z0-9]', '', parsed_data["Name"].lower())[:15]
-                                station_id = f"station_{clean_name}_{index}"
-                                
-                            # Capture positional GPS coordinates if available in the url
-                            lat, lng = "", ""
-                            if station_url and "!3d" in station_url:
-                                coords_match = re.search(r'!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)', station_url)
-                                if coords_match:
-                                    lat = coords_match.group(1)
-                                    lng = coords_match.group(2)
-                                    
-                            all_parsed_records.append({
-                                "Station_ID": station_id,
-                                "Name": parsed_data["Name"],
-                                "Address": parsed_data["Address"],
-                                "Latitude": lat,
-                                "Longitude": lng,
-                                "Regular_Price": parsed_data["Regular_Price"],
-                                "Plus_Price": "",
-                                "Premium_Price": "",
-                                "Scrape_Date": current_date
-                            })
-                    except Exception:
-                        continue
-                        
-            except Exception as nav_err:
-                print(f"   Skipped hub {hub['name']} due to connection layout timeout.")
+                # Expand details pane
+                await name_elem.click()
+                await page.wait_for_timeout(2000) 
+                
+                current_url = page.url
+                station_lat, station_lng = None, None
+                
+                coord_match = re.search(r'@([-?\d\.]+),([-?\d\.]+)', current_url)
+                if coord_match:
+                    station_lat, station_lng = float(coord_match.group(1)), float(coord_match.group(2))
+                else:
+                    fallback_match = re.search(r'!3d([-?\d\.]+)!4d([-?\d\.]+)', current_url)
+                    if fallback_match:
+                        station_lat, station_lng = float(fallback_match.group(1)), float(fallback_match.group(2))
+
+                # Parse prices with dollar signs ($3.85) or standard floats (3.85)
+                info_text = await card.inner_text()
+                found_prices = re.findall(r'\$?\b([2-6]\.\d{2})\b', info_text)
+                prices = [float(p) for p in found_prices]
+                
+                reg_price, plus_price, prem_price = 0.0, 0.0, 0.0
+                if len(prices) >= 1: reg_price = prices[0]
+                if len(prices) >= 2: plus_price = prices[1]
+                if len(prices) >= 3: prem_price = prices[2]
+
+                station_id = name.lower().replace(" ", "-").replace(",", "").replace(".", "").replace("'", "").strip()
+                unique_key = f"{station_id}-{current_date}"
+                
+                stations[unique_key] = {
+                    "Station_ID": station_id, 
+                    "Name": name, 
+                    "Address": f"El Paso, TX ({area_name})",
+                    "Latitude": station_lat, 
+                    "Longitude": station_lng,
+                    "Regular_Price": reg_price, 
+                    "Plus_Price": plus_price, 
+                    "Premium_Price": prem_price,
+                    "Scrape_Date": current_date
+                }
+            except Exception:
                 continue
                 
-        browser.close()
+    except Exception as err:
+        print(f"⚠️ Navigation challenge on node {area_name}: {err}")
+    finally:
+        await page.close()
         
-    # Write entries out directly matching database column header tracking schema
-    if all_parsed_records:
-        # Deduplicate records grabbed multiple times due to broad element selectors
-        unique_records = {}
-        for rec in all_parsed_records:
-            unique_key = f"{rec['Name']}_{rec['Regular_Price']}"
-            unique_records[unique_key] = rec
+    return stations
+
+async def main():
+    el_paso_grid = [
+        (31.7587, -106.4869, "Downtown_Central"), 
+        (31.8344, -106.5294, "West_Side_Mesa"),
+        (31.8792, -106.5542, "Upper_Valley"), 
+        (31.8455, -106.4178, "Northeast_Dyer"),
+        (31.7611, -106.3683, "East_Side_Cielo_Vista"), 
+        (31.7455, -106.3012, "Zaragosa_Lower_Valley"),
+        (31.8214, -106.2611, "Far_East_Montana"), 
+        (31.6789, -106.2789, "Socorro_Horizon_Border")
+    ]
+    
+    all_stations = {}
+    global current_date
+    current_date = pd.Timestamp.now().strftime('%m/%d/%Y')
+    
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context(viewport={'width': 1280, 'height': 800})
+        
+        for lat, lng, area_name in el_paso_grid:
+            node_data = await scrape_node(context, lat, lng, area_name)
+            all_stations.update(node_data)
+            await asyncio.sleep(2)
+        await browser.close()
+
+    if all_stations:
+        df_new = pd.DataFrame(all_stations.values())
+        csv_file = "el_paso_gas_prices.csv"
+        
+        if os.path.exists(csv_file):
+            df_existing = pd.read_csv(csv_file)
+            df_final = pd.concat([df_existing, df_new], ignore_index=True)
+            df_final.drop_duplicates(subset=["Station_ID", "Scrape_Date"], keep="last", inplace=True)
+        else:
+            df_final = df_new
             
-        file_exists = os.path.exists(CSV_FILE)
-        with open(CSV_FILE, mode="a", encoding="utf-8") as f:
-            if not file_exists:
-                f.write("Station_ID,Name,Address,Latitude,Longitude,Regular_Price,Plus_Price,Premium_Price,Scrape_Date\n")
-            
-            for record in unique_records.values():
-                line = f'"{record["Station_ID"]}","{record["Name"]}","{record["Address"]}","{record["Latitude"]}","{record["Longitude"]}","{record["Regular_Price"]}","{record["Plus_Price"]}","{record["Premium_Price"]}","{record["Scrape_Date"]}"\n'
-                f.write(line)
-                
-        print(f"\nPipeline finished. Added {len(unique_records)} unique gas stations with coordinates across all El Paso sectors.")
+        df_final.to_csv(csv_file, index=False)
+        print(f"✅ Success! Local CSV updated with {len(df_new)} unique entries.")
     else:
-        print("\nWarning: No records with valid price details found during this sweep.")
+        print("❌ Error: Map scanning completed but no pricing entities could be verified.")
 
 if __name__ == "__main__":
-    run()
+    asyncio.run(main())
