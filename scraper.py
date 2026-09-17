@@ -17,27 +17,25 @@ async def scrape_node(context, lat, lng, area_name):
     
     try:
         await page.goto(search_url, timeout=60000)
-        await page.wait_for_timeout(5000)
+        await page.wait_for_timeout(4000)
         
-        # Deep scroll map pane to populate sidebar
-        for _ in range(8): 
+        # Deep scroll map pane to force station cards to render
+        for _ in range(6): 
             try:
                 await page.mouse.move(200, 400)
-                await page.mouse.wheel(0, 4000)
-                await page.wait_for_timeout(1200)
+                await page.mouse.wheel(0, 3000)
+                await page.wait_for_timeout(1000)
             except Exception:
                 pass
 
-        # Use resilient ARIA and structural selectors instead of fragile class names
         cards = await page.query_selector_all('div[role="article"]')
         print(f"  -> Found {len(cards)} entries on grid node {area_name}.")
         
         for card in cards[:50]:
             try:
-                # Target the station link structurally
+                # 1. Structural target for station title
                 name_elem = await card.query_selector('a[href*="/maps/place"]')
                 if not name_elem:
-                    # Fallback to general header target
                     name_elem = await card.query_selector('div.fontHeadlineSmall')
                 
                 if not name_elem:
@@ -46,12 +44,14 @@ async def scrape_node(context, lat, lng, area_name):
                 name = await name_elem.get_attribute('aria-label')
                 if not name:
                     name = await name_elem.inner_text()
-                
                 name = name.strip()
+
+                # 2. Extract Card Text (Primary Price Source)
+                card_text = await card.inner_text()
                 
-                # Expand details pane
+                # Expand panel to force Google Maps to reveal hidden price DOM elements
                 await name_elem.click()
-                await page.wait_for_timeout(2000) 
+                await page.wait_for_timeout(1800) 
                 
                 current_url = page.url
                 station_lat, station_lng = None, None
@@ -64,11 +64,31 @@ async def scrape_node(context, lat, lng, area_name):
                     if fallback_match:
                         station_lat, station_lng = float(fallback_match.group(1)), float(fallback_match.group(2))
 
-                # Parse prices with dollar signs ($3.85) or standard floats (3.85)
-                info_text = await card.inner_text()
-                found_prices = re.findall(r'\$?\b([2-6]\.\d{2})\b', info_text)
-                prices = [float(p) for p in found_prices]
+                # 3. Pull text from the expanded panel if main card was missing prices
+                panel_text = ""
+                try:
+                    panel = await page.query_selector('div[role="main"]')
+                    if panel:
+                        panel_text = await panel.inner_text()
+                except Exception:
+                    pass
+
+                combined_text = f"{card_text}\n{panel_text}"
+
+                # 4. Universal Price Extraction Engine
+                # Matches formats: $4.30, 4.30/Regular, $4.30/Gal, 4.30
+                found_prices = re.findall(r'\$?([2-6]\.\d{2})(?:\s*\/|\s*Regular|\s*Gal|\b)', combined_text, re.IGNORECASE)
                 
+                # Convert strings to floats
+                prices = []
+                for p in found_prices:
+                    try:
+                        val = float(p)
+                        if 2.00 <= val <= 6.50: # Valid fuel threshold guard
+                            prices.append(val)
+                    except ValueError:
+                        continue
+
                 reg_price, plus_price, prem_price = 0.0, 0.0, 0.0
                 if len(prices) >= 1: reg_price = prices[0]
                 if len(prices) >= 2: plus_price = prices[1]
@@ -83,9 +103,9 @@ async def scrape_node(context, lat, lng, area_name):
                     "Address": f"El Paso, TX ({area_name})",
                     "Latitude": station_lat, 
                     "Longitude": station_lng,
-                    "Regular_Price": reg_price, 
-                    "Plus_Price": plus_price, 
-                    "Premium_Price": prem_price,
+                    "Regular_Price": reg_price if reg_price > 0 else "", # Leave clean blank instead of 0.0
+                    "Plus_Price": plus_price if plus_price > 0 else "",
+                    "Premium_Price": prem_price if prem_price > 0 else "",
                     "Scrape_Date": current_date
                 }
             except Exception:
@@ -116,7 +136,10 @@ async def main():
     
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
-        context = await browser.new_context(viewport={'width': 1280, 'height': 800})
+        context = await browser.new_context(
+            viewport={'width': 1280, 'height': 800},
+            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+        )
         
         for lat, lng, area_name in el_paso_grid:
             node_data = await scrape_node(context, lat, lng, area_name)
@@ -128,6 +151,9 @@ async def main():
         df_new = pd.DataFrame(all_stations.values())
         csv_file = "el_paso_gas_prices.csv"
         
+        # Remove empty rows where Regular_Price was not captured
+        df_new = df_new[df_new['Regular_Price'] != ""]
+        
         if os.path.exists(csv_file):
             df_existing = pd.read_csv(csv_file)
             df_final = pd.concat([df_existing, df_new], ignore_index=True)
@@ -136,7 +162,7 @@ async def main():
             df_final = df_new
             
         df_final.to_csv(csv_file, index=False)
-        print(f"✅ Success! Local CSV updated with {len(df_new)} unique entries.")
+        print(f"✅ Success! Updated dataset with {len(df_new)} valid pricing entries for {current_date}.")
     else:
         print("❌ Error: Map scanning completed but no pricing entities could be verified.")
 
