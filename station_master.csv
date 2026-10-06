@@ -91,6 +91,7 @@ Station_ID,Name,Address,Latitude,Longitude
 197791,Circle K,"2050 N Yarbrough Dr, El Paso, TX",31.771339,-106.339159
 201577,Circle K,"6410 Doniphan Dr, El Paso, TX",31.886376,-106.596447
 201709,Valero,"2120 N Zaragoza Rd, El Paso, TX",31.77070930189,-106.257893443108
+204700,Circle K,"1612 Hawkins Blvd, El Paso, TX",31.7933500191,-106.3713549078
 206407,Marathon,"10197 Alameda Ave, Socorro, TX",31.6562654,-106.2917968
 206508,Circle K,"3101 FM-659, El Paso, TX",31.7834634,-106.2439162
 208584,Murphy USA,"9420 Diana Dr, El Paso, TX",31.876856,-106.423431
@@ -241,4 +242,5 @@ Station_ID,Name,Address,Latitude,Longitude
 96991,Circle K,"7960 Gateway  Blvd E, El Paso, TX",31.751663695774,-106.345408558846
 97020,Circle K,"660 Sunland Park Dr, El Paso, TX",31.819340127797,-106.540904045105
 98000,Circle K,"8130 Alameda Ave, El Paso, TX",31.719764,-106.353811
+98176,Circle K,"8726 Montana Ave, El Paso, TX",31.792448,-106.372201
 98177,Alon,"10898 Montana Ave, El Paso, TX",31.798679,-106.323015
