@@ -8,7 +8,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,380;0,9..144,460;0,9..144,600;1,9..144,460&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
@@ -20,15 +20,16 @@
 
 <style>
   :root {
-    --paper: #fffdf9;
-    --ink: #211a14;
-    --ink-soft: #6b6155;
-    --hairline: #e4ddcf;
-    --yellow: #ffe156;
-    --pink: #ff6fa6;
-    --teal: #2ec4b6;
-    --teal-ink: #0f6e65;
-    --pink-ink: #9c1f52;
+    --paper: #f7f4ec;
+    --ink: #111111;
+    --ink-soft: #5c584f;
+    --hairline: #d9d4c4;
+    --mint: #bfe8d8;
+    --gold: #fce083;
+    --salmon: #f5b4a6;
+    --lavender: #d8c7f0;
+    --mint-ink: #1d6b53;
+    --salmon-ink: #a5422e;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -37,265 +38,206 @@
 
   * { box-sizing: border-box; }
 
-  html { scroll-behavior: smooth; }
-
   body {
     margin: 0;
     background: var(--paper);
     color: var(--ink);
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'IBM Plex Sans', sans-serif;
     font-size: 16px;
     line-height: 1.6;
   }
 
-  a { color: var(--pink-ink); text-underline-offset: 3px; }
+  a { color: var(--ink); }
   a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
-    outline: 3px solid var(--teal-ink);
+    outline: 3px solid var(--ink);
     outline-offset: 2px;
   }
 
-  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-  .prose { max-width: 680px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
-  header.masthead {
-    padding: 48px 0 0;
-  }
-  .wordmark {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    letter-spacing: 0.02em;
-    color: var(--ink-soft);
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-  .wordmark .dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--teal);
-    display: inline-block;
-  }
+  header.masthead { padding: 44px 0 0; }
 
-  .hero {
-    padding: 28px 0 56px;
-  }
   h1.headline {
-    font-family: 'Fraunces', serif;
-    font-weight: 460;
-    font-size: clamp(2rem, 5vw, 3.4rem);
-    line-height: 1.12;
-    letter-spacing: -0.01em;
-    margin: 0 0 20px;
-    max-width: 16ch;
+    font-family: 'Archivo Black', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: clamp(1.9rem, 4.6vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: 0.002em;
+    margin: 0 0 18px;
   }
-  .mark {
-    position: relative;
-    white-space: nowrap;
-    padding: 0 0.08em;
-  }
-  .mark::before {
-    content: '';
-    position: absolute;
-    left: -0.1em; right: -0.1em; top: 0.18em; bottom: 0.02em;
-    background: var(--yellow);
-    transform: rotate(-1.2deg);
-    z-index: -1;
-    border-radius: 2px 6px 3px 7px / 5px 3px 8px 2px;
-    mix-blend-mode: multiply;
-  }
-  .mark.pink::before { background: var(--pink); }
-  .mark.teal::before { background: var(--teal); }
 
-  .hero-sub {
-    font-size: 1.05rem;
-    color: var(--ink-soft);
-    max-width: 58ch;
+  p.lede {
+    font-family: Fraunces, serif;
+    font-size: 1.15rem;
+    max-width: 62ch;
+    margin: 0 0 8px;
   }
-  .hero-sub strong { color: var(--ink); font-weight: 600; }
-
-  .meta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 28px;
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 1px solid var(--hairline);
-  }
-  .meta-item .num {
-    font-family: 'Fraunces', serif;
-    font-size: 1.8rem;
+  p.lede .mark {
+    background: var(--gold);
+    padding: 1px 6px;
     font-weight: 500;
+  }
+
+  .hero-sub { color: var(--ink-soft); max-width: 62ch; font-size: 0.95rem; }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 32px 0 48px;
+  }
+  @media (max-width: 760px) {
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
+  }
+  .stat-block {
+    border: 3px solid var(--ink);
+    padding: 20px;
+  }
+  .stat-block .num {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 1.9rem;
+    display: block;
+    line-height: 1.1;
+  }
+  .stat-block .lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+    margin-top: 6px;
     display: block;
   }
-  .meta-item .lbl {
-    font-size: 0.85rem;
-    color: var(--ink-soft);
-  }
 
-  section { padding: 48px 0; }
+  section { padding: 44px 0; }
   section + section { border-top: 1px solid var(--hairline); }
 
   h2.section-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 460;
-    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
-    margin: 0 0 8px;
+    font-family: 'Archivo Black', sans-serif;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.15rem;
+    margin: 0 0 10px;
   }
   p.section-dek {
+    font-family: Fraunces, serif;
     color: var(--ink-soft);
-    margin: 0 0 28px;
-    max-width: 62ch;
+    margin: 0 0 24px;
+    max-width: 68ch;
+    font-size: 1.02rem;
   }
 
   .controls {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
-    align-items: flex-end;
-    margin-bottom: 24px;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
   }
-  .field label {
-    display: block;
-    font-size: 0.8rem;
+  .controls .field-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
     color: var(--ink-soft);
-    margin-bottom: 6px;
+    margin-right: 4px;
   }
-  .field select, .field input[type="date"] {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.92rem;
-    background: transparent;
-    border: none;
-    border-bottom: 2px solid var(--ink);
-    padding: 4px 2px;
+  .toggle-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    background: #fff;
+    color: var(--ink);
+    border: 2px solid var(--ink);
+    padding: 7px 13px;
+    cursor: pointer;
+  }
+  .toggle-btn.active { background: var(--ink); color: var(--paper); }
+  .toggle-btn:hover:not(.active) { background: #efebe0; }
+
+  input[type="date"] {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    border: 2px solid var(--ink);
+    background: #fff;
+    padding: 6px 8px;
     color: var(--ink);
   }
-  .check-field {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-  }
-  .check-field input { accent-color: var(--teal-ink); width: 16px; height: 16px; }
 
-  .chart-box { position: relative; height: 420px; }
+  .panel { background: #fff; border: 3px solid var(--ink); padding: 20px; }
+  .chart-box { position: relative; height: 400px; }
 
-  #stationMap {
-    height: 460px;
-    width: 100%;
-    border: 1px solid var(--hairline);
-    border-radius: 4px;
-  }
-  .leaflet-popup-content-wrapper {
-    font-family: 'Inter', sans-serif;
-    border-radius: 6px;
-  }
-  .popup-price { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  #stationMap { height: 440px; width: 100%; }
+  .leaflet-popup-content-wrapper { font-family: 'IBM Plex Sans', sans-serif; border-radius: 0; border: 2px solid var(--ink); box-shadow: none; }
+  .leaflet-popup-tip { display: none; }
+  .popup-price { font-family: 'IBM Plex Mono', monospace; font-weight: 600; }
+  .popup-name { font-family: 'Archivo Black', sans-serif; font-size: 0.85rem; text-transform: uppercase; }
 
-  .legend-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 14px;
-    font-size: 0.85rem;
-    color: var(--ink-soft);
-  }
-  .legend-swatch {
-    width: 180px; height: 10px; border-radius: 5px;
-    background: linear-gradient(90deg, var(--teal), #f3d35c, var(--pink));
-  }
+  .legend-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; text-transform: uppercase; color: var(--ink-soft); }
+  .legend-swatch { width: 180px; height: 10px; border: 1px solid var(--ink); background: linear-gradient(90deg, var(--mint), var(--gold), var(--salmon)); }
 
-  .boards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-  }
-  @media (max-width: 680px) {
-    .boards { grid-template-columns: 1fr; }
-  }
-  .board h3 {
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
-    font-size: 1.1rem;
-    margin: 0 0 4px;
-  }
-  .board .board-dek { color: var(--ink-soft); font-size: 0.85rem; margin: 0 0 14px; }
+  .boards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 680px) { .boards { grid-template-columns: 1fr; } }
+  .board { border: 3px solid var(--ink); padding: 20px; }
+  .board h3 { font-family: 'Archivo Black', sans-serif; text-transform: uppercase; font-size: 1rem; margin: 0 0 4px; }
+  .board .board-dek { font-family: 'IBM Plex Mono', monospace; color: var(--ink-soft); font-size: 0.72rem; text-transform: uppercase; margin: 0 0 14px; }
   table.board-table { width: 100%; border-collapse: collapse; }
-  table.board-table td { padding: 9px 0; border-bottom: 1px solid var(--hairline); font-size: 0.92rem; }
+  table.board-table td { padding: 10px 0; border-bottom: 1px solid var(--hairline); font-size: 0.92rem; vertical-align: top; }
   table.board-table tr:last-child td { border-bottom: none; }
-  td.rank { color: var(--ink-soft); width: 1.6em; font-family: 'JetBrains Mono', monospace; }
-  td.price { font-family: 'JetBrains Mono', monospace; font-weight: 600; text-align: right; }
-  .cheap-board td.price { color: var(--teal-ink); }
-  .pricey-board td.price { color: var(--pink-ink); }
-  td.station-addr { color: var(--ink-soft); font-size: 0.8rem; display: block; }
+  td.rank { color: var(--ink-soft); width: 1.8em; font-family: 'IBM Plex Mono', monospace; }
+  td.price { font-family: 'IBM Plex Mono', monospace; font-weight: 600; text-align: right; white-space: nowrap; }
+  .cheap-board .price-chip { background: var(--mint); }
+  .pricey-board .price-chip { background: var(--salmon); }
+  .price-chip { display: inline-block; padding: 2px 7px; border: 1px solid var(--ink); }
+  .station-addr { color: var(--ink-soft); font-size: 0.8rem; display: block; font-family: 'IBM Plex Sans', sans-serif; }
 
-  footer {
-    padding: 36px 0 56px;
-    color: var(--ink-soft);
-    font-size: 0.85rem;
-  }
-  footer a { color: var(--ink-soft); }
-
-  .loading-note {
-    color: var(--ink-soft);
-    font-size: 0.9rem;
-  }
+  footer { padding: 36px 0 56px; color: var(--ink-soft); font-size: 0.82rem; font-family: 'IBM Plex Mono', monospace; }
+  footer a { color: var(--ink-soft); text-decoration: underline; }
 </style>
 </head>
 <body>
 
 <div class="wrap">
   <header class="masthead">
-    <div class="wordmark"><span class="dot"></span>EPGas — a daily station-by-station tracker</div>
+    <h1 class="headline">El Paso Gas Prices</h1>
   </header>
 
-  <section class="hero">
-    <h1 class="headline" id="heroHeadline">Reading today's prices…</h1>
+  <section class="hero" style="padding-top:0;">
+    <p class="lede" id="heroHeadline">Reading today's prices…</p>
     <p class="hero-sub" id="heroSub"></p>
-
-    <div class="meta-row" id="metaRow"></div>
+    <div class="stat-row" id="statRow"></div>
   </section>
 
   <section id="trend-section">
-    <h2 class="section-title">How prices have moved</h2>
-    <p class="section-dek">City-wide average, by grade. The gap in late September is real — the scraper feeding this page broke on 9/30 and was rebuilt on 10/6, so there's no data for that week. Midgrade and premium are off by default since they've only been tracked since the rebuild.</p>
+    <h2 class="section-title">How Prices Have Moved</h2>
+    <p class="section-dek">City-wide average, by grade. The gap in late September is real — the scraper feeding this page broke on 9/30 and was rebuilt on 10/6, so there's no data for that week. Midgrade and premium are off by default since that history only starts at the rebuild.</p>
 
     <div class="controls">
-      <div class="field">
-        <label for="aggregation">Group by</label>
-        <select id="aggregation">
-          <option value="daily" selected>Day</option>
-          <option value="weekly">Week</option>
-          <option value="monthly">Month</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="startDate">From</label>
-        <input type="date" id="startDate">
-      </div>
-      <div class="field">
-        <label for="endDate">To</label>
-        <input type="date" id="endDate">
-      </div>
-      <label class="check-field"><input type="checkbox" id="togglePlus"> Midgrade</label>
-      <label class="check-field"><input type="checkbox" id="togglePremium"> Premium</label>
+      <span class="field-label">Group by</span>
+      <button class="toggle-btn active" data-agg="daily">Day</button>
+      <button class="toggle-btn" data-agg="weekly">Week</button>
+      <button class="toggle-btn" data-agg="monthly">Month</button>
+      <span class="field-label" style="margin-left:14px;">From</span>
+      <input type="date" id="startDate">
+      <span class="field-label">To</span>
+      <input type="date" id="endDate">
+      <button class="toggle-btn" data-grade="plus">Midgrade</button>
+      <button class="toggle-btn" data-grade="premium">Premium</button>
     </div>
 
-    <div class="chart-box"><canvas id="gasChart"></canvas></div>
+    <div class="panel chart-box"><canvas id="gasChart"></canvas></div>
   </section>
 
   <section id="map-section">
-    <h2 class="section-title">Where it's cheap, where it isn't</h2>
+    <h2 class="section-title">Where It's Cheap, Where It Isn't</h2>
     <p class="section-dek">Every tracked station on the most recent scrape, colored by regular-grade price. Click a pin for the full grade breakdown.</p>
-    <div id="stationMap"></div>
-    <div class="legend-row">
-      <span>Cheaper</span>
-      <span class="legend-swatch"></span>
-      <span>Pricier</span>
-    </div>
+    <div class="panel" style="padding:0;"><div id="stationMap"></div></div>
+    <div class="legend-row"><span>Cheaper</span><span class="legend-swatch"></span><span>Pricier</span></div>
   </section>
 
   <section id="boards-section">
-    <h2 class="section-title">Today's extremes</h2>
-    <p class="section-dek">Regular grade, most recent scrape.</p>
+    <h2 class="section-title">Today's Extremes</h2>
+    <p class="section-dek" style="margin-bottom:20px;">Regular grade, most recent scrape.</p>
     <div class="boards">
       <div class="board cheap-board">
         <h3>Cheapest</h3>
@@ -311,7 +253,7 @@
   </section>
 
   <footer>
-    Prices are crowdsourced via <a href="https://www.gasbuddy.com" target="_blank" rel="noopener">GasBuddy</a> and refreshed daily. Source + methodology: <a href="https://github.com/hoffmanap/epgas" target="_blank" rel="noopener">hoffmanap/epgas</a>.
+    Prices are crowdsourced via <a href="https://www.gasbuddy.com" target="_blank" rel="noopener">GasBuddy</a> and refreshed daily. Basemap tiles &copy; Esri. Source + methodology: <a href="https://github.com/hoffmanap/epgas" target="_blank" rel="noopener">hoffmanap/epgas</a>.
   </footer>
 </div>
 
@@ -322,16 +264,37 @@ if (window.Chart && window['chartjs-plugin-annotation']) {
 }
 
 let rawRows = [];
-let dailyBaseline = []; // one row per {date, regular, plus, premium}
+let dailyBaseline = [];
 let gasChartInstance = null;
+let aggMode = 'daily';
+let showPlus = false;
+let showPremium = false;
 
-const elAgg = document.getElementById('aggregation');
 const elStart = document.getElementById('startDate');
 const elEnd = document.getElementById('endDate');
-const elPlus = document.getElementById('togglePlus');
-const elPremium = document.getElementById('togglePremium');
 
 window.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-agg]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-agg]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      aggMode = btn.dataset.agg;
+      renderChart();
+    });
+  });
+  document.querySelector('[data-grade="plus"]').addEventListener('click', (e) => {
+    showPlus = !showPlus;
+    e.target.classList.toggle('active', showPlus);
+    renderChart();
+  });
+  document.querySelector('[data-grade="premium"]').addEventListener('click', (e) => {
+    showPremium = !showPremium;
+    e.target.classList.toggle('active', showPremium);
+    renderChart();
+  });
+  elStart.addEventListener('change', renderChart);
+  elEnd.addEventListener('change', renderChart);
+
   Papa.parse('el_paso_gas_prices.csv', {
     download: true,
     header: true,
@@ -369,12 +332,8 @@ function init(data) {
   renderBoards();
   renderMap();
 
-  const minDate = dailyBaseline[0].date;
-  const maxDate = dailyBaseline[dailyBaseline.length - 1].date;
-  elStart.value = minDate.toISODate();
-  elEnd.value = maxDate.toISODate();
-
-  [elAgg, elStart, elEnd, elPlus, elPremium].forEach(el => el.addEventListener('change', renderChart));
+  elStart.value = dailyBaseline[0].date.toISODate();
+  elEnd.value = dailyBaseline[dailyBaseline.length - 1].date.toISODate();
   renderChart();
 }
 
@@ -389,19 +348,11 @@ function buildDailyBaseline() {
   });
   const avg = arr => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null;
   dailyBaseline = Object.values(byDate)
-    .map(d => ({
-      date: d.date,
-      regular: avg(d.regular),
-      plus: avg(d.plus),
-      premium: avg(d.premium),
-      stations: d.regular.length
-    }))
+    .map(d => ({ date: d.date, regular: avg(d.regular), plus: avg(d.plus), premium: avg(d.premium), stations: d.regular.length }))
     .sort((a, b) => a.date - b.date);
 }
 
-function latestDate() {
-  return dailyBaseline[dailyBaseline.length - 1].date;
-}
+function latestDate() { return dailyBaseline[dailyBaseline.length - 1].date; }
 
 function renderHero() {
   const latest = latestDate();
@@ -415,20 +366,22 @@ function renderHero() {
   document.getElementById('heroHeadline').innerHTML =
     `Regular gas in El Paso is averaging <span class="mark">$${avgToday.toFixed(2)}</span> a gallon today.`;
 
-  let sub = `Tracked across <strong>${todayRows.length} stations</strong> on ${latest.toFormat('MMMM d')}.`;
+  let sub = `Tracked across ${todayRows.length} stations on ${latest.toFormat('MMMM d')}.`;
   if (delta !== null) {
     const dir = delta > 0.005 ? 'up' : delta < -0.005 ? 'down' : 'flat vs.';
     sub += ` That's ${dir === 'flat vs.' ? 'flat versus' : `${dir} ${Math.abs(delta).toFixed(2)}¢ from`} the prior reading.`;
   }
-  document.getElementById('heroSub').innerHTML = sub;
+  document.getElementById('heroSub').textContent = sub;
 
   const cheapest = todayRows.reduce((m, r) => (r.regular < m.regular ? r : m));
-  const spread = Math.max(...todayRows.map(r => r.regular)) - Math.min(...todayRows.map(r => r.regular));
+  const priciest = todayRows.reduce((m, r) => (r.regular > m.regular ? r : m));
+  const spread = priciest.regular - cheapest.regular;
 
-  document.getElementById('metaRow').innerHTML = `
-    <div class="meta-item"><span class="num mark teal">$${cheapest.regular.toFixed(2)}</span><span class="lbl">cheapest station (${cheapest.name})</span></div>
-    <div class="meta-item"><span class="num mark pink">${spread.toFixed(2)}¢</span><span class="lbl">spread, cheapest to priciest</span></div>
-    <div class="meta-item"><span class="num">${new Set(rawRows.map(r => r.id)).size}</span><span class="lbl">stations tracked all-time</span></div>
+  document.getElementById('statRow').innerHTML = `
+    <div class="stat-block" style="background:var(--mint)"><span class="num">$${cheapest.regular.toFixed(2)}</span><span class="lbl">Cheapest · ${cheapest.name}</span></div>
+    <div class="stat-block" style="background:var(--salmon)"><span class="num">$${priciest.regular.toFixed(2)}</span><span class="lbl">Priciest · ${priciest.name}</span></div>
+    <div class="stat-block" style="background:var(--gold)"><span class="num">${spread.toFixed(2)}¢</span><span class="lbl">Spread, low to high</span></div>
+    <div class="stat-block" style="background:var(--lavender)"><span class="num">${new Set(rawRows.map(r => r.id)).size}</span><span class="lbl">Stations tracked all-time</span></div>
   `;
 }
 
@@ -453,70 +406,38 @@ function renderChart() {
   const start = elStart.value ? DateTime.fromISO(elStart.value) : null;
   const end = elEnd.value ? DateTime.fromISO(elEnd.value) : null;
   let filtered = dailyBaseline.filter(d => (!start || d.date >= start) && (!end || d.date <= end));
-  filtered = aggregate(filtered, elAgg.value);
+  filtered = aggregate(filtered, aggMode);
 
   const datasets = [{
     label: 'Regular',
     data: filtered.map(d => ({ x: d.date.toISODate(), y: d.regular })),
-    borderColor: '#0f6e65',
-    backgroundColor: '#2ec4b6',
+    borderColor: '#111111',
+    backgroundColor: 'rgba(191, 232, 216, 0.6)',
     borderWidth: 2.5,
     pointRadius: 2,
-    tension: 0.15
+    pointBackgroundColor: '#1d6b53',
+    fill: true,
+    tension: 0.12
   }];
-  if (elPlus.checked) {
-    datasets.push({
-      label: 'Midgrade',
-      data: filtered.map(d => ({ x: d.date.toISODate(), y: d.plus })),
-      borderColor: '#d9a441',
-      borderWidth: 2,
-      pointRadius: 1.5,
-      borderDash: [4, 3],
-      tension: 0.15
-    });
+  if (showPlus) {
+    datasets.push({ label: 'Midgrade', data: filtered.map(d => ({ x: d.date.toISODate(), y: d.plus })), borderColor: '#b8860b', borderWidth: 2, pointRadius: 1.5, borderDash: [4, 3], fill: false, tension: 0.12 });
   }
-  if (elPremium.checked) {
-    datasets.push({
-      label: 'Premium',
-      data: filtered.map(d => ({ x: d.date.toISODate(), y: d.premium })),
-      borderColor: '#9c1f52',
-      borderWidth: 2,
-      pointRadius: 1.5,
-      borderDash: [2, 3],
-      tension: 0.15
-    });
+  if (showPremium) {
+    datasets.push({ label: 'Premium', data: filtered.map(d => ({ x: d.date.toISODate(), y: d.premium })), borderColor: '#a5422e', borderWidth: 2, pointRadius: 1.5, borderDash: [2, 3], fill: false, tension: 0.12 });
   }
 
-  // Detect the real data gap to annotate honestly rather than let the
-  // line silently bridge across two weeks of missing scrapes.
-  // Annotate the most recent gap longer than a few days, rather than the
-  // largest one overall — the relevant story is the latest break in
-  // coverage, not an older sparse-collection stretch earlier in the series.
   let gapBox = null;
   for (let i = 1; i < filtered.length; i++) {
     const diffDays = filtered[i].date.diff(filtered[i - 1].date, 'days').days;
-    if (diffDays > 3) {
-      gapBox = { start: filtered[i - 1].date.toISODate(), end: filtered[i].date.toISODate() };
-    }
+    if (diffDays > 3) gapBox = { start: filtered[i - 1].date.toISODate(), end: filtered[i].date.toISODate() };
   }
-
   const annotations = {};
   if (gapBox) {
     annotations.gap = {
-      type: 'box',
-      xMin: gapBox.start,
-      xMax: gapBox.end,
-      backgroundColor: 'rgba(255, 225, 86, 0.25)',
-      borderColor: 'rgba(255, 225, 86, 0.7)',
-      borderWidth: 1,
-      label: {
-        display: true,
-        content: 'scraper down',
-        position: 'start',
-        color: '#6b6155',
-        font: { family: 'Inter', size: 11 },
-        backgroundColor: 'transparent'
-      }
+      type: 'box', xMin: gapBox.start, xMax: gapBox.end,
+      backgroundColor: 'rgba(245, 180, 166, 0.35)',
+      borderColor: '#111111', borderWidth: 1,
+      label: { display: true, content: 'GAP', position: 'start', rotation: -90, xAdjust: -12, color: '#111111', font: { family: 'IBM Plex Mono', size: 10 }, backgroundColor: 'transparent' }
     };
   }
 
@@ -529,18 +450,13 @@ function renderChart() {
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { position: 'top', align: 'end', labels: { font: { family: 'Inter', size: 12 }, usePointStyle: true, boxWidth: 8 } },
-        tooltip: {
-          backgroundColor: '#211a14',
-          titleFont: { family: 'Inter' },
-          bodyFont: { family: 'JetBrains Mono' },
-          callbacks: { label: (ctx) => ` ${ctx.dataset.label}: $${ctx.parsed.y?.toFixed(2)}` }
-        },
+        legend: { position: 'top', align: 'end', labels: { font: { family: 'IBM Plex Mono', size: 11 }, usePointStyle: true, boxWidth: 8 } },
+        tooltip: { backgroundColor: '#111111', titleFont: { family: 'IBM Plex Sans' }, bodyFont: { family: 'IBM Plex Mono' }, callbacks: { label: (ctx) => ` ${ctx.dataset.label}: $${ctx.parsed.y?.toFixed(2)}` } },
         annotation: { annotations }
       },
       scales: {
-        x: { type: 'time', time: { unit: elAgg.value === 'monthly' ? 'month' : elAgg.value === 'weekly' ? 'week' : 'day' }, grid: { display: false }, ticks: { font: { family: 'Inter', size: 11 } } },
-        y: { grid: { color: '#e4ddcf' }, ticks: { font: { family: 'JetBrains Mono', size: 11 }, callback: v => '$' + v.toFixed(2) } }
+        x: { type: 'time', time: { unit: aggMode === 'monthly' ? 'month' : aggMode === 'weekly' ? 'week' : 'day' }, grid: { display: false }, ticks: { font: { family: 'IBM Plex Mono', size: 10 } } },
+        y: { grid: { color: '#d9d4c4' }, ticks: { font: { family: 'IBM Plex Mono', size: 11 }, callback: v => '$' + v.toFixed(2) } }
       }
     }
   });
@@ -557,7 +473,7 @@ function renderBoards() {
     <tr>
       <td class="rank">${i + 1}</td>
       <td>${r.name}<br><span class="station-addr">${r.address}</span></td>
-      <td class="price">$${r.regular.toFixed(2)}</td>
+      <td class="price"><span class="price-chip">$${r.regular.toFixed(2)}</span></td>
     </tr>`;
 
   document.getElementById('cheapBoard').innerHTML = cheap.map(rowHtml).join('');
@@ -570,36 +486,28 @@ function renderMap() {
   if (today.length === 0) return;
 
   const map = L.map('stationMap', { scrollWheelZoom: false }).setView([31.78, -106.45], 11);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+    maxZoom: 16
   }).addTo(map);
 
   const prices = today.map(r => r.regular);
   const lo = Math.min(...prices), hi = Math.max(...prices);
   const colorFor = (p) => {
     const t = hi === lo ? 0.5 : (p - lo) / (hi - lo);
-    const r1 = [46, 196, 182], r2 = [243, 211, 92], r3 = [255, 111, 166];
-    const mix = (a, b, t2) => Math.round(a + (b - a) * t2);
-    const [c1, c2] = t < 0.5 ? [r1, r2] : [r2, r3];
+    const c1 = [191, 232, 216], c2 = [252, 224, 131], c3 = [245, 180, 166];
+    const mix = (a, b, tt) => Math.round(a + (b - a) * tt);
+    const [from, to] = t < 0.5 ? [c1, c2] : [c2, c3];
     const tt = t < 0.5 ? t / 0.5 : (t - 0.5) / 0.5;
-    return `rgb(${mix(c1[0], c2[0], tt)}, ${mix(c1[1], c2[1], tt)}, ${mix(c1[2], c2[2], tt)})`;
+    return `rgb(${mix(from[0], to[0], tt)}, ${mix(from[1], to[1], tt)}, ${mix(from[2], to[2], tt)})`;
   };
 
   today.forEach(r => {
-    const marker = L.circleMarker([r.lat, r.lng], {
-      radius: 7,
-      fillColor: colorFor(r.regular),
-      fillOpacity: 0.9,
-      color: '#211a14',
-      weight: 1
-    }).addTo(map);
-
+    const marker = L.circleMarker([r.lat, r.lng], { radius: 7, fillColor: colorFor(r.regular), fillOpacity: 0.95, color: '#111111', weight: 1.5 }).addTo(map);
     const grades = [`Regular <span class="popup-price">$${r.regular.toFixed(2)}</span>`];
     if (r.plus !== null) grades.push(`Midgrade <span class="popup-price">$${r.plus.toFixed(2)}</span>`);
     if (r.premium !== null) grades.push(`Premium <span class="popup-price">$${r.premium.toFixed(2)}</span>`);
-
-    marker.bindPopup(`<strong>${r.name}</strong><br>${r.address}<br><br>${grades.join('<br>')}`);
+    marker.bindPopup(`<div class="popup-name">${r.name}</div>${r.address}<br><br>${grades.join('<br>')}`);
   });
 }
 </script>
