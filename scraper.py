@@ -27,6 +27,7 @@ from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 
 STATION_MASTER_FILE = "station_master.csv"
+LISTING_STATE_FILE = "listing_state.json"
 OUTPUT_CSV = "el_paso_gas_prices.csv"
 SEARCH_TERM = "El Paso, TX"
 USER_AGENT = (
@@ -105,7 +106,22 @@ def save_station_master(stations):
     df.to_csv(STATION_MASTER_FILE, index=False)
 
 
-MAX_LISTING_PAGES = 20  # safety cap: 20 pages * 20/page = up to 400 stations
+MAX_LISTING_PAGES = 20  # safety cap: 20 pages * 20/page = up to 400 stations per run
+
+
+def load_listing_state():
+    if os.path.exists(LISTING_STATE_FILE):
+        try:
+            with open(LISTING_STATE_FILE) as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"cursor": 0, "total_count": None}
+
+
+def save_listing_state(state):
+    with open(LISTING_STATE_FILE, "w") as f:
+        json.dump(state, f)
 
 
 async def discover_from_city_listing(page, stations):
@@ -115,10 +131,23 @@ async def discover_from_city_listing(page, stations):
     neighborhood at a time and can take many runs to reach the far
     side of a city. The city search index itself has no such
     geographic bias, so paging through it directly is a much faster
-    way to pick up new stations in every part of town right away."""
+    way to pick up new stations in every part of town right away.
+
+    GasBuddy's Cloudflare check frequently blocks this past the very
+    first page in a given run (sometimes even the first page), so a
+    run often only gets one page through before giving up. To make
+    progress anyway, where we left off is persisted across runs
+    (listing_state.json) instead of restarting at cursor=0 every
+    time, so a slow trickle of successful single-page fetches still
+    walks the whole index eventually rather than re-fetching the same
+    page over and over. Once the end of the index is reached, the
+    cursor wraps back to 0 so a later pass can pick up stations added
+    to GasBuddy after the first full walk."""
     added = 0
-    cursor = 0
-    total_count = None
+    state = load_listing_state()
+    cursor = state.get("cursor", 0) or 0
+    total_count = state.get("total_count")
+    reached_end = False
     for _ in range(MAX_LISTING_PAGES):
         url = (
             f"https://www.gasbuddy.com/home?search={SEARCH_TERM.replace(' ', '+').replace(',', '%2C')}"
@@ -130,12 +159,12 @@ async def discover_from_city_listing(page, stations):
             html = await page.content()
         except Exception as err:
             print(f"⚠️ City listing page at cursor={cursor} failed to load: {err}")
-            break
+            break  # transient failure - resume at this same cursor next run
 
         data = extract_apollo_state(html)
         if not data:
             print(f"⚠️ Could not read city listing at cursor={cursor} (may have been challenged).")
-            break
+            break  # challenged - resume at this same cursor next run
 
         loc_key = next((k for k in data if k.startswith("Location:")), None)
         if not loc_key:
@@ -148,6 +177,7 @@ async def discover_from_city_listing(page, stations):
         total_count = sdata.get("count", total_count)
         refs = sdata.get("results", [])
         if not refs:
+            reached_end = True
             break
 
         for ref in refs:
@@ -165,16 +195,23 @@ async def discover_from_city_listing(page, stations):
 
         nxt = sdata.get("cursor", {}).get("next")
         if not nxt:
+            reached_end = True
             break
         cursor = int(nxt)
         if total_count is not None and cursor >= total_count:
+            reached_end = True
             break
         await asyncio.sleep(random.uniform(0.4, 0.9))
 
+    # Persist where we left off so the next run resumes further into the
+    # index instead of re-fetching page one again. On reaching the end,
+    # wrap back to 0 so a future pass can catch newly listed stations.
+    save_listing_state({"cursor": 0 if reached_end else cursor, "total_count": total_count})
+
     if added:
-        print(f"🌱 City listing added {added} new station(s) (master list now {len(stations)}).")
+        print(f"🌱 City listing added {added} new station(s) (master list now {len(stations)}), next cursor={0 if reached_end else cursor}.")
     else:
-        print("🌱 City listing found no new stations this run.")
+        print(f"🌱 City listing found no new stations this run (next cursor={0 if reached_end else cursor}).")
 
 
 async def scrape_station(page, station_id):

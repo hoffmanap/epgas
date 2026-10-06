@@ -43,7 +43,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add el_paso_gas_prices.csv station_master.csv
+          git add el_paso_gas_prices.csv station_master.csv listing_state.json
           if git diff --cached --quiet; then
             echo "No data changes to commit."
           else
