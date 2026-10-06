@@ -105,37 +105,76 @@ def save_station_master(stations):
     df.to_csv(STATION_MASTER_FILE, index=False)
 
 
-async def discover_seed_stations(page, stations):
-    """Bootstrap run only: pull the first page of city-wide results so
-    there is something to work with before the nearby-station graph
-    has a chance to expand organically."""
-    url = f"https://www.gasbuddy.com/home?search={SEARCH_TERM.replace(' ', '+').replace(',', '%2C')}&fuel=1"
-    await page.goto(url, timeout=45000)
-    await page.wait_for_timeout(2500)
-    html = await page.content()
-    data = extract_apollo_state(html)
-    if not data:
-        print("⚠️ Could not read seed search results (page may have been challenged).")
-        return
-    loc_key = next((k for k in data if k.startswith("Location:")), None)
-    if not loc_key:
-        return
-    loc = data[loc_key]
-    stations_key = next((k for k in loc if k.startswith("stations(")), None)
-    if not stations_key:
-        return
-    for ref in loc[stations_key].get("results", []):
-        sid = ref["__ref"].split(":")[1]
-        if sid not in stations:
-            obj = data.get(ref["__ref"], {})
-            stations[sid] = {
-                "Station_ID": sid,
-                "Name": obj.get("name", ""),
-                "Address": format_address(obj.get("address")),
-                "Latitude": "",
-                "Longitude": "",
-            }
-    print(f"🌱 Seeded {len(stations)} station(s) from city search.")
+MAX_LISTING_PAGES = 20  # safety cap: 20 pages * 20/page = up to 400 stations
+
+
+async def discover_from_city_listing(page, stations):
+    """Walk GasBuddy's city-wide search results (paginated via &cursor=)
+    every run, not just once. The organic 'nearby station' graph only
+    grows outward from wherever it started, so it crawls one
+    neighborhood at a time and can take many runs to reach the far
+    side of a city. The city search index itself has no such
+    geographic bias, so paging through it directly is a much faster
+    way to pick up new stations in every part of town right away."""
+    added = 0
+    cursor = 0
+    total_count = None
+    for _ in range(MAX_LISTING_PAGES):
+        url = (
+            f"https://www.gasbuddy.com/home?search={SEARCH_TERM.replace(' ', '+').replace(',', '%2C')}"
+            f"&fuel=1&cursor={cursor}"
+        )
+        try:
+            await page.goto(url, timeout=45000)
+            await page.wait_for_timeout(1200)
+            html = await page.content()
+        except Exception as err:
+            print(f"⚠️ City listing page at cursor={cursor} failed to load: {err}")
+            break
+
+        data = extract_apollo_state(html)
+        if not data:
+            print(f"⚠️ Could not read city listing at cursor={cursor} (may have been challenged).")
+            break
+
+        loc_key = next((k for k in data if k.startswith("Location:")), None)
+        if not loc_key:
+            break
+        loc = data[loc_key]
+        stations_key = next((k for k in loc if k.startswith("stations(")), None)
+        if not stations_key:
+            break
+        sdata = loc[stations_key]
+        total_count = sdata.get("count", total_count)
+        refs = sdata.get("results", [])
+        if not refs:
+            break
+
+        for ref in refs:
+            sid = ref["__ref"].split(":")[1]
+            if sid not in stations:
+                obj = data.get(ref["__ref"], {})
+                stations[sid] = {
+                    "Station_ID": sid,
+                    "Name": obj.get("name", ""),
+                    "Address": format_address(obj.get("address")),
+                    "Latitude": "",
+                    "Longitude": "",
+                }
+                added += 1
+
+        nxt = sdata.get("cursor", {}).get("next")
+        if not nxt:
+            break
+        cursor = int(nxt)
+        if total_count is not None and cursor >= total_count:
+            break
+        await asyncio.sleep(random.uniform(0.4, 0.9))
+
+    if added:
+        print(f"🌱 City listing added {added} new station(s) (master list now {len(stations)}).")
+    else:
+        print("🌱 City listing found no new stations this run.")
 
 
 async def scrape_station(page, station_id):
@@ -220,9 +259,8 @@ async def main():
         )
         page = await context.new_page()
 
-        if not stations:
-            await discover_seed_stations(page, stations)
-            await asyncio.sleep(1)
+        await discover_from_city_listing(page, stations)
+        await asyncio.sleep(1)
 
         rows = []
         visited_ids = list(stations.keys())
