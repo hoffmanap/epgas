@@ -166,14 +166,22 @@
   .panel { background: #fff; border: 3px solid var(--ink); padding: 20px; }
   .chart-box { position: relative; height: 400px; }
 
-  #stationMap { height: 440px; width: 100%; }
+  #stationMap { height: 520px; width: 100%; }
+  .map-full-bleed {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
   .leaflet-popup-content-wrapper { font-family: 'IBM Plex Sans', sans-serif; border-radius: 0; border: 2px solid var(--ink); box-shadow: none; }
   .leaflet-popup-tip { display: none; }
   .popup-price { font-family: 'IBM Plex Mono', monospace; font-weight: 600; }
   .popup-name { font-family: 'Archivo Black', sans-serif; font-size: 0.85rem; text-transform: uppercase; }
 
   .legend-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; text-transform: uppercase; color: var(--ink-soft); }
-  .legend-swatch { width: 180px; height: 10px; border: 1px solid var(--ink); background: linear-gradient(90deg, var(--mint), var(--gold), var(--salmon)); }
+  .legend-swatch { width: 180px; height: 10px; border: 1px solid var(--ink); background: linear-gradient(90deg, var(--mint), var(--gold), var(--salmon-ink)); }
 
   .boards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 680px) { .boards { grid-template-columns: 1fr; } }
@@ -230,7 +238,7 @@
   <section id="map-section">
     <h2 class="section-title">Where It's Cheap, Where It Isn't</h2>
     <p class="section-dek">Every tracked station on the most recent scrape, colored by regular-grade price. Click a pin for the full grade breakdown.</p>
-    <div class="panel" style="padding:0;"><div id="stationMap"></div></div>
+    <div class="panel map-full-bleed" style="padding:0; border-left:none; border-right:none;"><div id="stationMap"></div></div>
     <div class="legend-row"><span>Cheaper</span><span class="legend-swatch"></span><span>Pricier</span></div>
   </section>
 
@@ -464,7 +472,7 @@ function renderMap() {
   const today = rawRows.filter(r => r.date.hasSame(latest, 'day') && r.lat && r.lng);
   if (today.length === 0) return;
 
-  const map = L.map('stationMap', { scrollWheelZoom: false }).setView([31.78, -106.45], 11);
+  const map = L.map('stationMap', { scrollWheelZoom: true }).setView([31.78, -106.45], 11);
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
     attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
     maxZoom: 16
@@ -474,7 +482,7 @@ function renderMap() {
   const lo = Math.min(...prices), hi = Math.max(...prices);
   const colorFor = (p) => {
     const t = hi === lo ? 0.5 : (p - lo) / (hi - lo);
-    const c1 = [191, 232, 216], c2 = [252, 224, 131], c3 = [245, 180, 166];
+    const c1 = [191, 232, 216], c2 = [252, 224, 131], c3 = [165, 66, 46];
     const mix = (a, b, tt) => Math.round(a + (b - a) * tt);
     const [from, to] = t < 0.5 ? [c1, c2] : [c2, c3];
     const tt = t < 0.5 ? t / 0.5 : (t - 0.5) / 0.5;
