@@ -19,14 +19,15 @@ The pipeline automatically compiles and appends data daily into `el_paso_gas_pri
 | `Scrape_Date` | String | Calendar execution timestamp (`YYYY-MM-DD`). |
 
 ## 🛠️ How the Data is Collected
-Because consumer websites utilize restrictive data-center firewall rules (e.g., Cloudflare tracking tokens), standard API-scraping environments often face connection limits or blocks. This repository circumvents infrastructure barriers by deploying a local automation engine:
+As of October 2026, this pipeline sources prices from **GasBuddy**'s crowdsourced station data rather than Google Maps. (Google began gating place-detail interactions behind a sign-in wall in late September 2026, which silently broke the original Maps-based scraper — it kept running, but every click into a station card was blocked by an invisible overlay, so no prices were ever collected after 9/30.)
 
-1. **Targeting Matrix:** The script evaluates a core geographical grid of target El Paso ZIP codes spanning the West Side, East Side, Northeast, and Lower Valley regions.
-2. **Browser Emulation:** Utilizing **Playwright**, the pipeline launches a headless instance of Chromium modified with stealth fingerprinting layers (`playwright-stealth`) to simulate standard human navigation.
-3. **Geospatial Point Mining:** The browser visits Google Maps search endpoints. To overcome lazy-loading limitations, it programmatically engages scrolling frames. It dynamically **clicks into each discovered station element**, triggering the live map pane to load and exposing the exact decimal `Latitude` and `Longitude` configurations embedded inside the browser's active window string.
-4. **Data Deduplication:** A Python engine built on **Pandas** reads existing CSV archives, stacks the fresh coordinates and pricing layers, and drops duplicate station profiles recorded on the same calendar day before rewriting the database matrix.
+1. **Self-expanding station graph:** `station_master.csv` holds the list of known station IDs, names, addresses, and coordinates. Each station's detail page on GasBuddy links out to a handful of nearby stations, so every run that encounters an unfamiliar station ID automatically adds it to the master list — the coverage area grows on its own over time without needing a hardcoded geographic grid.
+2. **Browser automation:** **Playwright** drives a headless Chromium instance to each known station's detail page and waits for the client-rendered price panel to resolve.
+3. **Structured + text extraction:** Station metadata (name, address, latitude/longitude) comes from the page's embedded Apollo GraphQL cache (`window.__APOLLO_STATE__`); fuel grade prices (Regular/Midgrade/Premium) are parsed from the rendered price panel.
+4. **Data deduplication:** A Python engine built on **Pandas** reads the existing CSV archive, appends the day's new readings, and drops duplicate station/date pairs before rewriting the dataset.
 
 ## 🚀 Automation & Synchronizing
-The system is managed via a local machine scheduler (Windows Task Scheduler / Mac Crontab) executing daily:
-* It spins up headlessly using a residential internet service provider connection, sliding smoothly past cloud data-center blocklists.
-* Upon processing, the script initiates sequential git sub-shell parameters (`git pull --rebase`, `git add`, `git commit`), publishing fresh tracking updates straight to this GitHub dashboard completely unattended.
+The pipeline runs daily via a **GitHub Actions workflow** (`.github/workflows/scrape.yml`), so it no longer depends on any particular computer being powered on:
+* A scheduled job spins up an Ubuntu runner, installs Playwright + Chromium, and runs `scraper.py` followed by `clean_data.py`.
+* If the resulting CSV or station list changed, the workflow commits and pushes the update directly to `main` using the built-in `GITHUB_TOKEN` — which also refreshes the live GitHub Pages dashboard automatically.
+* The workflow can also be triggered manually from the **Actions** tab (`workflow_dispatch`) at any time.

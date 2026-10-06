@@ -1,182 +1,322 @@
+"""
+El Paso Gas Price Scraper (v2 - GasBuddy source)
+=================================================
+Google Maps started gating place-detail interactions behind a
+"limited view" wall around 9/30/2026, which silently broke the old
+click-into-card approach (every result card was covered by an
+invisible overlay, so no price grid could ever be opened).
+
+This version pulls the same station-level, geolocated price data from
+GasBuddy instead, which renders price data without needing an
+authenticated session. It also self-expands its own station list over
+time: every station detail page links out to a handful of "nearby"
+stations, so each run that finds a brand-new station adds it to
+station_master.csv for all future runs.
+
+Designed to run unattended (e.g. via GitHub Actions / cron) with no
+dependency on a specific machine or residential IP.
+"""
+
 import os
 import re
-import time
+import json
+import random
 import asyncio
 import pandas as pd
+from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
-from playwright_stealth import Stealth
 
-async def scrape_node(context, lat, lng, area_name):
-    stations = {}
-    page = await context.new_page()
-    stealth = Stealth()
-    await stealth.apply_stealth_async(page)
-    
-    search_url = f"https://www.google.com/maps/search/gas+stations/@{lat},{lng},15z"
-    print(f"Scanning Coordinate Node: {area_name}...")
-    
-    try:
-        await page.goto(search_url, timeout=60000)
-        await page.wait_for_timeout(4000)
-        
-        # Deep scroll map pane to force all station cards to load into the DOM
-        for _ in range(6): 
-            try:
-                await page.mouse.move(200, 400)
-                await page.mouse.wheel(0, 3000)
-                await page.wait_for_timeout(1000)
-            except Exception:
-                pass
+STATION_MASTER_FILE = "station_master.csv"
+OUTPUT_CSV = "el_paso_gas_prices.csv"
+SEARCH_TERM = "El Paso, TX"
+USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+)
 
-        # We cap at 35 to ensure the script completes before timing out
-        for i in range(35):
-            try:
-                # Re-query cards every loop to avoid "Detached Element" errors after navigating back
-                cards = await page.query_selector_all('div[role="article"]')
-                if i >= len(cards):
+# Map GasBuddy's fuel grade labels onto the dashboard's existing schema
+FUEL_LABEL_MAP = {
+    "Regular": "Regular_Price",
+    "Midgrade": "Plus_Price",
+    "Premium": "Premium_Price",
+}
+
+# Safety cap so a single run can never balloon out of control if the
+# "nearby" discovery graph turns out to be larger than expected.
+MAX_NEW_STATIONS_PER_RUN = 60
+
+
+def extract_apollo_state(html):
+    """Pull the window.__APOLLO_STATE__ JSON blob out of a GasBuddy page."""
+    marker = "window.__APOLLO_STATE__ = "
+    idx = html.find(marker)
+    if idx == -1:
+        return None
+    start = html.find("{", idx)
+    depth = 0
+    in_str = False
+    esc = False
+    end = None
+    for i in range(start, len(html)):
+        c = html[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif c == "\\":
+                esc = True
+            elif c == '"':
+                in_str = False
+        else:
+            if c == '"':
+                in_str = True
+            elif c == "{":
+                depth += 1
+            elif c == "}":
+                depth -= 1
+                if depth == 0:
+                    end = i + 1
                     break
-                
-                card = cards[i]
-                
-                # Locate the station title
-                name_elem = await card.query_selector('a[href*="/maps/place"]')
-                if not name_elem:
-                    name_elem = await card.query_selector('div.fontHeadlineSmall')
-                
-                if not name_elem:
+    if end is None:
+        return None
+    try:
+        return json.loads(html[start:end])
+    except json.JSONDecodeError:
+        return None
+
+
+def format_address(addr):
+    if not addr:
+        return "El Paso, TX"
+    parts = [addr.get("line1", ""), addr.get("locality", ""), addr.get("region", "")]
+    return ", ".join(p for p in parts if p)
+
+
+async def load_station_master():
+    if os.path.exists(STATION_MASTER_FILE):
+        df = pd.read_csv(STATION_MASTER_FILE, dtype=str)
+        return {row["Station_ID"]: row.to_dict() for _, row in df.iterrows()}
+    return {}
+
+
+def save_station_master(stations):
+    df = pd.DataFrame(stations.values())
+    if not df.empty:
+        df = df.sort_values("Station_ID")
+    df.to_csv(STATION_MASTER_FILE, index=False)
+
+
+async def discover_seed_stations(page, stations):
+    """Bootstrap run only: pull the first page of city-wide results so
+    there is something to work with before the nearby-station graph
+    has a chance to expand organically."""
+    url = f"https://www.gasbuddy.com/home?search={SEARCH_TERM.replace(' ', '+').replace(',', '%2C')}&fuel=1"
+    await page.goto(url, timeout=45000)
+    await page.wait_for_timeout(2500)
+    html = await page.content()
+    data = extract_apollo_state(html)
+    if not data:
+        print("⚠️ Could not read seed search results (page may have been challenged).")
+        return
+    loc_key = next((k for k in data if k.startswith("Location:")), None)
+    if not loc_key:
+        return
+    loc = data[loc_key]
+    stations_key = next((k for k in loc if k.startswith("stations(")), None)
+    if not stations_key:
+        return
+    for ref in loc[stations_key].get("results", []):
+        sid = ref["__ref"].split(":")[1]
+        if sid not in stations:
+            obj = data.get(ref["__ref"], {})
+            stations[sid] = {
+                "Station_ID": sid,
+                "Name": obj.get("name", ""),
+                "Address": format_address(obj.get("address")),
+                "Latitude": "",
+                "Longitude": "",
+            }
+    print(f"🌱 Seeded {len(stations)} station(s) from city search.")
+
+
+async def scrape_station(page, station_id):
+    """Visit one station's detail page and return its current prices,
+    its own master-list fields, and any brand-new nearby station ids
+    this run has not seen before (id + name + address only; those get
+    their own lat/lon the first time they are actually visited)."""
+    url = f"https://www.gasbuddy.com/station/{station_id}"
+    await page.goto(url, timeout=45000)
+
+    try:
+        await page.wait_for_function(
+            """() => {
+                const els = document.querySelectorAll('[class*="priceDisplay"]');
+                if (els.length === 0) return false;
+                return Array.from(els).every(e => !e.querySelector('[class*="loader"]'));
+            }""",
+            timeout=15000,
+        )
+    except Exception:
+        pass  # fall through and parse whatever rendered
+
+    await page.wait_for_timeout(400)
+    html = await page.content()
+
+    apollo = extract_apollo_state(html)
+    station_obj = apollo.get(f"Station:{station_id}") if apollo else None
+
+    master_fields = None
+    if station_obj:
+        master_fields = {
+            "Station_ID": station_id,
+            "Name": station_obj.get("name", ""),
+            "Address": format_address(station_obj.get("address")),
+            "Latitude": station_obj.get("latitude", ""),
+            "Longitude": station_obj.get("longitude", ""),
+        }
+
+    prices = {"Regular_Price": "", "Plus_Price": "", "Premium_Price": ""}
+    soup = BeautifulSoup(html, "html.parser")
+    heading = soup.find("h2", string=re.compile("Station Prices"))
+    if heading:
+        panel = heading.find_parent("div").find_next_sibling("div")
+        if panel:
+            labels = [l.get_text(strip=True) for l in panel.select('[class*="fuelTypeDisplay"]')]
+            price_divs = panel.select('[class*="priceDisplay"]')
+            for label, pdiv in zip(labels, price_divs):
+                col = FUEL_LABEL_MAP.get(label)
+                if not col:
                     continue
+                text = pdiv.get_text(" ", strip=True)
+                m = re.search(r"\$\s*([\d.]+)", text)
+                if m:
+                    prices[col] = m.group(1)
 
-                name = await name_elem.get_attribute('aria-label')
-                if not name:
-                    name = await name_elem.inner_text()
-                name = name.strip()
-
-                # Click to expand the new detailed place panel shown in the image
-                await name_elem.click()
-                await page.wait_for_timeout(2500) 
-                
-                current_url = page.url
-                station_lat, station_lng = None, None
-                
-                coord_match = re.search(r'@([-?\d\.]+),([-?\d\.]+)', current_url)
-                if coord_match:
-                    station_lat, station_lng = float(coord_match.group(1)), float(coord_match.group(2))
-                else:
-                    fallback_match = re.search(r'!3d([-?\d\.]+)!4d([-?\d\.]+)', current_url)
-                    if fallback_match:
-                        station_lat, station_lng = float(fallback_match.group(1)), float(fallback_match.group(2))
-
-                # Scrape the entire expanded sidebar panel to capture the new price grid
-                sidebar = await page.query_selector('div[role="main"]')
-                panel_text = await sidebar.inner_text() if sidebar else await page.inner_text('body')
-
-                # Regex specifically targets the $X.XX format from the grid (e.g., $4.50 *)
-                found_prices = re.findall(r'\$\s*([2-6]\.\d{2})', panel_text)
-                
-                # Deduplicate and validate prices
-                prices = []
-                for p in found_prices:
-                    try:
-                        val = float(p)
-                        if 2.00 <= val <= 6.50 and val not in prices:
-                            prices.append(val)
-                    except ValueError:
-                        continue
-
-                # The grid orders them logically: Regular, Midgrade (Plus), Premium
-                reg_price, plus_price, prem_price = 0.0, 0.0, 0.0
-                if len(prices) >= 1: reg_price = prices[0]
-                if len(prices) >= 2: plus_price = prices[1]
-                if len(prices) >= 3: prem_price = prices[2]
-
-                station_id = name.lower().replace(" ", "-").replace(",", "").replace(".", "").replace("'", "").strip()
-                unique_key = f"{station_id}-{current_date}"
-                
-                stations[unique_key] = {
-                    "Station_ID": station_id, 
-                    "Name": name, 
-                    "Address": f"El Paso, TX ({area_name})",
-                    "Latitude": station_lat, 
-                    "Longitude": station_lng,
-                    "Regular_Price": reg_price if reg_price > 0 else "", 
-                    "Plus_Price": plus_price if plus_price > 0 else "",
-                    "Premium_Price": prem_price if prem_price > 0 else "",
-                    "Scrape_Date": current_date
+    # Harvest nearby station stubs for future-run discovery.
+    new_nearby = {}
+    if station_obj:
+        for ref in station_obj.get("nearby", []):
+            nid = ref.get("__ref", "").split(":")[-1]
+            if nid and nid not in new_nearby:
+                nearby_obj = apollo.get(ref["__ref"], {})
+                new_nearby[nid] = {
+                    "Station_ID": nid,
+                    "Name": nearby_obj.get("name", ""),
+                    "Address": "",
+                    "Latitude": "",
+                    "Longitude": "",
                 }
 
-                # CRITICAL: Click the "Back" arrow to restore the list view so the loop can continue
-                back_btn = await page.query_selector('button[aria-label="Back"]')
-                if back_btn:
-                    await back_btn.click()
-                    await page.wait_for_timeout(1500)
-                else:
-                    # Failsafe if the back button is hidden
-                    await page.goto(search_url)
-                    await page.wait_for_timeout(4000)
+    return master_fields, prices, new_nearby
 
-            except Exception:
-                continue
-                
-    except Exception as err:
-        print(f"⚠️ Navigation challenge on node {area_name}: {err}")
-    finally:
-        await page.close()
-        
-    return stations
 
 async def main():
-    el_paso_grid = [
-        (31.7587, -106.4869, "Downtown_Central"), 
-        (31.8344, -106.5294, "West_Side_Mesa"),
-        (31.8792, -106.5542, "Upper_Valley"), 
-        (31.8455, -106.4178, "Northeast_Dyer"),
-        (31.7611, -106.3683, "East_Side_Cielo_Vista"), 
-        (31.7455, -106.3012, "Zaragosa_Lower_Valley"),
-        (31.8214, -106.2611, "Far_East_Montana"), 
-        (31.6789, -106.2789, "Socorro_Horizon_Border")
-    ]
-    
-    all_stations = {}
-    global current_date
-    current_date = pd.Timestamp.now().strftime('%m/%d/%Y')
-    
+    current_date = pd.Timestamp.now().strftime("%m/%d/%Y")
+    stations = await load_station_master()
+
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         context = await browser.new_context(
-            viewport={'width': 1280, 'height': 800},
-            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+            viewport={"width": 1280, "height": 900}, user_agent=USER_AGENT
         )
-        
-        for lat, lng, area_name in el_paso_grid:
-            node_data = await scrape_node(context, lat, lng, area_name)
-            all_stations.update(node_data)
-            await asyncio.sleep(2)
+        page = await context.new_page()
+
+        if not stations:
+            await discover_seed_stations(page, stations)
+            await asyncio.sleep(1)
+
+        rows = []
+        visited_ids = list(stations.keys())
+        new_ids_this_run = []
+        failures = []
+
+        for sid in visited_ids:
+            try:
+                master_fields, prices, new_nearby = await scrape_station(page, sid)
+            except Exception as err:
+                failures.append(sid)
+                print(f"⚠️ Failed to scrape station {sid}: {err}")
+                await asyncio.sleep(random.uniform(0.5, 1.2))
+                continue
+
+            if master_fields:
+                stations[sid].update(master_fields)
+
+            if any(prices.values()):
+                row = {
+                    "Station_ID": sid,
+                    "Name": stations[sid].get("Name", ""),
+                    "Address": stations[sid].get("Address", "El Paso, TX"),
+                    "Latitude": stations[sid].get("Latitude", ""),
+                    "Longitude": stations[sid].get("Longitude", ""),
+                    "Regular_Price": prices["Regular_Price"],
+                    "Plus_Price": prices["Plus_Price"],
+                    "Premium_Price": prices["Premium_Price"],
+                    "Scrape_Date": current_date,
+                }
+                rows.append(row)
+
+            for nid, stub in new_nearby.items():
+                if nid not in stations and nid not in [x[0] for x in new_ids_this_run]:
+                    if len(new_ids_this_run) < MAX_NEW_STATIONS_PER_RUN:
+                        new_ids_this_run.append((nid, stub))
+
+            await asyncio.sleep(random.uniform(0.4, 0.9))
+
+        # Visit newly discovered stations in this same run so they get
+        # full lat/lon + a price reading immediately instead of waiting
+        # for the next scheduled run.
+        for nid, stub in new_ids_this_run:
+            stations[nid] = stub
+            try:
+                master_fields, prices, _ = await scrape_station(page, nid)
+            except Exception as err:
+                failures.append(nid)
+                print(f"⚠️ Failed to scrape newly discovered station {nid}: {err}")
+                continue
+
+            if master_fields:
+                stations[nid].update(master_fields)
+
+            if any(prices.values()):
+                rows.append({
+                    "Station_ID": nid,
+                    "Name": stations[nid].get("Name", ""),
+                    "Address": stations[nid].get("Address", "El Paso, TX"),
+                    "Latitude": stations[nid].get("Latitude", ""),
+                    "Longitude": stations[nid].get("Longitude", ""),
+                    "Regular_Price": prices["Regular_Price"],
+                    "Plus_Price": prices["Plus_Price"],
+                    "Premium_Price": prices["Premium_Price"],
+                    "Scrape_Date": current_date,
+                })
+            await asyncio.sleep(random.uniform(0.4, 0.9))
+
         await browser.close()
 
-    if all_stations:
-        df_new = pd.DataFrame(all_stations.values())
-        csv_file = "el_paso_gas_prices.csv"
-        
-        # Filter out rows where Regular_Price was not successfully scraped
-        df_new = df_new[df_new['Regular_Price'] != ""]
-        
+    save_station_master(stations)
+
+    if rows:
+        df_new = pd.DataFrame(rows)
+        df_new = df_new[df_new["Regular_Price"] != ""]
+
         if not df_new.empty:
-            if os.path.exists(csv_file):
-                df_existing = pd.read_csv(csv_file)
-                if not df_existing.empty:
-                    df_final = pd.concat([df_existing, df_new], ignore_index=True)
-                else:
-                    df_final = df_new
+            if os.path.exists(OUTPUT_CSV):
+                df_existing = pd.read_csv(OUTPUT_CSV)
+                df_final = pd.concat([df_existing, df_new], ignore_index=True)
                 df_final.drop_duplicates(subset=["Station_ID", "Scrape_Date"], keep="last", inplace=True)
             else:
                 df_final = df_new
-                
-            df_final.to_csv(csv_file, index=False)
+            df_final.to_csv(OUTPUT_CSV, index=False)
             print(f"✅ Success! Updated dataset with {len(df_new)} valid pricing entries for {current_date}.")
+            if new_ids_this_run:
+                print(f"🔎 Discovered {len(new_ids_this_run)} new station(s) this run.")
+            if failures:
+                print(f"⚠️ {len(failures)} station(s) failed to load and were skipped: {failures}")
         else:
             print(f"⚠️ Scan completed, but no valid pricing grids were found for {current_date}.")
     else:
-        print("❌ Error: Map scanning completed but no pricing entities could be verified.")
+        print("❌ Error: No pricing data could be collected this run.")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
