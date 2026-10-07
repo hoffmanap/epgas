@@ -273,6 +273,30 @@ let gasChartInstance = null;
 let aggMode = 'daily';
 let showPlus = false;
 let showPremium = false;
+let lastUpdatedDT = null;
+
+// The CSV only records a scrape *date*, not a time, so for an actual
+// timestamp we ask GitHub when the data file was last committed - that
+// lines up with whenever the hourly scrape workflow last pushed new rows.
+async function fetchLastUpdated() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+  try {
+    const res = await fetch(
+      'https://api.github.com/repos/hoffmanap/epgas/commits?path=el_paso_gas_prices.csv&per_page=1',
+      { signal: controller.signal }
+    );
+    if (!res.ok) return null;
+    const commits = await res.json();
+    const iso = commits?.[0]?.commit?.author?.date;
+    return iso ? DateTime.fromISO(iso, { zone: 'utc' }).setZone('America/Denver') : null;
+  } catch (err) {
+    console.error('Could not fetch last-updated time', err);
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 const elStart = document.getElementById('startDate');
 const elEnd = document.getElementById('endDate');
@@ -303,7 +327,10 @@ window.addEventListener('DOMContentLoaded', () => {
     download: true,
     header: true,
     skipEmptyLines: true,
-    complete: (results) => init(results.data),
+    complete: async (results) => {
+      lastUpdatedDT = await fetchLastUpdated();
+      init(results.data);
+    },
     error: (err) => {
       document.getElementById('heroHeadline').textContent = "Couldn't load today's data.";
       console.error(err);
@@ -370,7 +397,10 @@ function renderHero() {
   document.getElementById('heroHeadline').innerHTML =
     `Regular gas in El Paso is averaging <span class="mark">$${avgToday.toFixed(2)}</span> a gallon today.`;
 
-  let sub = `Tracked across ${todayRows.length} stations on ${latest.toFormat('MMMM d')}.`;
+  const updatedText = lastUpdatedDT
+    ? `last updated ${lastUpdatedDT.toFormat('h:mm a')} ${lastUpdatedDT.toFormat('ZZZZ')} on ${lastUpdatedDT.toFormat('MMMM d')}`
+    : `last updated ${latest.toFormat('MMMM d')}`;
+  let sub = `Tracked across ${todayRows.length} stations, ${updatedText}.`;
   if (delta !== null) {
     const dir = delta > 0.005 ? 'up' : delta < -0.005 ? 'down' : 'flat vs.';
     sub += ` That's ${dir === 'flat vs.' ? 'flat versus' : `${dir} ${Math.abs(delta).toFixed(2)}¢ from`} the prior reading.`;
