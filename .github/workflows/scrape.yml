@@ -2,11 +2,19 @@ name: Daily Gas Price Scrape
 
 on:
   schedule:
-    # 13:12 UTC = ~6-7am in El Paso (America/Denver), depending on DST.
-    # Deliberately off the top of the hour: GitHub's scheduler queues
-    # on-the-hour cron times most heavily, and can delay or silently
-    # drop runs there, especially right after a schedule is added.
-    - cron: "12 13 * * *"
+    # GasBuddy prices are crowdsourced - which stations have a
+    # recent-enough reported price shifts throughout the day as
+    # people fill up and report. A single run only catches whatever
+    # happens to be fresh at that moment, so run several times a day
+    # and let them union together into each day's dataset instead of
+    # relying on one snapshot (or on manual re-runs) for coverage.
+    # Times are deliberately off the top of the hour: GitHub's
+    # scheduler queues on-the-hour cron times most heavily, and can
+    # delay or silently drop runs there.
+    - cron: "12 13 * * *"  # ~7:12am MDT
+    - cron: "12 18 * * *"  # ~12:12pm MDT
+    - cron: "12 23 * * *"  # ~5:12pm MDT
+    - cron: "42 3 * * *"   # ~9:42pm MDT (following UTC day)
   workflow_dispatch: {}
 
 permissions:
