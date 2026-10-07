@@ -2,8 +2,11 @@ name: Daily Gas Price Scrape
 
 on:
   schedule:
-    # 13:00 UTC = ~6-7am in El Paso (America/Denver), depending on DST
-    - cron: "0 13 * * *"
+    # 13:12 UTC = ~6-7am in El Paso (America/Denver), depending on DST.
+    # Deliberately off the top of the hour: GitHub's scheduler queues
+    # on-the-hour cron times most heavily, and can delay or silently
+    # drop runs there, especially right after a schedule is added.
+    - cron: "12 13 * * *"
   workflow_dispatch: {}
 
 permissions:
