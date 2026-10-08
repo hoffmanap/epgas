@@ -286,7 +286,14 @@ async def scrape_station(page, station_id):
 
 
 async def main():
-    current_date = pd.Timestamp.now().strftime("%m/%d/%Y")
+    # Stamp rows with the El Paso (America/Denver) calendar date, not the
+    # scraping host's local time. GitHub Actions runners are UTC, and the
+    # hourly schedule window (8am-4pm MDT) sits late enough in the UTC day
+    # that a run which fires on time - or, worse, a delayed one running
+    # after its slot - can land after UTC midnight while it's still
+    # evening in El Paso. Using naive now() in that window mislabels the
+    # day's data as tomorrow before today's real first run has happened.
+    current_date = pd.Timestamp.now(tz="America/Denver").strftime("%m/%d/%Y")
     stations = await load_station_master()
 
     async with async_playwright() as p:
