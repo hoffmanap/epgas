@@ -29,6 +29,14 @@ from playwright.async_api import async_playwright
 STATION_MASTER_FILE = "station_master.csv"
 LISTING_STATE_FILE = "listing_state.json"
 OUTPUT_CSV = "el_paso_gas_prices.csv"
+# Full-resolution companion to OUTPUT_CSV: every run appends its readings
+# here keyed on (Station_ID, Scrape_Timestamp) instead of collapsing to one
+# row per station per day. OUTPUT_CSV keeps its existing last-reading-of-
+# the-day behavior unchanged (the dashboard depends on that daily grain),
+# so this file is purely additive - it's what will let us build intraday /
+# interday price-movement charts (by brand, by geography) once enough runs
+# have piled up. Same columns as OUTPUT_CSV plus Scrape_Timestamp.
+HISTORY_CSV = "station_price_history.csv"
 SEARCH_TERM = "El Paso, TX"
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -293,7 +301,13 @@ async def main():
     # after its slot - can land after UTC midnight while it's still
     # evening in El Paso. Using naive now() in that window mislabels the
     # day's data as tomorrow before today's real first run has happened.
-    current_date = pd.Timestamp.now(tz="America/Denver").strftime("%m/%d/%Y")
+    run_time = pd.Timestamp.now(tz="America/Denver")
+    current_date = run_time.strftime("%m/%d/%Y")
+    # One timestamp per run (not per station) - a full pass over ~250
+    # stations takes a few minutes, but that's a finer grain than we need:
+    # "when did this run happen" is the meaningful unit for intraday
+    # comparison, not which second within the run a given station loaded.
+    current_timestamp = run_time.isoformat()
     stations = await load_station_master()
 
     async with async_playwright() as p:
@@ -334,6 +348,7 @@ async def main():
                     "Plus_Price": prices["Plus_Price"],
                     "Premium_Price": prices["Premium_Price"],
                     "Scrape_Date": current_date,
+                    "Scrape_Timestamp": current_timestamp,
                 }
                 rows.append(row)
 
@@ -370,6 +385,7 @@ async def main():
                     "Plus_Price": prices["Plus_Price"],
                     "Premium_Price": prices["Premium_Price"],
                     "Scrape_Date": current_date,
+                    "Scrape_Timestamp": current_timestamp,
                 })
             await asyncio.sleep(random.uniform(0.4, 0.9))
 
@@ -382,13 +398,32 @@ async def main():
         df_new = df_new[df_new["Regular_Price"] != ""]
 
         if not df_new.empty:
+            # ---- Daily snapshot (unchanged): one row per station per day,
+            # last reading of the day wins. The dashboard reads this file
+            # and expects exactly this grain, so its schema and dedup key
+            # stay as they were.
+            df_daily = df_new.drop(columns=["Scrape_Timestamp"])
             if os.path.exists(OUTPUT_CSV):
                 df_existing = pd.read_csv(OUTPUT_CSV)
-                df_final = pd.concat([df_existing, df_new], ignore_index=True)
+                df_final = pd.concat([df_existing, df_daily], ignore_index=True)
                 df_final.drop_duplicates(subset=["Station_ID", "Scrape_Date"], keep="last", inplace=True)
             else:
-                df_final = df_new
+                df_final = df_daily
             df_final.to_csv(OUTPUT_CSV, index=False)
+
+            # ---- Full-resolution history (new): every run's reading is
+            # appended, keyed on (Station_ID, Scrape_Timestamp) instead of
+            # the daily key above, so same-day runs no longer overwrite
+            # each other. This is what accumulates the intraday /
+            # interday series.
+            if os.path.exists(HISTORY_CSV):
+                df_hist_existing = pd.read_csv(HISTORY_CSV)
+                df_hist_final = pd.concat([df_hist_existing, df_new], ignore_index=True)
+                df_hist_final.drop_duplicates(subset=["Station_ID", "Scrape_Timestamp"], keep="last", inplace=True)
+            else:
+                df_hist_final = df_new
+            df_hist_final.to_csv(HISTORY_CSV, index=False)
+
             print(f"✅ Success! Updated dataset with {len(df_new)} valid pricing entries for {current_date}.")
             if new_ids_this_run:
                 print(f"🔎 Discovered {len(new_ids_this_run)} new station(s) this run.")

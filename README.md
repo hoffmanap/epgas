@@ -18,6 +18,11 @@ The pipeline automatically compiles and appends data daily into `el_paso_gas_pri
 | `Premium_Price` | Float | Real-time price ($ USD) for 91/93 Octane gasoline. |
 | `Scrape_Date` | String | Calendar execution timestamp (`YYYY-MM-DD`). |
 
+Only the last successful reading of each day survives in this file (same-day runs overwrite each other on `Station_ID` + `Scrape_Date`), so it's built for day-over-day and geospatial analysis, not for tracking how a station's price moves within a day.
+
+### Full-resolution history
+Every run also appends to `station_price_history.csv`, which uses the same columns above plus `Scrape_Timestamp` (ISO 8601, `America/Denver`) and is **not** deduplicated down to one row per day — every hourly reading is kept, keyed on `Station_ID` + `Scrape_Timestamp`. This is the file to use once there's enough history for intraday and day-over-day price-movement charts (including comparisons by brand or by geography); `el_paso_gas_prices.csv` and the dashboard are unaffected by it. Started October 2026, so it'll take a few weeks of runs before there's a useful amount of history to chart.
+
 ## 🛠️ How the Data is Collected
 As of October 2026, this pipeline sources prices from **GasBuddy**'s crowdsourced station data rather than Google Maps. (Google began gating place-detail interactions behind a sign-in wall in late September 2026, which silently broke the original Maps-based scraper — it kept running, but every click into a station card was blocked by an invisible overlay, so no prices were ever collected after 9/30.)
 
