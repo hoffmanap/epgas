@@ -50,6 +50,7 @@ Station_ID,Name,Address,Latitude,Longitude
 133898,Speedway,"10498 N Loop Dr, Socorro, TX",31.65909835473,-106.274271011353
 134479,Circle K,"2210 Joe Battle Blvd, El Paso, TX",31.776914583475,-106.266921758652
 134986,Circle K,"2297 N Zaragoza Rd, El Paso, TX",31.77589382624,-106.253651529551
+136678,Valero,"14501 Horizon Blvd, Horizon City, TX",31.683490396123,-106.187270879745
 137405,Alon,"400 S Mesa Hills Dr, El Paso, TX",31.81798171997,-106.527442932129
 137406,Diamond Shamrock,"511 N Copia St, El Paso, TX",31.77933,-106.451108
 139465,AAFES,"5001 Jeb Stuart Rd, Fort Bliss, TX",31.800209934441,-106.421842128038
@@ -68,6 +69,7 @@ Station_ID,Name,Address,Latitude,Longitude
 153563,Alon,"9829 Socorro Rd, El Paso, TX",31.665769,-106.30828
 153749,Alon,"8382 Alameda Ave, El Paso, TX",31.711485,-106.347942
 153972,Alon,"114 Buena Vista St, El Paso, TX",31.7675,-106.422339
+154352,Marathon,"14432 Rudi Kuefner Dr, Horizon City, TX",31.665856,-106.187941
 156325,Alon,"14034 Horizon Blvd, Horizon City, TX",31.682542,-106.195071
 156646,Circle K,"1408 W Yandell Dr, El Paso, TX",31.762492,-106.503159
 158495,Murphy USA,"10361 Alameda Ave, Socorro, TX",31.653688,-106.289408
@@ -110,6 +112,7 @@ Station_ID,Name,Address,Latitude,Longitude
 210219,Circle K,"1404 Joe Battle Blvd, El Paso, TX",31.72646,-106.26627
 211188,Murphy USA,"9941 North Loop Dr, Socorro, TX",31.67295,-106.284737
 211196,Circle K,"2301 Joe Battle Blvd, El Paso, TX",31.776927303188,-106.268997717797
+211270,QuikTrip,"10300 Gtwy Blvd E, El Paso, TX",31.6860083,-106.2685257
 212115,Murphy Express,"11391 Montwood Dr, El Paso, TX",31.76829,-106.297569
 212131,Murphy USA,"7424 North Mesa, El Paso, TX",31.837817,-106.56075
 213095,Murphy USA,"1420 Lee Trevino, El Paso, TX",31.74648,-106.31883
@@ -167,6 +170,7 @@ Station_ID,Name,Address,Latitude,Longitude
 73235,Circle K,"9121 Dyer St, El Paso, TX",31.871498829917,-106.427567303181
 75182,Ram,"800 N Carolina Dr, El Paso, TX",31.741653565137,-106.35359197855
 75183,Phillips 66,"1025 N Carolina Dr, El Paso, TX",31.739570963174,-106.347001791
+75197,Marathon,"1130 Joe Battle Blvd, El Paso, TX",31.704325,-106.28088
 75754,Circle K,"6200 N Mesa St, El Paso, TX",31.831919972367,-106.532192230225
 76038,Valero,"804 N Zaragoza Rd, El Paso, TX",31.706841581091,-106.314772367477
 78039,Alon,"11761 Vista Del Sol Dr, El Paso, TX",31.747219106185,-106.291061639786
