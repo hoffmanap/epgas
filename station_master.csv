@@ -58,6 +58,7 @@ Station_ID,Name,Address,Latitude,Longitude
 141244,Alon,"3525 N Yarbrough Dr, El Paso, TX",31.796303,-106.332579
 142314,Speedway,"1797 George Dieter Dr, El Paso, TX",31.764366,-106.3023879
 142569,Alon,"4413 Dyer St, El Paso, TX",31.816327091759,-106.444923877716
+150040,Valero,"13690 Eastlake Dr, Horizon City, TX",31.698954,-106.212271
 151274,Circle K,"4101 N Piedras St, El Paso, TX",31.813316,-106.461478
 151864,Alon,"10014 Alameda Ave, Socorro, TX",31.661857,-106.296567
 151896,Chevron,"7949 Knights Dr, El Paso, TX",31.722609,-106.367617
@@ -67,6 +68,7 @@ Station_ID,Name,Address,Latitude,Longitude
 153563,Alon,"9829 Socorro Rd, El Paso, TX",31.665769,-106.30828
 153749,Alon,"8382 Alameda Ave, El Paso, TX",31.711485,-106.347942
 153972,Alon,"114 Buena Vista St, El Paso, TX",31.7675,-106.422339
+156325,Alon,"14034 Horizon Blvd, Horizon City, TX",31.682542,-106.195071
 156646,Circle K,"1408 W Yandell Dr, El Paso, TX",31.762492,-106.503159
 158495,Murphy USA,"10361 Alameda Ave, Socorro, TX",31.653688,-106.289408
 158892,Alon,"2100 N Zaragoza Rd, El Paso, TX",31.768462407264,-106.260344982147
@@ -78,6 +80,7 @@ Station_ID,Name,Address,Latitude,Longitude
 16759,Circle K,"12190 Montwood Dr, El Paso, TX",31.760264882989,-106.268606185913
 16760,Speedway,"10701 Gateway Blvd S, El Paso, TX",31.923600708006,-106.440224647522
 172200,Alon,"295 Padres Dr, El Paso, TX",31.692973,-106.339653
+173698,Circle K,"12281 Eastlake Blvd, El Paso, TX",31.691056,-106.262212
 175837,Sam's Club,"9498 Gateway Blvd N, El Paso, TX",31.882259,-106.439613
 177583,Valero,"2300 N Zaragoza Rd, El Paso, TX",31.775741813817,-106.252616196871
 187852,Alon,"320 S Americas Ave, El Paso, TX",31.677544,-106.316419
@@ -85,6 +88,7 @@ Station_ID,Name,Address,Latitude,Longitude
 189904,Firebird Fuel,"800 Texas Ave, El Paso, TX",31.762062,-106.481933
 191547,Chevron,"214 Val Verde St, El Paso, TX",31.768009185791,-106.432487487793
 193369,Murphy Express,"3591 Zaragoza Rd, El Paso, TX",31.797506,-106.230245
+193399,Murphy USA,"165 S. Darrington Road, Horizon City, TX",31.680327,-106.199027
 193401,Circle K,"3291 N Zaragoza Rd, El Paso, TX",31.791163,-106.236821
 193970,Circle K,"12681 Montana Ave, El Paso, TX",31.809741564038,-106.248332709074
 196254,Walmart,"7831 Paseo Del Norte, El Paso, TX",31.883991,-106.578712
@@ -93,11 +97,14 @@ Station_ID,Name,Address,Latitude,Longitude
 201577,Circle K,"6410 Doniphan Dr, El Paso, TX",31.886376,-106.596447
 201632,Murphy USA,"13000 Eastlake Blvd., El Paso, TX",31.698946,-106.241722
 201709,Valero,"2120 N Zaragoza Rd, El Paso, TX",31.77070930189,-106.257893443108
+204564,Speedway,"13891 Horizon Blvd, Horizon City, TX",31.683734,-106.200242
 204700,Circle K,"1612 Hawkins Blvd, El Paso, TX",31.7933500191,-106.3713549078
 205473,Murphy USA,"12295 Pellicano, El Paso, TX",31.726652,-106.268364
 205867,Murphy USA,"13300 Pellicano Dr, El Paso, TX",31.725356,-106.232042
 206407,Marathon,"10197 Alameda Ave, Socorro, TX",31.6562654,-106.2917968
 206508,Circle K,"3101 FM-659, El Paso, TX",31.7834634,-106.2439162
+208076,Speedway,"12290 Eastlake Blvd, Horizon City, TX",31.69059,-106.26101
+208392,Murphy USA,"12158 Eastlake Blvd., El Paso, TX",31.688221,-106.263214
 208584,Murphy USA,"9420 Diana Dr, El Paso, TX",31.876856,-106.423431
 208696,Murphy USA,"7800 Paseo Del Notre Drive, El Paso, TX",31.883491,-106.576454
 210219,Circle K,"1404 Joe Battle Blvd, El Paso, TX",31.72646,-106.26627
