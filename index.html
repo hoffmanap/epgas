@@ -29,6 +29,11 @@
     --lavender: #d8c7f0;
     --mint-ink: #1d6b53;
     --salmon-ink: #a5422e;
+    --mint-strong: #0e8f5e;
+    --area-ne: #0e8f5e;
+    --area-se: #b8441f;
+    --area-nw: #5e4bb8;
+    --area-sw: #9c7a0f;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -198,6 +203,24 @@
   .price-chip { display: inline-block; padding: 2px 7px; border: 1px solid var(--ink); }
   .station-addr { color: var(--ink-soft); font-size: 0.8rem; display: block; font-family: 'IBM Plex Sans', sans-serif; }
 
+  .chart-note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    margin: 12px 0 0;
+  }
+  .split-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 760px) { .split-charts { grid-template-columns: 1fr; } }
+  .split-charts .panel h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    color: var(--ink-soft);
+    margin: 0 0 14px;
+  }
+  .chart-box-sm { position: relative; height: 280px; }
+
   footer { padding: 36px 0 56px; color: var(--ink-soft); font-size: 0.82rem; font-family: 'IBM Plex Mono', monospace; }
   footer a { color: var(--ink-soft); text-decoration: underline; }
 </style>
@@ -230,9 +253,11 @@
       <input type="date" id="endDate">
       <button class="toggle-btn" data-grade="plus">Midgrade</button>
       <button class="toggle-btn" data-grade="premium">Premium</button>
+      <button class="toggle-btn" data-grade="spread">+ Daily range</button>
     </div>
 
     <div class="panel chart-box"><canvas id="gasChart"></canvas></div>
+    <p class="chart-note" id="spreadNote" style="display:none;">Shaded band is that day's spread between the cheapest and priciest station tracked — the line is the average.</p>
   </section>
 
   <section id="map-section">
@@ -259,6 +284,37 @@
     </div>
   </section>
 
+  <section id="brand-section">
+    <h2 class="section-title">Who's Cheaper, By Brand</h2>
+    <p class="section-dek" id="brandDek">Average regular-grade price by brand, every clean reading in the dataset's history.</p>
+    <div class="panel chart-box"><canvas id="brandChart"></canvas></div>
+    <p class="chart-note" id="brandNote"></p>
+  </section>
+
+  <section id="area-section">
+    <h2 class="section-title">Does It Matter Where You Are</h2>
+    <p class="section-dek" id="areaDek">Tracked stations split into four rough geographic quadrants by their coordinates, trended over time. Coordinates are only reliable since the current scraper went live, so this fills in as more days come in.</p>
+    <div class="panel chart-box"><canvas id="areaChart"></canvas></div>
+    <p class="chart-note" id="areaNote"></p>
+  </section>
+
+  <section id="patterns-section">
+    <h2 class="section-title">Patterns In The Data</h2>
+    <p class="section-dek">Two ways of slicing the same history: which day of the week tends to run cheap or pricey, and how many stations are actually reporting in on a given day.</p>
+    <div class="split-charts">
+      <div class="panel">
+        <h3>By day of week</h3>
+        <div class="chart-box-sm"><canvas id="weekdayChart"></canvas></div>
+        <p class="chart-note" id="weekdayNote"></p>
+      </div>
+      <div class="panel">
+        <h3>Stations reporting per day</h3>
+        <div class="chart-box-sm"><canvas id="coverageChart"></canvas></div>
+        <p class="chart-note">The dataset's station graph grows on its own as the scraper discovers new stations, so an upward trend here is partly coverage growth, not just more people reporting prices.</p>
+      </div>
+    </div>
+  </section>
+
   <footer>
     Prices are crowdsourced via <a href="https://www.gasbuddy.com" target="_blank" rel="noopener">GasBuddy</a> and refreshed daily. Basemap tiles &copy; Esri. Source + methodology: <a href="https://github.com/hoffmanap/epgas" target="_blank" rel="noopener">hoffmanap/epgas</a>.
   </footer>
@@ -273,7 +329,50 @@ let gasChartInstance = null;
 let aggMode = 'daily';
 let showPlus = false;
 let showPremium = false;
+let showSpread = false;
 let lastUpdatedDT = null;
+let brandChartInstance = null;
+let areaChartInstance = null;
+let weekdayChartInstance = null;
+let coverageChartInstance = null;
+
+// Known gas brands, longest/most-specific keyword first, used to fold a
+// station's raw name ("FREEWAY CHEVRON", "Mesa Hills Valero", "ALON Gas
+// Station") into a canonical brand via substring match.
+const BRAND_KEYWORDS = [
+  ["love's travel stop", "Love's"], ["love's", "Love's"],
+  ['flying j', 'Flying J'],
+  ['murphy express', 'Murphy USA'], ['murphy usa', 'Murphy USA'], ['murphy', 'Murphy USA'],
+  ['circle k', 'Circle K'],
+  ['speedway', 'Speedway'],
+  ['valero', 'Valero'],
+  ['chevron', 'Chevron'],
+  ['alon', 'Alon'],
+  ['dk gas station', 'DK'],
+  ["sam's club", "Sam's Club"],
+  ['costco', 'Costco'],
+  ['walmart', 'Walmart'],
+  ['aafes', 'AAFES'],
+  ['station 54', 'Station 54'],
+  ['diamond shamrock', 'Diamond Shamrock'],
+];
+
+// The scraper's old Google-Maps backend (pre-Oct 2026) occasionally baked
+// review text, ratings, and address fragments straight into the Name
+// field. Those rows are still useful for price, but not for a by-brand
+// comparison, so filter them out by shape rather than by date.
+function isCleanStationName(name) {
+  if (!name || name.length > 30) return false;
+  return !/\(|website|directions|closes|open|\d\.\d/i.test(name);
+}
+
+function brandFor(name) {
+  const lower = name.toLowerCase();
+  for (const [kw, canon] of BRAND_KEYWORDS) {
+    if (lower.includes(kw)) return canon;
+  }
+  return null;
+}
 
 // The CSV only records a scrape *date*, not a time, so for an actual
 // timestamp we ask GitHub when the data file was last committed - that
@@ -320,6 +419,12 @@ window.addEventListener('DOMContentLoaded', () => {
     e.target.classList.toggle('active', showPremium);
     renderChart();
   });
+  document.querySelector('[data-grade="spread"]').addEventListener('click', (e) => {
+    showSpread = !showSpread;
+    e.target.classList.toggle('active', showSpread);
+    document.getElementById('spreadNote').style.display = showSpread ? 'block' : 'none';
+    renderChart();
+  });
   elStart.addEventListener('change', renderChart);
   elEnd.addEventListener('change', renderChart);
 
@@ -362,6 +467,10 @@ function init(data) {
   renderHero();
   renderBoards();
   renderMap();
+  renderBrandChart();
+  renderAreaChart();
+  renderWeekdayChart();
+  renderCoverageChart();
 
   elStart.value = dailyBaseline[0].date.toISODate();
   elEnd.value = dailyBaseline[dailyBaseline.length - 1].date.toISODate();
@@ -379,7 +488,11 @@ function buildDailyBaseline() {
   });
   const avg = arr => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null;
   dailyBaseline = Object.values(byDate)
-    .map(d => ({ date: d.date, regular: avg(d.regular), plus: avg(d.plus), premium: avg(d.premium), stations: d.regular.length }))
+    .map(d => ({
+      date: d.date, regular: avg(d.regular), plus: avg(d.plus), premium: avg(d.premium),
+      regularMin: Math.min(...d.regular), regularMax: Math.max(...d.regular),
+      stations: d.regular.length
+    }))
     .sort((a, b) => a.date - b.date);
 }
 
@@ -424,14 +537,20 @@ function aggregate(rows, mode) {
   const groups = {};
   rows.forEach(r => {
     const k = keyFor(r.date);
-    if (!groups[k]) groups[k] = { date: r.date.startOf(mode === 'weekly' ? 'week' : 'month'), regular: [], plus: [], premium: [] };
+    if (!groups[k]) groups[k] = { date: r.date.startOf(mode === 'weekly' ? 'week' : 'month'), regular: [], plus: [], premium: [], regularMin: [], regularMax: [] };
     groups[k].regular.push(r.regular);
     if (r.plus !== null) groups[k].plus.push(r.plus);
     if (r.premium !== null) groups[k].premium.push(r.premium);
+    if (r.regularMin !== null && r.regularMin !== undefined) groups[k].regularMin.push(r.regularMin);
+    if (r.regularMax !== null && r.regularMax !== undefined) groups[k].regularMax.push(r.regularMax);
   });
   const avg = arr => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null;
   return Object.values(groups)
-    .map(g => ({ date: g.date, regular: avg(g.regular), plus: avg(g.plus), premium: avg(g.premium) }))
+    .map(g => ({
+      date: g.date, regular: avg(g.regular), plus: avg(g.plus), premium: avg(g.premium),
+      regularMin: g.regularMin.length ? Math.min(...g.regularMin) : null,
+      regularMax: g.regularMax.length ? Math.max(...g.regularMax) : null
+    }))
     .sort((a, b) => a.date - b.date);
 }
 
@@ -441,7 +560,21 @@ function renderChart() {
   let filtered = dailyBaseline.filter(d => (!start || d.date >= start) && (!end || d.date <= end));
   filtered = aggregate(filtered, aggMode);
 
-  const datasets = [{
+  const datasets = [];
+  if (showSpread) {
+    datasets.push({
+      label: 'Daily high', _legend: false,
+      data: filtered.map(d => ({ x: d.date.toISODate(), y: d.regularMax })),
+      borderWidth: 0, pointRadius: 0, fill: '+1',
+      backgroundColor: 'rgba(191, 232, 216, 0.45)', tension: 0.12
+    });
+    datasets.push({
+      label: 'Daily low', _legend: false,
+      data: filtered.map(d => ({ x: d.date.toISODate(), y: d.regularMin })),
+      borderWidth: 0, pointRadius: 0, fill: false, tension: 0.12
+    });
+  }
+  datasets.push({
     label: 'Regular',
     data: filtered.map(d => ({ x: d.date.toISODate(), y: d.regular })),
     borderColor: '#111111',
@@ -449,9 +582,9 @@ function renderChart() {
     borderWidth: 2.5,
     pointRadius: 2,
     pointBackgroundColor: '#1d6b53',
-    fill: true,
+    fill: showSpread ? false : true,
     tension: 0.12
-  }];
+  });
   if (showPlus) {
     datasets.push({ label: 'Midgrade', data: filtered.map(d => ({ x: d.date.toISODate(), y: d.plus })), borderColor: '#b8860b', borderWidth: 2, pointRadius: 1.5, borderDash: [4, 3], fill: false, tension: 0.12 });
   }
@@ -468,7 +601,7 @@ function renderChart() {
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { position: 'top', align: 'end', labels: { font: { family: 'IBM Plex Mono', size: 11 }, usePointStyle: true, boxWidth: 8 } },
+        legend: { position: 'top', align: 'end', labels: { font: { family: 'IBM Plex Mono', size: 11 }, usePointStyle: true, boxWidth: 8, filter: (item, data) => data.datasets[item.datasetIndex]._legend !== false } },
         tooltip: { backgroundColor: '#111111', titleFont: { family: 'IBM Plex Sans' }, bodyFont: { family: 'IBM Plex Mono' }, callbacks: { label: (ctx) => ` ${ctx.dataset.label}: $${ctx.parsed.y?.toFixed(2)}` } },
       },
       scales: {
@@ -525,6 +658,219 @@ function renderMap() {
     if (r.plus !== null) grades.push(`Midgrade <span class="popup-price">$${r.plus.toFixed(2)}</span>`);
     if (r.premium !== null) grades.push(`Premium <span class="popup-price">$${r.premium.toFixed(2)}</span>`);
     marker.bindPopup(`<div class="popup-name">${r.name}</div>${r.address}<br><br>${grades.join('<br>')}`);
+  });
+}
+
+function renderBrandChart() {
+  const MIN_SAMPLES = 20;
+  const byBrand = {};
+  rawRows.forEach(r => {
+    if (!isCleanStationName(r.name)) return;
+    const brand = brandFor(r.name);
+    if (!brand) return;
+    (byBrand[brand] = byBrand[brand] || []).push(r.regular);
+  });
+
+  const allClean = Object.values(byBrand).flat();
+  const overallAvg = allClean.length ? allClean.reduce((a, b) => a + b, 0) / allClean.length : null;
+
+  const stats = Object.entries(byBrand)
+    .map(([brand, prices]) => ({ brand, avg: prices.reduce((a, b) => a + b, 0) / prices.length, n: prices.length }))
+    .filter(s => s.n >= MIN_SAMPLES)
+    .sort((a, b) => b.n - a.n)   // keep the brands with the most data, not the cheapest ones
+    .slice(0, 6)
+    .sort((a, b) => a.avg - b.avg);   // then order the chart cheapest to priciest
+
+  document.getElementById('brandNote').textContent = stats.length
+    ? `Based on ${allClean.length} clean, brand-matched readings across this history; a brand needs at least ${MIN_SAMPLES} to show. Bars at or below the $${overallAvg.toFixed(2)} average for those readings are shaded green, above shaded red.`
+    : 'Not enough clean, brand-matched readings yet to compare brands.';
+
+  if (brandChartInstance) brandChartInstance.destroy();
+  if (!stats.length) return;
+
+  brandChartInstance = new Chart(document.getElementById('brandChart'), {
+    type: 'bar',
+    data: {
+      labels: stats.map(s => `${s.brand}  (n=${s.n})`),
+      datasets: [{
+        label: 'Average regular price',
+        data: stats.map(s => s.avg),
+        backgroundColor: stats.map(s => s.avg <= overallAvg ? '#0e8f5e' : '#a5422e'),
+        borderColor: '#111111',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        maxBarThickness: 36
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#111111', titleFont: { family: 'IBM Plex Sans' }, bodyFont: { family: 'IBM Plex Mono' },
+          callbacks: { label: (ctx) => ` $${ctx.parsed.x.toFixed(2)} average` }
+        },
+      },
+      scales: {
+        x: { grid: { color: '#d9d4c4' }, ticks: { font: { family: 'IBM Plex Mono', size: 11 }, callback: v => '$' + v.toFixed(2) } },
+        y: { grid: { display: false }, ticks: { font: { family: 'IBM Plex Mono', size: 11 } } }
+      }
+    }
+  });
+}
+
+function renderAreaChart() {
+  const geoRows = rawRows.filter(r => r.lat && r.lng);
+  if (!geoRows.length) {
+    document.getElementById('areaNote').textContent = 'No geocoded readings yet.';
+    return;
+  }
+
+  const lats = geoRows.map(r => r.lat).sort((a, b) => a - b);
+  const lngs = geoRows.map(r => r.lng).sort((a, b) => a - b);
+  const medLat = lats[Math.floor(lats.length / 2)];
+  const medLng = lngs[Math.floor(lngs.length / 2)];
+  const quadrantFor = r => (r.lat >= medLat ? 'N' : 'S') + (r.lng >= medLng ? 'E' : 'W');
+
+  const QUADS = [
+    { key: 'NE', label: 'Northeast', color: '#0e8f5e', dash: [] },
+    { key: 'SE', label: 'Southeast', color: '#b8441f', dash: [6, 3] },
+    { key: 'NW', label: 'Northwest', color: '#5e4bb8', dash: [2, 2] },
+    { key: 'SW', label: 'Southwest', color: '#9c7a0f', dash: [8, 3, 2, 3] },
+  ];
+
+  const byDateQuad = {};
+  const stationCounts = { NE: new Set(), SE: new Set(), NW: new Set(), SW: new Set() };
+  geoRows.forEach(r => {
+    const q = quadrantFor(r);
+    stationCounts[q].add(r.id);
+    const key = r.date.toISODate();
+    if (!byDateQuad[key]) byDateQuad[key] = { NE: [], SE: [], NW: [], SW: [] };
+    byDateQuad[key][q].push(r.regular);
+  });
+
+  const avg = arr => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null;
+
+  // Walk every day the scraper actually ran (dailyBaseline covers the full
+  // history), not just the days a given quadrant happened to have a geo-tagged
+  // reading. That way a quadrant's gap shows up as a real break in its line -
+  // Chart.js otherwise just connects its two nearest real readings with a
+  // straight line, however many weeks apart they are.
+  const datasets = QUADS.map(q => ({
+    label: q.label,
+    data: dailyBaseline.map(d => {
+      const key = d.date.toISODate();
+      const vals = byDateQuad[key] ? byDateQuad[key][q.key] : [];
+      return { x: key, y: avg(vals) };
+    }),
+    borderColor: q.color,
+    backgroundColor: q.color,
+    borderWidth: 2,
+    pointRadius: 2,
+    borderDash: q.dash,
+    spanGaps: false,   // real gaps in a quadrant's coverage show as a break, not a straight line across weeks of nothing
+    tension: 0.15,
+    fill: false
+  }));
+
+  document.getElementById('areaNote').textContent =
+    'Quadrants are split at the tracked stations’ own median coordinates, not an official boundary. Distinct stations seen per quadrant so far: ' +
+    QUADS.map(q => `${q.label} ${stationCounts[q.key].size}`).join(' · ') + '.';
+
+  if (areaChartInstance) areaChartInstance.destroy();
+  areaChartInstance = new Chart(document.getElementById('areaChart'), {
+    type: 'line',
+    data: { datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', align: 'end', labels: { font: { family: 'IBM Plex Mono', size: 11 }, usePointStyle: true, boxWidth: 8 } },
+        tooltip: { backgroundColor: '#111111', titleFont: { family: 'IBM Plex Sans' }, bodyFont: { family: 'IBM Plex Mono' }, callbacks: { label: (ctx) => ` ${ctx.dataset.label}: $${ctx.parsed.y?.toFixed(2)}` } },
+      },
+      scales: {
+        x: { type: 'time', time: { unit: 'day' }, grid: { display: false }, ticks: { font: { family: 'IBM Plex Mono', size: 10 } } },
+        y: { grid: { color: '#d9d4c4' }, ticks: { font: { family: 'IBM Plex Mono', size: 11 }, callback: v => '$' + v.toFixed(2) } }
+      }
+    }
+  });
+}
+
+function renderWeekdayChart() {
+  const byWeekday = { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [] };
+  dailyBaseline.forEach(d => { byWeekday[d.date.weekday].push(d.regular); });
+  const overallAvg = dailyBaseline.reduce((a, d) => a + d.regular, 0) / dailyBaseline.length;
+
+  const WEEKDAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const counts = [1, 2, 3, 4, 5, 6, 7].map(w => byWeekday[w].length);
+  const avgs = [1, 2, 3, 4, 5, 6, 7].map(w => {
+    const arr = byWeekday[w];
+    return arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null;
+  });
+
+  document.getElementById('weekdayNote').textContent =
+    `Average of each day's city-wide average, grouped by weekday (${Math.min(...counts)}–${Math.max(...counts)} days behind each bar so far). Overall average across the whole history: $${overallAvg.toFixed(2)}.`;
+
+  if (weekdayChartInstance) weekdayChartInstance.destroy();
+  weekdayChartInstance = new Chart(document.getElementById('weekdayChart'), {
+    type: 'bar',
+    data: {
+      labels: WEEKDAY_LABELS,
+      datasets: [{
+        label: 'Average regular price',
+        data: avgs,
+        backgroundColor: avgs.map(v => v === null ? '#d9d4c4' : (v <= overallAvg ? '#0e8f5e' : '#a5422e')),
+        borderColor: '#111111',
+        borderWidth: 1.5,
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#111111', titleFont: { family: 'IBM Plex Sans' }, bodyFont: { family: 'IBM Plex Mono' },
+          callbacks: { label: (ctx) => ` $${ctx.parsed.y?.toFixed(2)} average` }
+        },
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { family: 'IBM Plex Mono', size: 11 } } },
+        y: { grid: { color: '#d9d4c4' }, ticks: { font: { family: 'IBM Plex Mono', size: 10 }, callback: v => '$' + v.toFixed(2) } }
+      }
+    }
+  });
+}
+
+function renderCoverageChart() {
+  if (coverageChartInstance) coverageChartInstance.destroy();
+  coverageChartInstance = new Chart(document.getElementById('coverageChart'), {
+    type: 'bar',
+    data: {
+      datasets: [{
+        label: 'Stations reporting',
+        data: dailyBaseline.map(d => ({ x: d.date.toISODate(), y: d.stations })),
+        backgroundColor: 'rgba(216, 199, 240, 0.75)',
+        borderColor: '#111111',
+        borderWidth: 1,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: '#111111', titleFont: { family: 'IBM Plex Sans' }, bodyFont: { family: 'IBM Plex Mono' }, callbacks: { label: (ctx) => ` ${ctx.parsed.y} stations` } },
+      },
+      scales: {
+        x: { type: 'time', time: { unit: 'month' }, grid: { display: false }, ticks: { font: { family: 'IBM Plex Mono', size: 10 } } },
+        y: { grid: { color: '#d9d4c4' }, ticks: { font: { family: 'IBM Plex Mono', size: 10 } }, beginAtZero: true }
+      }
+    }
   });
 }
 </script>
