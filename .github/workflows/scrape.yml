@@ -31,6 +31,12 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          # Full history, not the default shallow clone - the push step
+          # below rebases onto whatever's on main by the time it runs,
+          # and a shallow clone doesn't have the common ancestor needed
+          # for that to work cleanly.
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -57,7 +63,26 @@ jobs:
           git add el_paso_gas_prices.csv station_price_history.csv station_master.csv listing_state.json
           if git diff --cached --quiet; then
             echo "No data changes to commit."
-          else
-            git commit -m "Automated daily gas price scrape: $(TZ='America/Denver' date +'%Y-%m-%d')"
-            git push
+            exit 0
           fi
+          git commit -m "Automated daily gas price scrape: $(TZ='America/Denver' date +'%Y-%m-%d')"
+
+          # main can move between checkout and here - another scrape run,
+          # or an unrelated push like a dashboard update - so rebase onto
+          # whatever's current before pushing, and retry a few times in
+          # case something else wins the same race.
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              echo "Rebase conflict on attempt $attempt - aborting and retrying."
+              git rebase --abort
+            elif git push origin HEAD:main; then
+              echo "Pushed on attempt $attempt."
+              exit 0
+            else
+              echo "Push rejected on attempt $attempt, retrying..."
+            fi
+            sleep $((attempt * 5))
+          done
+          echo "Failed to push after retries." >&2
+          exit 1
