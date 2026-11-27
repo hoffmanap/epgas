@@ -168,6 +168,19 @@
   .chart-box { position: relative; height: 400px; }
 
   #stationMap { height: 520px; width: 100%; }
+  #regionMap { height: 460px; width: 100%; }
+  .region-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    text-align: center;
+    color: var(--ink);
+    text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 6px #fff;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .region-label .band-name { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.02em; }
+  .region-label .band-price { display: block; font-size: 16px; }
+  .region-label .band-diff { display: block; font-size: 10px; }
   .map-full-bleed {
     width: 100vw;
     position: relative;
@@ -266,11 +279,11 @@
 
   <section id="region-section">
     <h2 class="section-title">West Side vs. East Side</h2>
-    <p class="section-dek" id="regionDek">Stations split into four west-to-east bands by longitude, across the date range selected above.</p>
-    <div class="panel chart-box" style="height:300px;"><canvas id="regionChart"></canvas></div>
+    <p class="section-dek" id="regionDek">City split into four west-to-east bands by longitude, across the date range selected above. Each band is labeled with its average regular-grade price and how far that sits from the city-wide average.</p>
+    <div class="panel map-full-bleed" style="padding:0; border-left:none; border-right:none;"><div id="regionMap"></div></div>
     <p class="chart-note" id="regionNote"></p>
     <p class="section-dek" style="margin-top:14px;">
-      The west side (Upper Valley / Doniphan corridor) consistently runs pricier than the east side (Montana / Zaragoza corridor), and it holds up week to week, not just as a one-time snapshot. It isn't just a brand effect either &mdash; the same chains (Circle K, Valero, Alon) are individually cheaper on the east side than their own locations out west. The best-supported explanation from gas-pricing research elsewhere is <strong>competition density</strong>: stations on the east side sit closer together on average, and tighter competition tends to push prices down regardless of brand or neighborhood income. It's a pattern seen in other cities too, not something unique to El Paso &mdash; see the <a href="#methodology">methodology note</a> below for sources.
+      The west side (Upper Valley / Doniphan corridor) consistently runs pricier than the east side (Montana / Zaragoza corridor), and it holds up week to week, not just as a one-time snapshot. It isn't just a brand effect either &mdash; the same chains (Circle K, Valero, Alon) are individually cheaper on the east side than their own locations out west. Price also correlates with north-south position, not just east-west (see the <a href="#methodology">methodology note</a> below). What it isn't explained by: station density &mdash; checked directly, and how closely stations sit to their nearest neighbors doesn't meaningfully predict price here, so the "tighter competition = cheaper" story that holds in other markets doesn't show up cleanly in El Paso's data yet.
     </p>
   </section>
 
@@ -316,7 +329,7 @@
       <li><strong>Income effects are real but small, and mostly explained by the above:</strong> a <a href="https://ideas.repec.org/p/mdl/mdlpap/0906.html" target="_blank" rel="noopener">study of three U.S. cities</a> found poorer neighborhoods pay slightly more on average, but most of that gap disappears once competition and cost are controlled for &mdash; only a small residual remains.</li>
       <li><strong>Competition loss hits low-competition areas hardest:</strong> <a href="https://www.uea.ac.uk/about/news/article/lack-of-competition-between-petrol-stations-hits-households-most-in-poorest-areas" target="_blank" rel="noopener">15 years of Western Australian station data</a> showed prices rise faster when a nearby station closes in areas with fewer alternatives and more car-dependent commuters.</li>
     </ul>
-    <p class="section-dek">El Paso's west-side stations sit measurably farther apart on average than east-side ones in this dataset &mdash; suggestive of the same density effect, though this tracker doesn't yet have the land-use/traffic data to test it directly.</p>
+    <p class="section-dek">Checked directly against station density here, though: how close a station sits to its nearest neighbors doesn't meaningfully predict its price in this dataset (station-level correlation near zero, not statistically significant). So while competition density is the best-supported explanation in other markets' research, it doesn't appear to be the driver of El Paso's specific gradient &mdash; this tracker doesn't yet have the land-use, freeway-proximity, or income data needed to test the other candidate explanations above directly.</p>
   </section>
 
   <footer>
@@ -335,7 +348,7 @@ let showPlus = false;
 let showPremium = false;
 let lastUpdatedDT = null;
 let brandChartInstance = null;
-let regionChartInstance = null;
+let regionMapInstance = null;
 let lowHighChartInstance = null;
 let coverageChartInstance = null;
 
@@ -741,11 +754,12 @@ function renderRegionChart() {
   const MIN_SAMPLES = 20;
   const start = elStart.value ? DateTime.fromISO(elStart.value) : null;
   const end = elEnd.value ? DateTime.fromISO(elEnd.value) : null;
-  const inRange = rawRows.filter(r => (!start || r.date >= start) && (!end || r.date <= end) && r.lng);
+  const inRange = rawRows.filter(r => (!start || r.date >= start) && (!end || r.date <= end) && r.lng && r.lat);
+
+  if (regionMapInstance) { regionMapInstance.remove(); regionMapInstance = null; }
 
   if (inRange.length < MIN_SAMPLES * 4) {
     document.getElementById('regionNote').textContent = 'Not enough geolocated readings in this date range to compare regions.';
-    if (regionChartInstance) regionChartInstance.destroy();
     return;
   }
 
@@ -758,13 +772,20 @@ function renderRegionChart() {
   const bandNames = ['Far West', 'West-Central', 'East-Central', 'Far East'];
   const bandFor = lng => lng <= cuts[0] ? 0 : lng <= cuts[1] ? 1 : lng <= cuts[2] ? 2 : 3;
 
+  const lats = inRange.map(r => r.lat);
+  const latMin = Math.min(...lats), latMax = Math.max(...lats);
+  const latPad = (latMax - latMin) * 0.06 || 0.01;
+  const bandEdges = [Math.min(...lngs), cuts[0], cuts[1], cuts[2], Math.max(...lngs)];
+
   const byBand = [[], [], [], []];
   inRange.forEach(r => byBand[bandFor(r.lng)].push(r.regular));
 
   const stats = bandNames.map((name, i) => ({
     name,
     avg: byBand[i].length ? byBand[i].reduce((a, b) => a + b, 0) / byBand[i].length : null,
-    n: byBand[i].length
+    n: byBand[i].length,
+    lngMin: bandEdges[i],
+    lngMax: bandEdges[i + 1]
   }));
 
   const overallAvg = inRange.reduce((a, r) => a + r.regular, 0) / inRange.length;
@@ -772,38 +793,53 @@ function renderRegionChart() {
   const spread = far.length ? Math.max(...far.map(s => s.avg)) - Math.min(...far.map(s => s.avg)) : 0;
 
   document.getElementById('regionNote').textContent = far.length
-    ? `Based on ${inRange.length} geolocated readings in the selected date range, split into four equal-sized west-to-east bands. Far West to Far East spans a $${spread.toFixed(2)} gap. Bars at or below the $${overallAvg.toFixed(2)} average are shaded green, above shaded red.`
+    ? `Based on ${inRange.length} geolocated readings in the selected date range, split into four equal-sized west-to-east bands. Far West to Far East spans a $${spread.toFixed(2)} gap.`
     : 'Not enough geolocated readings in this date range to compare regions.';
 
-  if (regionChartInstance) regionChartInstance.destroy();
   if (!far.length) return;
 
-  regionChartInstance = new Chart(document.getElementById('regionChart'), {
-    type: 'bar',
-    data: {
-      labels: stats.map(s => `${s.name}  (n=${s.n})`),
-      datasets: [{
-        label: 'Average regular price',
-        data: stats.map(s => s.avg),
-        backgroundColor: stats.map(s => s.avg !== null && s.avg <= overallAvg ? '#0e8f5e' : '#a5422e'),
-        borderColor: '#111111',
-        borderWidth: 1.5,
-        borderRadius: 4,
-        maxBarThickness: 48
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => `$${ctx.parsed.y.toFixed(2)}` } }
-      },
-      scales: {
-        x: { grid: { display: false }, ticks: { font: { family: 'IBM Plex Mono', size: 11 } } },
-        y: { grid: { color: '#d9d4c4' }, ticks: { font: { family: 'IBM Plex Mono', size: 11 }, callback: v => '$' + v.toFixed(2) } }
-      }
-    }
+  const prices = far.map(s => s.avg);
+  const lo = Math.min(...prices), hi = Math.max(...prices);
+  const colorFor = (p) => {
+    const t = hi === lo ? 0.5 : (p - lo) / (hi - lo);
+    const c1 = [191, 232, 216], c2 = [252, 224, 131], c3 = [165, 66, 46];
+    const mix = (a, b, tt) => Math.round(a + (b - a) * tt);
+    const [from, to] = t < 0.5 ? [c1, c2] : [c2, c3];
+    const tt = t < 0.5 ? t / 0.5 : (t - 0.5) / 0.5;
+    return `rgb(${mix(from[0], to[0], tt)}, ${mix(from[1], to[1], tt)}, ${mix(from[2], to[2], tt)})`;
+  };
+
+  regionMapInstance = L.map('regionMap', { scrollWheelZoom: true, zoomControl: true }).fitBounds([
+    [latMin - latPad, bandEdges[0]], [latMax + latPad, bandEdges[4]]
+  ]);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+    maxZoom: 16
+  }).addTo(regionMapInstance);
+
+  // Equal-COUNT bands can be very unequal in width (the two middle bands
+  // here are geographically narrow, since stations are denser there) -
+  // stagger each label to a different vertical third so narrow
+  // neighboring bands don't collide into unreadable overlapping text.
+  const latSpan = (latMax - latPad) - (latMin + latPad);
+  const latSlots = [latMin + latPad + latSpan * 0.78, latMin + latPad + latSpan * 0.18,
+                    latMin + latPad + latSpan * 0.78, latMin + latPad + latSpan * 0.18];
+
+  stats.forEach((s, i) => {
+    if (s.avg === null) return;
+    const bounds = [[latMin - latPad, s.lngMin], [latMax + latPad, s.lngMax]];
+    L.rectangle(bounds, { color: '#111111', weight: 1.5, fillColor: colorFor(s.avg), fillOpacity: 0.55 }).addTo(regionMapInstance);
+    const diff = s.avg - overallAvg;
+    const diffStr = (diff >= 0 ? '+' : '&minus;') + '$' + Math.abs(diff).toFixed(2) + ' vs. avg';
+    const center = [latSlots[i], (s.lngMin + s.lngMax) / 2];
+    L.marker(center, {
+      icon: L.divIcon({
+        className: 'region-label',
+        html: `<span class="band-name">${s.name}</span><span class="band-price">$${s.avg.toFixed(2)}</span><span class="band-diff">${diffStr}</span>`,
+        iconSize: [96, 48]
+      }),
+      interactive: false
+    }).addTo(regionMapInstance);
   });
 }
 
