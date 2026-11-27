@@ -279,7 +279,7 @@
 
   <section id="region-section">
     <h2 class="section-title">West Side vs. East Side</h2>
-    <p class="section-dek" id="regionDek">City split into four west-to-east bands by longitude, across the date range selected above. Each band is labeled with its average regular-grade price and how far that sits from the city-wide average.</p>
+    <p class="section-dek" id="regionDek">Stations grouped by ZIP code (ZCTA), across the date range selected above. Each ZIP is shaded and labeled with its average regular-grade price and how far that sits from the city-wide average.</p>
     <div class="panel map-full-bleed" style="padding:0; border-left:none; border-right:none;"><div id="regionMap"></div></div>
     <p class="chart-note" id="regionNote"></p>
     <p class="section-dek" style="margin-top:14px;">
@@ -350,6 +350,8 @@ let showPremium = false;
 let lastUpdatedDT = null;
 let brandChartInstance = null;
 let regionMapInstance = null;
+let zctaGeo = null;
+let stationZip = null;
 let lowHighChartInstance = null;
 let coverageChartInstance = null;
 
@@ -446,6 +448,7 @@ window.addEventListener('DOMContentLoaded', () => {
     complete: async (results) => {
       lastUpdatedDT = await fetchLastUpdated();
       init(results.data);
+      loadRegionGeo();
     },
     error: (err) => {
       document.getElementById('heroHeadline').textContent = "Couldn't load today's data.";
@@ -751,56 +754,73 @@ function renderBrandChart() {
   });
 }
 
+async function loadRegionGeo() {
+  try {
+    const [geo, zipLookup] = await Promise.all([
+      fetch('epaso_zcta_used.geojson').then(r => r.json()),
+      fetch('station_zip.json').then(r => r.json())
+    ]);
+    zctaGeo = geo;
+    stationZip = zipLookup;
+    renderRegionChart();
+  } catch (err) {
+    console.error('Could not load ZIP boundary data', err);
+    document.getElementById('regionNote').textContent = 'ZIP-code boundary data failed to load.';
+  }
+}
+
 function renderRegionChart() {
   const MIN_SAMPLES = 20;
+  const MIN_PER_ZIP = 8; // don't label a ZIP off a handful of noisy readings
   const start = elStart.value ? DateTime.fromISO(elStart.value) : null;
   const end = elEnd.value ? DateTime.fromISO(elEnd.value) : null;
   const inRange = rawRows.filter(r => (!start || r.date >= start) && (!end || r.date <= end) && r.lng && r.lat);
 
   if (regionMapInstance) { regionMapInstance.remove(); regionMapInstance = null; }
 
+  if (!zctaGeo || !stationZip) {
+    document.getElementById('regionNote').textContent = 'Loading ZIP-code boundaries…';
+    return;
+  }
+
   if (inRange.length < MIN_SAMPLES * 4) {
     document.getElementById('regionNote').textContent = 'Not enough geolocated readings in this date range to compare regions.';
     return;
   }
 
-  // Split into four equal-COUNT bands by longitude (west -> east), same
-  // quartile approach used in the underlying analysis, rather than four
-  // equal-width map strips, so each band has a comparable sample size.
-  const lngs = inRange.map(r => r.lng).sort((a, b) => a - b);
-  const qAt = p => lngs[Math.min(lngs.length - 1, Math.floor(p * lngs.length))];
-  const cuts = [qAt(0.25), qAt(0.5), qAt(0.75)];
-  const bandNames = ['Far West', 'West-Central', 'East-Central', 'Far East'];
-  const bandFor = lng => lng <= cuts[0] ? 0 : lng <= cuts[1] ? 1 : lng <= cuts[2] ? 2 : 3;
-
-  const lats = inRange.map(r => r.lat);
-  const latMin = Math.min(...lats), latMax = Math.max(...lats);
-  const latPad = (latMax - latMin) * 0.06 || 0.01;
-  const bandEdges = [Math.min(...lngs), cuts[0], cuts[1], cuts[2], Math.max(...lngs)];
-
-  const byBand = [[], [], [], []];
-  inRange.forEach(r => byBand[bandFor(r.lng)].push(r.regular));
-
-  const stats = bandNames.map((name, i) => ({
-    name,
-    avg: byBand[i].length ? byBand[i].reduce((a, b) => a + b, 0) / byBand[i].length : null,
-    n: byBand[i].length,
-    lngMin: bandEdges[i],
-    lngMax: bandEdges[i + 1]
-  }));
+  // Group readings by the real ZIP Code Tabulation Area (ZCTA) each
+  // station sits in - a prescribed Census geography - rather than an
+  // abstract east/west split, so the map lines up with recognizable
+  // city boundaries.
+  const byZip = {};
+  inRange.forEach(r => {
+    const zip = stationZip[String(r.id)];
+    if (!zip) return;
+    (byZip[zip] = byZip[zip] || []).push(r.regular);
+  });
 
   const overallAvg = inRange.reduce((a, r) => a + r.regular, 0) / inRange.length;
-  const far = stats.filter(s => s.avg !== null);
-  const spread = far.length ? Math.max(...far.map(s => s.avg)) - Math.min(...far.map(s => s.avg)) : 0;
+  const zipStats = {};
+  Object.entries(byZip).forEach(([zip, prices]) => {
+    if (prices.length < MIN_PER_ZIP) return;
+    zipStats[zip] = {
+      avg: prices.reduce((a, b) => a + b, 0) / prices.length,
+      n: prices.length
+    };
+  });
 
-  document.getElementById('regionNote').textContent = far.length
-    ? `Based on ${inRange.length} geolocated readings in the selected date range, split into four equal-sized west-to-east bands. Far West to Far East spans a $${spread.toFixed(2)} gap.`
-    : 'Not enough geolocated readings in this date range to compare regions.';
+  const avgs = Object.values(zipStats).map(s => s.avg);
+  if (avgs.length < 2) {
+    document.getElementById('regionNote').textContent = 'Not enough geolocated readings across distinct ZIP codes in this date range to compare regions.';
+    return;
+  }
+  const spread = Math.max(...avgs) - Math.min(...avgs);
 
-  if (!far.length) return;
+  document.getElementById('regionNote').textContent =
+    `Based on ${inRange.length} geolocated readings in the selected date range, grouped by ZIP code (ZCTA). ` +
+    `Across the ${avgs.length} ZIPs with enough readings to compare, the cheapest-to-priciest gap is $${spread.toFixed(2)}.`;
 
-  const prices = far.map(s => s.avg);
-  const lo = Math.min(...prices), hi = Math.max(...prices);
+  const lo = Math.min(...avgs), hi = Math.max(...avgs);
   const colorFor = (p) => {
     const t = hi === lo ? 0.5 : (p - lo) / (hi - lo);
     const c1 = [191, 232, 216], c2 = [252, 224, 131], c3 = [165, 66, 46];
@@ -810,37 +830,64 @@ function renderRegionChart() {
     return `rgb(${mix(from[0], to[0], tt)}, ${mix(from[1], to[1], tt)}, ${mix(from[2], to[2], tt)})`;
   };
 
-  regionMapInstance = L.map('regionMap', { scrollWheelZoom: true, zoomControl: true }).fitBounds([
-    [latMin - latPad, bandEdges[0]], [latMax + latPad, bandEdges[4]]
-  ]);
+  regionMapInstance = L.map('regionMap', { scrollWheelZoom: true, zoomControl: true });
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ &middot; ZIP boundaries: US Census Bureau',
     maxZoom: 16
   }).addTo(regionMapInstance);
 
-  // Equal-COUNT bands can be very unequal in width (the two middle bands
-  // here are geographically narrow, since stations are denser there) -
-  // stagger each label to a different vertical third so narrow
-  // neighboring bands don't collide into unreadable overlapping text.
-  const latSpan = (latMax - latPad) - (latMin + latPad);
-  const latSlots = [latMin + latPad + latSpan * 0.78, latMin + latPad + latSpan * 0.18,
-                    latMin + latPad + latSpan * 0.78, latMin + latPad + latSpan * 0.18];
+  const layer = L.geoJSON(zctaGeo, {
+    style: feature => {
+      const s = zipStats[feature.properties.zip];
+      return s
+        ? { color: '#111111', weight: 1, fillColor: colorFor(s.avg), fillOpacity: 0.6 }
+        : { color: '#999999', weight: 0.75, fillColor: '#eeeeee', fillOpacity: 0.25, dashArray: '2,3' };
+    },
+    onEachFeature: (feature, lyr) => {
+      const zip = feature.properties.zip;
+      const s = zipStats[zip];
+      if (!s) {
+        lyr.bindTooltip(`${zip} — not enough readings`, { sticky: true });
+        return;
+      }
+      const diff = s.avg - overallAvg;
+      const diffStr = (diff >= 0 ? '+' : '−') + '$' + Math.abs(diff).toFixed(2) + ' vs. avg';
+      lyr.bindTooltip(
+        `<strong>${zip}</strong><br>$${s.avg.toFixed(2)} avg (${diffStr})<br>${s.n} readings`,
+        { sticky: true }
+      );
+    }
+  }).addTo(regionMapInstance);
 
-  stats.forEach((s, i) => {
-    if (s.avg === null) return;
-    const bounds = [[latMin - latPad, s.lngMin], [latMax + latPad, s.lngMax]];
-    L.rectangle(bounds, { color: '#111111', weight: 1.5, fillColor: colorFor(s.avg), fillOpacity: 0.55 }).addTo(regionMapInstance);
-    const diff = s.avg - overallAvg;
-    const diffStr = (diff >= 0 ? '+' : '&minus;') + '$' + Math.abs(diff).toFixed(2) + ' vs. avg';
-    const center = [latSlots[i], (s.lngMin + s.lngMax) / 2];
-    L.marker(center, {
-      icon: L.divIcon({
-        className: 'region-label',
-        html: `<span class="band-name">${s.name}</span><span class="band-price">$${s.avg.toFixed(2)}</span><span class="band-diff">${diffStr}</span>`,
-        iconSize: [96, 48]
-      }),
-      interactive: false
-    }).addTo(regionMapInstance);
+  regionMapInstance.fitBounds(layer.getBounds(), { padding: [12, 12] });
+
+  // Only print a text label inside ZIPs that render large enough on screen
+  // to hold one without colliding with its neighbors; small ZIPs still
+  // have their price on hover via the tooltip bound above.
+  const MIN_LABEL_PX = 70;
+  regionMapInstance.whenReady(() => {
+    setTimeout(() => {
+      layer.eachLayer(lyr => {
+        const zip = lyr.feature.properties.zip;
+        const s = zipStats[zip];
+        if (!s) return;
+        const b = lyr.getBounds();
+        const nw = regionMapInstance.latLngToContainerPoint(b.getNorthWest());
+        const se = regionMapInstance.latLngToContainerPoint(b.getSouthEast());
+        const w = Math.abs(se.x - nw.x), h = Math.abs(se.y - nw.y);
+        if (w < MIN_LABEL_PX || h < MIN_LABEL_PX) return;
+        const diff = s.avg - overallAvg;
+        const diffStr = (diff >= 0 ? '+' : '−') + '$' + Math.abs(diff).toFixed(2) + ' vs. avg';
+        L.marker(b.getCenter(), {
+          icon: L.divIcon({
+            className: 'region-label',
+            html: `<span class="band-name">${zip}</span><span class="band-price">$${s.avg.toFixed(2)}</span><span class="band-diff">${diffStr}</span>`,
+            iconSize: [96, 48]
+          }),
+          interactive: false
+        }).addTo(regionMapInstance);
+      });
+    }, 0);
   });
 }
 
