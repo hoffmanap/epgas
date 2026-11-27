@@ -264,6 +264,16 @@
     <div class="legend-row"><span>Cheaper</span><span class="legend-swatch"></span><span>Pricier</span></div>
   </section>
 
+  <section id="region-section">
+    <h2 class="section-title">West Side vs. East Side</h2>
+    <p class="section-dek" id="regionDek">Stations split into four west-to-east bands by longitude, across the date range selected above.</p>
+    <div class="panel chart-box" style="height:300px;"><canvas id="regionChart"></canvas></div>
+    <p class="chart-note" id="regionNote"></p>
+    <p class="section-dek" style="margin-top:14px;">
+      The west side (Upper Valley / Doniphan corridor) consistently runs pricier than the east side (Montana / Zaragoza corridor), and it holds up week to week, not just as a one-time snapshot. It isn't just a brand effect either &mdash; the same chains (Circle K, Valero, Alon) are individually cheaper on the east side than their own locations out west. The best-supported explanation from gas-pricing research elsewhere is <strong>competition density</strong>: stations on the east side sit closer together on average, and tighter competition tends to push prices down regardless of brand or neighborhood income. It's a pattern seen in other cities too, not something unique to El Paso &mdash; see the <a href="#methodology">methodology note</a> below for sources.
+    </p>
+  </section>
+
   <section id="boards-section">
     <h2 class="section-title">Today's Extremes</h2>
     <p class="section-dek" style="margin-bottom:20px;">Regular grade, most recent scrape.</p>
@@ -295,6 +305,20 @@
     <p class="chart-note" id="coverageNote"></p>
   </section>
 
+  <section id="methodology">
+    <h2 class="section-title">Why West vs. East?</h2>
+    <p class="section-dek">
+      This isn't unique to El Paso. Research on gasoline pricing in other U.S. and international markets points to a few recurring, non-discriminatory drivers of within-city price gaps:
+    </p>
+    <ul class="section-dek" style="margin-top:-6px;">
+      <li><strong>Station density / competition:</strong> a larger <a href="https://ar5iv.arxiv.org/html/1706.07467" target="_blank" rel="noopener">nationwide study of ~14M price observations</a> found stations-per-capita is one of the strongest predictors of local price &mdash; denser areas price lower, consistent with standard spatial-competition models.</li>
+      <li><strong>Convenience / captive-traffic pricing:</strong> <a href="https://news.ucsb.edu/2019/019365/location-and-competition" target="_blank" rel="noopener">UCSB research in Santa Barbara County</a> found stations near freeway ramps, shopping centers, and other "already stopping here" locations price higher, independent of brand.</li>
+      <li><strong>Income effects are real but small, and mostly explained by the above:</strong> a <a href="https://ideas.repec.org/p/mdl/mdlpap/0906.html" target="_blank" rel="noopener">study of three U.S. cities</a> found poorer neighborhoods pay slightly more on average, but most of that gap disappears once competition and cost are controlled for &mdash; only a small residual remains.</li>
+      <li><strong>Competition loss hits low-competition areas hardest:</strong> <a href="https://www.uea.ac.uk/about/news/article/lack-of-competition-between-petrol-stations-hits-households-most-in-poorest-areas" target="_blank" rel="noopener">15 years of Western Australian station data</a> showed prices rise faster when a nearby station closes in areas with fewer alternatives and more car-dependent commuters.</li>
+    </ul>
+    <p class="section-dek">El Paso's west-side stations sit measurably farther apart on average than east-side ones in this dataset &mdash; suggestive of the same density effect, though this tracker doesn't yet have the land-use/traffic data to test it directly.</p>
+  </section>
+
   <footer>
     Prices are crowdsourced via <a href="https://www.gasbuddy.com" target="_blank" rel="noopener">GasBuddy</a> and refreshed daily. Basemap tiles &copy; Esri. Source + methodology: <a href="https://github.com/hoffmanap/epgas" target="_blank" rel="noopener">hoffmanap/epgas</a>.
   </footer>
@@ -311,6 +335,7 @@ let showPlus = false;
 let showPremium = false;
 let lastUpdatedDT = null;
 let brandChartInstance = null;
+let regionChartInstance = null;
 let lowHighChartInstance = null;
 let coverageChartInstance = null;
 
@@ -454,6 +479,7 @@ function renderAllFiltered() {
   renderLowHighChart();
   renderCoverageChart();
   renderBrandChart();
+  renderRegionChart();
 }
 
 function getFilteredAggregated() {
@@ -706,6 +732,76 @@ function renderBrandChart() {
       scales: {
         x: { grid: { color: '#d9d4c4' }, ticks: { font: { family: 'IBM Plex Mono', size: 11 }, callback: v => '$' + v.toFixed(2) } },
         y: { grid: { display: false }, ticks: { font: { family: 'IBM Plex Mono', size: 11 } } }
+      }
+    }
+  });
+}
+
+function renderRegionChart() {
+  const MIN_SAMPLES = 20;
+  const start = elStart.value ? DateTime.fromISO(elStart.value) : null;
+  const end = elEnd.value ? DateTime.fromISO(elEnd.value) : null;
+  const inRange = rawRows.filter(r => (!start || r.date >= start) && (!end || r.date <= end) && r.lng);
+
+  if (inRange.length < MIN_SAMPLES * 4) {
+    document.getElementById('regionNote').textContent = 'Not enough geolocated readings in this date range to compare regions.';
+    if (regionChartInstance) regionChartInstance.destroy();
+    return;
+  }
+
+  // Split into four equal-COUNT bands by longitude (west -> east), same
+  // quartile approach used in the underlying analysis, rather than four
+  // equal-width map strips, so each band has a comparable sample size.
+  const lngs = inRange.map(r => r.lng).sort((a, b) => a - b);
+  const qAt = p => lngs[Math.min(lngs.length - 1, Math.floor(p * lngs.length))];
+  const cuts = [qAt(0.25), qAt(0.5), qAt(0.75)];
+  const bandNames = ['Far West', 'West-Central', 'East-Central', 'Far East'];
+  const bandFor = lng => lng <= cuts[0] ? 0 : lng <= cuts[1] ? 1 : lng <= cuts[2] ? 2 : 3;
+
+  const byBand = [[], [], [], []];
+  inRange.forEach(r => byBand[bandFor(r.lng)].push(r.regular));
+
+  const stats = bandNames.map((name, i) => ({
+    name,
+    avg: byBand[i].length ? byBand[i].reduce((a, b) => a + b, 0) / byBand[i].length : null,
+    n: byBand[i].length
+  }));
+
+  const overallAvg = inRange.reduce((a, r) => a + r.regular, 0) / inRange.length;
+  const far = stats.filter(s => s.avg !== null);
+  const spread = far.length ? Math.max(...far.map(s => s.avg)) - Math.min(...far.map(s => s.avg)) : 0;
+
+  document.getElementById('regionNote').textContent = far.length
+    ? `Based on ${inRange.length} geolocated readings in the selected date range, split into four equal-sized west-to-east bands. Far West to Far East spans a $${spread.toFixed(2)} gap. Bars at or below the $${overallAvg.toFixed(2)} average are shaded green, above shaded red.`
+    : 'Not enough geolocated readings in this date range to compare regions.';
+
+  if (regionChartInstance) regionChartInstance.destroy();
+  if (!far.length) return;
+
+  regionChartInstance = new Chart(document.getElementById('regionChart'), {
+    type: 'bar',
+    data: {
+      labels: stats.map(s => `${s.name}  (n=${s.n})`),
+      datasets: [{
+        label: 'Average regular price',
+        data: stats.map(s => s.avg),
+        backgroundColor: stats.map(s => s.avg !== null && s.avg <= overallAvg ? '#0e8f5e' : '#a5422e'),
+        borderColor: '#111111',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        maxBarThickness: 48
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `$${ctx.parsed.y.toFixed(2)}` } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { family: 'IBM Plex Mono', size: 11 } } },
+        y: { grid: { color: '#d9d4c4' }, ticks: { font: { family: 'IBM Plex Mono', size: 11 }, callback: v => '$' + v.toFixed(2) } }
       }
     }
   });
